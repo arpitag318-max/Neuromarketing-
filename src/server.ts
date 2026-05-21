@@ -66,6 +66,10 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   return brandedErrorResponse();
 }
 
+// Netlify-compatible server entry.
+// The Netlify plugin calls this fetch handler for SSR requests.
+// The env/ctx params are kept for compatibility but are unused on Netlify
+// (environment variables are accessed via process.env instead).
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
