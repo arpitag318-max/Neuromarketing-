@@ -1,0 +1,179 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', sans-serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-teal: var(--teal);
+  --color-navy: var(--navy);
+  --color-gold: var(--gold);
+}
+
+:root {
+  --radius: 0.875rem;
+  /* Mahindra Finance: warm light premium consulting aesthetic */
+  --background: oklch(0.985 0.004 80);          /* warm off-white */
+  --foreground: oklch(0.22 0.02 260);            /* soft navy ink */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.02 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.02 260);
+  --primary: oklch(0.46 0.18 25);                /* Mahindra red #8B1E1E */
+  --primary-foreground: oklch(0.99 0.003 80);
+  --secondary: oklch(0.96 0.006 80);             /* warm light gray */
+  --secondary-foreground: oklch(0.28 0.03 260);
+  --muted: oklch(0.955 0.006 80);
+  --muted-foreground: oklch(0.5 0.018 260);
+  --accent: oklch(0.7 0.07 200);                 /* muted teal */
+  --accent-foreground: oklch(0.99 0.003 80);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.99 0.003 80);
+  --border: oklch(0.22 0.02 260 / 8%);
+  --input: oklch(0.22 0.02 260 / 12%);
+  --ring: oklch(0.46 0.18 25);
+  --chart-1: oklch(0.46 0.18 25);                /* Mahindra red */
+  --chart-2: oklch(0.7 0.07 200);                /* teal */
+  --chart-3: oklch(0.35 0.06 260);               /* soft navy */
+  --chart-4: oklch(0.78 0.13 75);                /* warm gold */
+  --chart-5: oklch(0.6 0.14 35);                 /* terracotta */
+  --sidebar: oklch(0.99 0.004 80);
+  --sidebar-foreground: oklch(0.28 0.03 260);
+  --sidebar-primary: oklch(0.46 0.18 25);
+  --sidebar-primary-foreground: oklch(0.99 0.003 80);
+  --sidebar-accent: oklch(0.955 0.006 80);
+  --sidebar-accent-foreground: oklch(0.22 0.02 260);
+  --sidebar-border: oklch(0.22 0.02 260 / 8%);
+  --sidebar-ring: oklch(0.46 0.18 25);
+  --teal: oklch(0.7 0.07 200);
+  --navy: oklch(0.32 0.05 260);
+  --gold: oklch(0.78 0.13 75);
+  color-scheme: light;
+}
+
+@layer base {
+  * { border-color: var(--color-border); }
+  html, body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Warm gradient backdrops */
+.warm-bg {
+  background:
+    radial-gradient(900px 500px at 100% 0%, oklch(0.46 0.18 25 / 0.06), transparent 60%),
+    radial-gradient(700px 400px at 0% 100%, oklch(0.7 0.07 200 / 0.07), transparent 65%),
+    oklch(0.985 0.004 80);
+}
+.soft-card {
+  background: linear-gradient(180deg, oklch(1 0 0), oklch(0.985 0.005 80));
+  border: 1px solid oklch(0.22 0.02 260 / 0.07);
+  box-shadow: 0 1px 0 oklch(1 0 0 / 0.6) inset, 0 6px 24px -12px oklch(0.22 0.02 260 / 0.18);
+}
+.soft-hover {
+  transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .3s, box-shadow .3s;
+}
+.soft-hover:hover {
+  transform: translateY(-2px);
+  border-color: oklch(0.46 0.18 25 / 0.35);
+  box-shadow: 0 10px 32px -12px oklch(0.46 0.18 25 / 0.22);
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, oklch(0.22 0.02 260) 0%, oklch(0.46 0.18 25) 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.chip {
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .2rem .55rem; border-radius: 9999px;
+  font-size: 10.5px; font-weight: 500; letter-spacing: .04em;
+  background: oklch(0.46 0.18 25 / 0.08);
+  color: oklch(0.46 0.18 25);
+  border: 1px solid oklch(0.46 0.18 25 / 0.18);
+  text-transform: uppercase;
+}
+.chip-teal {
+  background: oklch(0.7 0.07 200 / 0.12);
+  color: oklch(0.42 0.06 200);
+  border-color: oklch(0.7 0.07 200 / 0.3);
+}
+.chip-gold {
+  background: oklch(0.78 0.13 75 / 0.15);
+  color: oklch(0.5 0.12 60);
+  border-color: oklch(0.78 0.13 75 / 0.4);
+}
+.chip-navy {
+  background: oklch(0.32 0.05 260 / 0.08);
+  color: oklch(0.32 0.05 260);
+  border-color: oklch(0.32 0.05 260 / 0.18);
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+.pulse-glow { animation: pulse-glow 2.6s ease-in-out infinite; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.float { animation: float 6s ease-in-out infinite; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up .7s ease-out both; }
+
+.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
+.scrollbar-thin::-webkit-scrollbar-thumb { background: oklch(0.22 0.02 260 / 0.15); border-radius: 999px; }
