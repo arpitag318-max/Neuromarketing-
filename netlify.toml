@@ -2,6 +2,9 @@
   command = "npm run build"
   publish = "dist/client"
 
+[build.environment]
+  ROLLUP_DISABLE_NATIVE = "true"
+
 [dev]
   command = "vite dev"
   port = 8080
