@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { GoogleGenAI } from "@google/genai";
 
 const AnalysisSchema = z.object({
   imageDataUrl: z.string().min(50),
@@ -56,50 +57,47 @@ Metrics MUST include all 10 ids above. Theories to apply per metric:
 
 heatmap_zones: 4-7 most salient regions (faces, CTAs, brand marks, focal contrast). gaze_path: predicted 5-8 fixation order. Coordinates are normalized 0-1 with origin at top-left of the image.`;
 
+function getGeminiClient(): GoogleGenAI {
+  const key = process.env.GEMINI_API_KEY;
+  if (!key) throw new Error("GEMINI_API_KEY not configured.");
+  return new GoogleGenAI({ apiKey: key });
+}
+
 export const analyzeCreative = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => AnalysisSchema.parse(input))
   .handler(async ({ data }) => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) {
-      return { ok: false as const, error: "AI gateway not configured." };
-    }
-
-    const userPrompt = data.context
-      ? `Campaign context: ${data.context}\n\nAudit this creative for Mahindra Finance's rural marketing team.`
-      : `Audit this creative for Mahindra Finance's rural marketing team.`;
-
     try {
-      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${key}`,
-          "Content-Type": "application/json",
+      const ai = getGeminiClient();
+
+      const userPrompt = data.context
+        ? `Campaign context: ${data.context}\n\nAudit this creative for Mahindra Finance's rural marketing team.`
+        : `Audit this creative for Mahindra Finance's rural marketing team.`;
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { text: userPrompt },
+              {
+                inlineData: {
+                  mimeType: data.imageDataUrl.startsWith("data:image/png")
+                    ? "image/png"
+                    : "image/jpeg",
+                  data: data.imageDataUrl.replace(/^data:image\/\w+;base64,/, ""),
+                },
+              },
+            ],
+          },
+        ],
+        config: {
+          systemInstruction: SYSTEM_PROMPT,
+          responseMimeType: "application/json",
         },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-pro",
-          messages: [
-            { role: "system", content: SYSTEM_PROMPT },
-            {
-              role: "user",
-              content: [
-                { type: "text", text: userPrompt },
-                { type: "image_url", image_url: { url: data.imageDataUrl } },
-              ],
-            },
-          ],
-          response_format: { type: "json_object" },
-        }),
       });
 
-      if (!res.ok) {
-        const txt = await res.text();
-        if (res.status === 429) return { ok: false as const, error: "Rate limit hit. Please retry in a moment." };
-        if (res.status === 402) return { ok: false as const, error: "AI credits exhausted. Add credits in Workspace Settings → Usage." };
-        return { ok: false as const, error: `AI error (${res.status}): ${txt.slice(0, 200)}` };
-      }
-
-      const json = await res.json();
-      const content = json?.choices?.[0]?.message?.content;
+      const content = response.text;
       if (!content) return { ok: false as const, error: "Empty response from AI." };
 
       let parsed;
@@ -112,6 +110,9 @@ export const analyzeCreative = createServerFn({ method: "POST" })
       }
       return { ok: true as const, result: parsed };
     } catch (err) {
+      if (err instanceof Error && err.message === "GEMINI_API_KEY not configured.") {
+        return { ok: false as const, error: "AI gateway not configured." };
+      }
       return { ok: false as const, error: err instanceof Error ? err.message : "Unknown error" };
     }
   });
@@ -134,28 +135,29 @@ Answer in concise, executive-friendly markdown. Cite the specific neuroscience o
 export const askCopilot = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => ChatSchema.parse(input))
   .handler(async ({ data }) => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) return { ok: false as const, error: "AI gateway not configured." };
-
     try {
-      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
-          messages: [{ role: "system", content: COPILOT_SYSTEM }, ...data.messages],
-        }),
+      const ai = getGeminiClient();
+
+      // Map chat roles: Gemini uses "user" and "model" (not "assistant")
+      const contents = data.messages.map((msg) => ({
+        role: msg.role === "assistant" ? ("model" as const) : ("user" as const),
+        parts: [{ text: msg.content }],
+      }));
+
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents,
+        config: {
+          systemInstruction: COPILOT_SYSTEM,
+        },
       });
-      if (!res.ok) {
-        const txt = await res.text();
-        if (res.status === 429) return { ok: false as const, error: "Rate limit. Try again shortly." };
-        if (res.status === 402) return { ok: false as const, error: "AI credits exhausted." };
-        return { ok: false as const, error: `AI error: ${txt.slice(0, 160)}` };
-      }
-      const json = await res.json();
-      const reply = json?.choices?.[0]?.message?.content ?? "";
+
+      const reply = response.text ?? "";
       return { ok: true as const, reply };
     } catch (err) {
+      if (err instanceof Error && err.message === "GEMINI_API_KEY not configured.") {
+        return { ok: false as const, error: "AI gateway not configured." };
+      }
       return { ok: false as const, error: err instanceof Error ? err.message : "Unknown error" };
     }
   });
