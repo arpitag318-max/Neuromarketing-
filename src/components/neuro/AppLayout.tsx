@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { NeuroCopilot } from "./NeuroCopilot";
+import { MahindraFinanceLogo, MahindraIcon, MahindraWordmark } from "./MahindraLogo";
 
 type NavItem = { to: string; icon: typeof LayoutDashboard; label: string; highlight?: boolean };
 const nav: NavItem[] = [
@@ -33,15 +34,9 @@ export function AppLayout({ children }: { children?: ReactNode }) {
 
       {/* Sidebar */}
       <aside className={`fixed lg:sticky top-0 z-50 lg:z-30 h-screen w-[270px] shrink-0 bg-sidebar border-r border-sidebar-border flex flex-col transition-transform ${open ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}>
-        <div className="px-5 py-5 flex items-center gap-3 border-b border-sidebar-border">
-          <div className="relative h-10 w-10 rounded-xl bg-primary grid place-items-center shadow-sm">
-            <span className="font-display text-[16px] font-bold text-primary-foreground">M</span>
-          </div>
-          <div className="leading-tight">
-            <div className="font-display text-[14px] font-semibold tracking-tight">Mahindra Finance</div>
-            <div className="text-[10.5px] uppercase tracking-[0.16em] text-muted-foreground">Neuromarketing Capsule</div>
-          </div>
-          <button onClick={() => setOpen(false)} className="lg:hidden ml-auto p-1.5 rounded-md hover:bg-secondary">
+        <div className="px-5 py-5 flex items-center justify-between border-b border-sidebar-border gap-3">
+          <MahindraFinanceLogo />
+          <button onClick={() => setOpen(false)} className="lg:hidden p-1.5 rounded-md hover:bg-secondary shrink-0">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -138,11 +133,19 @@ export function AppLayout({ children }: { children?: ReactNode }) {
 
         <footer className="px-4 lg:px-8 py-6 border-t border-border bg-card/40">
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-md bg-primary grid place-items-center text-[10px] font-bold text-primary-foreground">M</div>
-              <span>Mahindra Finance · Neuromarketing Capsule</span>
+            <div className="flex items-center gap-3">
+              <div className="h-7 w-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center border border-primary/20 shrink-0 shadow-sm shadow-primary/5">
+                <MahindraIcon className="h-4.5 w-4.5" />
+              </div>
+              <div className="flex flex-col leading-tight select-none">
+                <div className="flex items-center gap-1.5">
+                  <MahindraWordmark className="h-[9.5px] text-primary" />
+                  <span className="font-display font-semibold text-[10px] uppercase text-foreground leading-none">Finance</span>
+                </div>
+                <span className="text-[9.5px] text-muted-foreground mt-0.5">Neuromarketing Capsule · Internal platform</span>
+              </div>
             </div>
-            <div className="text-center md:text-right">
+            <div className="text-center md:text-right select-none">
               Powered by Neuroscience, Behavioral Science & Rural Consumer Psychology
             </div>
           </div>

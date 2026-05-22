@@ -100,7 +100,7 @@ export const analyzeCreative = createServerFn({ method: "POST" })
       const content = response.text;
       if (!content) return { ok: false as const, error: "Empty response from AI." };
 
-      let parsed;
+      let parsed: any;
       try {
         parsed = JSON.parse(content);
       } catch {
@@ -108,6 +108,49 @@ export const analyzeCreative = createServerFn({ method: "POST" })
         if (!m) return { ok: false as const, error: "AI returned unparseable response." };
         parsed = JSON.parse(m[0]);
       }
+
+      // Explainable deterministic scoring calculations matching Phase 6 guidelines
+      if (parsed && Array.isArray(parsed.metrics)) {
+        const weights: Record<string, number> = {
+          attention: 0.15,
+          cognitive_load: 0.10,
+          memory_encoding: 0.12,
+          emotional_engagement: 0.10,
+          trust: 0.15,
+          human_connection: 0.08,
+          readability: 0.10,
+          rural_relevance: 0.15,
+          cta_visibility: 0.10,
+          brand_recall: 0.05,
+        };
+
+        let weightedSum = 0;
+        let totalWeight = 0;
+
+        parsed.metrics.forEach((m: any) => {
+          const w = weights[m.id];
+          if (w !== undefined) {
+            // Lower cognitive load is better, so invert it for total positive scoring
+            const effectiveScore = m.id === "cognitive_load" ? (100 - m.score) : m.score;
+            weightedSum += effectiveScore * w;
+            totalWeight += w;
+          }
+        });
+
+        const overallWeightedScore = totalWeight > 0 ? Math.round(weightedSum / totalWeight) : parsed.overall_score;
+        parsed.overall_score = overallWeightedScore;
+
+        if (overallWeightedScore >= 75) {
+          parsed.verdict = "Strong";
+        } else if (overallWeightedScore >= 55) {
+          parsed.verdict = "Solid";
+        } else if (overallWeightedScore >= 35) {
+          parsed.verdict = "Needs Work";
+        } else {
+          parsed.verdict = "Weak";
+        }
+      }
+
       return { ok: true as const, result: parsed };
     } catch (err) {
       if (err instanceof Error && err.message === "GEMINI_API_KEY not configured.") {
