@@ -74,7 +74,7 @@ export const analyzeCreative = createServerFn({ method: "POST" })
         : `Audit this creative for Mahindra Finance's rural marketing team.`;
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
+        model: "gemini-3.5-flash",
         contents: [
           {
             role: "user",
