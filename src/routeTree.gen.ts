@@ -19,6 +19,7 @@ import { Route as EyeTrackingRouteImport } from './routes/eye-tracking'
 import { Route as CaseStudiesRouteImport } from './routes/case-studies'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ToolsToolIdRouteImport } from './routes/tools.$toolId'
 
 const UxLabRoute = UxLabRouteImport.update({
   id: '/ux-lab',
@@ -70,6 +71,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsToolIdRoute = ToolsToolIdRouteImport.update({
+  id: '/$toolId',
+  path: '/$toolId',
+  getParentRoute: () => ToolsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -80,8 +86,9 @@ export interface FileRoutesByFullPath {
   '/psychology': typeof PsychologyRoute
   '/reports': typeof ReportsRoute
   '/rural': typeof RuralRoute
-  '/tools': typeof ToolsRoute
+  '/tools': typeof ToolsRouteWithChildren
   '/ux-lab': typeof UxLabRoute
+  '/tools/$toolId': typeof ToolsToolIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -92,8 +99,9 @@ export interface FileRoutesByTo {
   '/psychology': typeof PsychologyRoute
   '/reports': typeof ReportsRoute
   '/rural': typeof RuralRoute
-  '/tools': typeof ToolsRoute
+  '/tools': typeof ToolsRouteWithChildren
   '/ux-lab': typeof UxLabRoute
+  '/tools/$toolId': typeof ToolsToolIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -105,8 +113,9 @@ export interface FileRoutesById {
   '/psychology': typeof PsychologyRoute
   '/reports': typeof ReportsRoute
   '/rural': typeof RuralRoute
-  '/tools': typeof ToolsRoute
+  '/tools': typeof ToolsRouteWithChildren
   '/ux-lab': typeof UxLabRoute
+  '/tools/$toolId': typeof ToolsToolIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -121,6 +130,7 @@ export interface FileRouteTypes {
     | '/rural'
     | '/tools'
     | '/ux-lab'
+    | '/tools/$toolId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/rural'
     | '/tools'
     | '/ux-lab'
+    | '/tools/$toolId'
   id:
     | '__root__'
     | '/'
@@ -145,6 +156,7 @@ export interface FileRouteTypes {
     | '/rural'
     | '/tools'
     | '/ux-lab'
+    | '/tools/$toolId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -156,7 +168,7 @@ export interface RootRouteChildren {
   PsychologyRoute: typeof PsychologyRoute
   ReportsRoute: typeof ReportsRoute
   RuralRoute: typeof RuralRoute
-  ToolsRoute: typeof ToolsRoute
+  ToolsRoute: typeof ToolsRouteWithChildren
   UxLabRoute: typeof UxLabRoute
 }
 
@@ -232,8 +244,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/$toolId': {
+      id: '/tools/$toolId'
+      path: '/$toolId'
+      fullPath: '/tools/$toolId'
+      preLoaderRoute: typeof ToolsToolIdRouteImport
+      parentRoute: typeof ToolsRoute
+    }
   }
 }
+
+interface ToolsRouteChildren {
+  ToolsToolIdRoute: typeof ToolsToolIdRoute
+}
+
+const ToolsRouteChildren: ToolsRouteChildren = {
+  ToolsToolIdRoute: ToolsToolIdRoute,
+}
+
+const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -244,7 +273,7 @@ const rootRouteChildren: RootRouteChildren = {
   PsychologyRoute: PsychologyRoute,
   ReportsRoute: ReportsRoute,
   RuralRoute: RuralRoute,
-  ToolsRoute: ToolsRoute,
+  ToolsRoute: ToolsRouteWithChildren,
   UxLabRoute: UxLabRoute,
 }
 export const routeTree = rootRouteImport

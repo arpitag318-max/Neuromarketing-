@@ -28,29 +28,39 @@ const funnelData = [
   { stage: "Loyalty", v: 22 },
 ];
 
+/* ── Mahindra Finance Brand Colors ── */
+const BRAND = {
+  red: "oklch(0.40 0.14 22)",       // #8B1E1E
+  redLight: "oklch(0.50 0.17 24)",  // #C62828
+  teal: "oklch(0.67 0.065 195)",    // #6CA6A6
+  navy: "oklch(0.28 0.05 245)",     // #243447
+  navyMuted: "oklch(0.52 0.02 245)",
+  grid: "oklch(0.24 0.03 245 / 0.06)",
+  border: "oklch(0.24 0.03 245 / 0.1)",
+} as const;
+
 export function TrustAreaChart() {
   return (
     <ResponsiveContainer width="100%" height={220}>
       <AreaChart data={trustData} margin={{ left: -20, right: 8, top: 10, bottom: 0 }}>
         <defs>
           <linearGradient id="gTrust" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="oklch(0.78 0.14 195)" stopOpacity={0.5} />
-            <stop offset="100%" stopColor="oklch(0.78 0.14 195)" stopOpacity={0} />
+            <stop offset="0%" stopColor={BRAND.red} stopOpacity={0.4} />
+            <stop offset="100%" stopColor={BRAND.red} stopOpacity={0} />
           </linearGradient>
           <linearGradient id="gCog" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="oklch(0.7 0.18 305)" stopOpacity={0.4} />
-            <stop offset="100%" stopColor="oklch(0.7 0.18 305)" stopOpacity={0} />
+            <stop offset="0%" stopColor={BRAND.teal} stopOpacity={0.35} />
+            <stop offset="100%" stopColor={BRAND.teal} stopOpacity={0} />
           </linearGradient>
         </defs>
-        <CartesianGrid stroke="oklch(1 0 0 / 0.05)" vertical={false} />
-        <XAxis dataKey="t" tick={{ fill: "oklch(0.68 0.025 260)", fontSize: 10 }} axisLine={false} tickLine={false} interval={3} />
-        <YAxis tick={{ fill: "oklch(0.68 0.025 260)", fontSize: 10 }} axisLine={false} tickLine={false} />
+        <CartesianGrid stroke={BRAND.grid} vertical={false} />
+        <XAxis dataKey="t" tick={{ fill: BRAND.navyMuted, fontSize: 10 }} axisLine={false} tickLine={false} interval={3} />
+        <YAxis tick={{ fill: BRAND.navyMuted, fontSize: 10 }} axisLine={false} tickLine={false} />
         <Tooltip
-          contentStyle={{ background: "oklch(0.19 0.035 260)", border: "1px solid oklch(1 0 0 / 0.1)", borderRadius: 12, fontSize: 12 }}
-          labelStyle={{ color: "oklch(0.85 0.015 250)" }}
+          contentStyle={{ background: "white", border: `1px solid ${BRAND.border}`, borderRadius: 10, fontSize: 12 }}
         />
-        <Area type="monotone" dataKey="trust" stroke="oklch(0.78 0.14 195)" strokeWidth={2} fill="url(#gTrust)" />
-        <Area type="monotone" dataKey="cognitive" stroke="oklch(0.7 0.18 305)" strokeWidth={2} fill="url(#gCog)" />
+        <Area type="monotone" dataKey="trust" stroke={BRAND.red} strokeWidth={2} fill="url(#gTrust)" />
+        <Area type="monotone" dataKey="cognitive" stroke={BRAND.teal} strokeWidth={2} fill="url(#gCog)" />
       </AreaChart>
     </ResponsiveContainer>
   );
@@ -60,10 +70,10 @@ export function NeuroRadar() {
   return (
     <ResponsiveContainer width="100%" height={240}>
       <RadarChart data={radarData}>
-        <PolarGrid stroke="oklch(1 0 0 / 0.1)" />
-        <PolarAngleAxis dataKey="metric" tick={{ fill: "oklch(0.78 0.025 250)", fontSize: 11 }} />
+        <PolarGrid stroke={BRAND.border} />
+        <PolarAngleAxis dataKey="metric" tick={{ fill: BRAND.navy, fontSize: 11 }} />
         <PolarRadiusAxis tick={false} axisLine={false} domain={[0, 100]} />
-        <Radar dataKey="value" stroke="oklch(0.78 0.14 195)" fill="oklch(0.78 0.14 195)" fillOpacity={0.25} strokeWidth={2} />
+        <Radar dataKey="value" stroke={BRAND.red} fill={BRAND.red} fillOpacity={0.25} strokeWidth={2} />
       </RadarChart>
     </ResponsiveContainer>
   );
@@ -75,21 +85,21 @@ export function FunnelBars() {
       <BarChart data={funnelData} layout="vertical" margin={{ left: 8, right: 8, top: 4, bottom: 4 }}>
         <defs>
           <linearGradient id="gBar" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="oklch(0.78 0.14 195)" />
-            <stop offset="100%" stopColor="oklch(0.7 0.18 305)" />
+            <stop offset="0%" stopColor={BRAND.red} />
+            <stop offset="100%" stopColor={BRAND.teal} />
           </linearGradient>
         </defs>
-        <CartesianGrid stroke="oklch(1 0 0 / 0.05)" horizontal={false} />
+        <CartesianGrid stroke={BRAND.grid} horizontal={false} />
         <XAxis type="number" hide />
-        <YAxis dataKey="stage" type="category" tick={{ fill: "oklch(0.78 0.025 250)", fontSize: 11 }} axisLine={false} tickLine={false} width={92} />
-        <Tooltip cursor={{ fill: "oklch(1 0 0 / 0.04)" }} contentStyle={{ background: "oklch(0.19 0.035 260)", border: "1px solid oklch(1 0 0 / 0.1)", borderRadius: 12, fontSize: 12 }} />
+        <YAxis dataKey="stage" type="category" tick={{ fill: BRAND.navy, fontSize: 11 }} axisLine={false} tickLine={false} width={92} />
+        <Tooltip cursor={{ fill: "oklch(0.24 0.03 245 / 0.04)" }} contentStyle={{ background: "white", border: `1px solid ${BRAND.border}`, borderRadius: 10, fontSize: 12 }} />
         <Bar dataKey="v" fill="url(#gBar)" radius={[4, 4, 4, 4]} />
       </BarChart>
     </ResponsiveContainer>
   );
 }
 
-export function Sparkline({ color = "oklch(0.78 0.14 195)" }: { color?: string }) {
+export function Sparkline({ color = "oklch(0.40 0.14 22)" }: { color?: string }) {
   const data = Array.from({ length: 20 }, (_, i) => ({ i, v: 40 + Math.sin(i / 2) * 18 + Math.random() * 10 }));
   return (
     <ResponsiveContainer width="100%" height={48}>

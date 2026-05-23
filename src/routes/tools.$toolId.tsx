@@ -1,856 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppLayout } from "@/components/neuro/AppLayout";
 import { Card } from "@/components/neuro/Primitives";
 import { 
-  Eye, Brain, Activity, Smile, Zap, FileText, Heart, Award, 
+  ArrowLeft, Eye, Brain, Activity, Smile, Zap, FileText, Heart, Award, 
   ChevronRight, X, Check, ShieldAlert, Sparkles, Shield, BarChart3, HelpCircle,
   EyeOff, Sliders, Fingerprint, Play, Pause, RefreshCw, Cpu, Layers, TrendingUp,
-  Database, Gauge, Terminal, ArrowLeft, ShieldCheck, CheckCircle2
+  Database, Gauge, Terminal, ShieldCheck, CheckCircle2
 } from "lucide-react";
+import { neuroscienceToolsList, getSimulator, getCreativeBeforeAfterData } from "./tools";
 
-export const Route = createFileRoute("/tools")({ component: ToolsPage });
-
-// ═══════════════════════════════════════════
-// 1. COMPREHENSIVE DATASET (26 NEUROSCIENCE TOOLS CALIBRATED FOR MARKETING)
-// ═══════════════════════════════════════════
-export const neuroscienceToolsList = [
-  // ─── CNS TOOLS (5 Tools) ───
-  {
-    id: "eeg",
-    name: "EEG (Electroencephalography)",
-    group: "cns",
-    icon: Brain,
-    category: "CNS Neural telemetry",
-    color: "text-purple-500 bg-purple-50 border-purple-100 dark:bg-purple-950/20 dark:border-purple-900/30",
-    accent: "purple",
-    oneLinePurpose: "Measures scalp micro-voltage fluctuations to track active processing fatigue.",
-    primaryCapability: "Detects subconscious engagement states, cognitive fatigue, and motivation shifts.",
-    bestUseCase: "Testing second-by-second narrative peaks and voiceover edits in regional video campaigns.",
-    detail: {
-      whatItMeasures: "Frontal Alpha Asymmetry (approach vs avoidance bias) and prefrontal theta frequency load.",
-      howItWorks: "Monitors scalp electrical micro-fluctuations to evaluate prefrontal cortex hemispheric stress responses.",
-      principle: "Frontal Alpha Hemispheric Asymmetry",
-      marketingUse: "Validating that complex financing rate tables do not trigger instant prefrontal avoidance.",
-      mahindraApp: "Testing rural tractor loan TVCs to ensure interest rate displays trigger engagement rather than panic.",
-      campaignExample: "PhonePe multi-sensory soundbox: Proved that regional sound triggers lowered alpha wave avoidance.",
-      bestFor: "Vernacular TVC narration audits, digital landing page milestone triggers.",
-      limitations: "Requires laboratory participant calibration; sensitive to physical head adjustments.",
-      team: "Brand Strategy, Creative Production, Agency Partners",
-      related: ["BCI Analytics", "Memory Encoding Analysis"],
-      realInsight: "Prefrontal cognitive workload spiked by 80% when repayment terms were presented before familial safety anchors."
-    }
-  },
-  {
-    id: "fmri",
-    name: "fMRI (Functional MRI)",
-    group: "cns",
-    icon: Brain,
-    category: "CNS Brain Imaging",
-    color: "text-purple-500 bg-purple-50 border-purple-100 dark:bg-purple-950/20 dark:border-purple-900/30",
-    accent: "purple",
-    oneLinePurpose: "Maps deep brain oxygenated blood flows to reveal raw subconscious reward and desire.",
-    primaryCapability: "Measures metabolic activation inside reward hubs (Nucleus Accumbens) and trust zones.",
-    bestUseCase: "Validating primary corporate positioning statements and core visual brand assets pre-launch.",
-    detail: {
-      whatItMeasures: "Blood Oxygen Level Dependent (BOLD) signals in subcortical brain layers.",
-      howItWorks: "High-field magnetic resonance scanners trace local hemoglobin shifts during advertising exposure.",
-      principle: "Subcortical Mesolimbic Dopaminergic Valuation",
-      marketingUse: "Verifying if corporate trust claims trigger deep-seated emotional reward or amygdala threat warnings.",
-      mahindraApp: "Pre-testing rural branding icons to ensure the Mahindra Finance symbol triggers trust and safety.",
-      campaignExample: "Nubank corporate rebranding: verified subcortical emotional safety coordinates before global shift.",
-      bestFor: "Corporate equity tracking, sensory asset audit, trust validation.",
-      limitations: "High laboratory setup costs; requires participant placement in MRI machines.",
-      team: "Market Research, Executive Division, Agency Lead",
-      related: ["EEG (Brainwaves)", "Memory Encoding Analysis"],
-      realInsight: "Deep mesolimbic reward pathways lit up 2.4x stronger when campaigns depicted community empowerment compared to dry financing percentages."
-    }
-  },
-  {
-    id: "fnirs",
-    name: "fNIRS (Functional Near-Infrared)",
-    group: "cns",
-    icon: Activity,
-    category: "CNS Lightweight Imaging",
-    color: "text-purple-500 bg-purple-50 border-purple-100 dark:bg-purple-950/20 dark:border-purple-900/30",
-    accent: "purple",
-    oneLinePurpose: "Uses near-infrared light boundaries to map real-time prefrontal oxygenation.",
-    primaryCapability: "Measures prefrontal metabolic activity in natural field testing environments.",
-    bestUseCase: "Auditing branch staff software tools and customer self-service kiosk workflows.",
-    detail: {
-      whatItMeasures: "Oxygenated and deoxygenated hemoglobin ratios inside prefrontal cortex layers.",
-      howItWorks: "Flexible light sensors on a headband emit near-infrared light, calculating biological scatter rates.",
-      principle: "Prefrontal Metabolic Hemodynamics",
-      marketingUse: "Stripping visual friction blocks from branch kiosks to maintain cognitive comfort.",
-      mahindraApp: "Testing branch manager dealer portals to streamline KYC processing fields.",
-      campaignExample: "Banca Widiba kiosk audit: redesigned entry fields after identifying prefrontal stress events.",
-      bestFor: "Operational efficiency, branch software audit, transactional stress mapping.",
-      limitations: "Limited to cortical layers; cannot measure subcortical reward mechanisms.",
-      team: "UX Engineering, Digital Product Operations, CRM Team",
-      related: ["EEG (Brainwaves)", "Cognitive Load Analysis"],
-      realInsight: "Prefrontal oxygenation demands dropped by 32% when dealer tables consolidated multiple columns into a progressive vertical flow."
-    }
-  },
-  {
-    id: "meg",
-    name: "MEG (Magnetoencephalography)",
-    group: "cns",
-    icon: Brain,
-    category: "CNS Magnetic Telemetry",
-    color: "text-purple-500 bg-purple-50 border-purple-100 dark:bg-purple-950/20 dark:border-purple-900/30",
-    accent: "purple",
-    oneLinePurpose: "Traces magnetic fields produced by active neural currents with millisecond precision.",
-    primaryCapability: "Pinpoints exactly when and where the brain processes layout structures.",
-    bestUseCase: "Evaluating millisecond-level cognitive triggers in dynamic mobile checkouts and sound alerts.",
-    detail: {
-      whatItMeasures: "Extremely weak magnetic field oscillations induced by synaptic electrical flows.",
-      howItWorks: "Superconducting Quantum Interference Devices (SQUIDs) measure active brain magnetic cycles.",
-      principle: "High-Temporal Resolution Magnetic Localization",
-      marketingUse: "Finetuning payment notification sounds to confirm transaction success instantly.",
-      mahindraApp: "Acoustic calibration of regional collections voice bots to prevent customer panic signals.",
-      campaignExample: "CRED checkout sound audit: aligned audio tone to secure immediate relief waves.",
-      bestFor: "Sonic branding, millisecond interface transitions, warning banner calibration.",
-      limitations: "Highly specialized; requires insulated laboratory setups.",
-      team: "Sonic Branding, UX Engineering, Product Lead",
-      related: ["EEG (Brainwaves)", "Memory Encoding Analysis"],
-      realInsight: "Sonic approval tones triggered primary relief markers within 180ms when pitch sweeps rose in clean major scales."
-    }
-  },
-  {
-    id: "pet",
-    name: "PET (Positron Emission Tomography)",
-    group: "cns",
-    icon: Zap,
-    category: "CNS Metabolic Mapping",
-    color: "text-purple-500 bg-purple-50 border-purple-100 dark:bg-purple-950/20 dark:border-purple-900/30",
-    accent: "purple",
-    oneLinePurpose: "Evaluates brain glucose metabolization to track baseline chemical receptor trends.",
-    primaryCapability: "Traces neurotransmitter receptor binding density mapping (e.g. dopamine, serotonin).",
-    bestUseCase: "Deep academic benchmarking of sensory and emotional brand triggers.",
-    detail: {
-      whatItMeasures: "Positron-emitting radiotracer concentrations mapping brain tissue metabolic rates.",
-      howItWorks: "Scans gamma photon pairs released by positron collisions to plot 3D metabolic activity grids.",
-      principle: "Dopaminergic Synaptic Transmission Mapping",
-      marketingUse: "Validating that long-term branding assets construct sustainable equity over short-term offers.",
-      mahindraApp: "Validating the long-term trust equity of our customer relationship templates.",
-      campaignExample: "Global Finance brand benchmark: verified chemical trust triggers across decades.",
-      bestFor: "Academic brand equity validation, sensory asset auditing.",
-      limitations: "Requires clinical environment and radiotracer injections; high cost.",
-      team: "Academic Research Partners, Brand Strategy Team",
-      related: ["fMRI (Functional MRI)", "Implicit Association (IAT)"],
-      realInsight: "Familiar brand identifiers buffer stress-response centers, keeping amygdala signals stable during difficult compliance requests."
-    }
-  },
-
-  // ─── ANS BIOMETRICS (5 Tools) ───
-  {
-    id: "gsr",
-    name: "GSR / EDA (Galvanic Skin Response)",
-    group: "ans",
-    icon: Activity,
-    category: "ANS Sympathetic Arousal",
-    color: "text-cyan-500 bg-cyan-50 border-cyan-100 dark:bg-cyan-950/20 dark:border-cyan-900/30",
-    accent: "cyan",
-    oneLinePurpose: "Measures sympathetic micro-sweat changes to track immediate stress.",
-    primaryCapability: "Detects acute subconscious anxiety events and overall physiological arousal.",
-    bestUseCase: "Pinpointing the exact inputs driving form abandonment in digital KYC and loan applications.",
-    detail: {
-      whatItMeasures: "Sympathetic nervous system skin conductance response (SCR) event spikes.",
-      howItWorks: "Passes tiny currents between electrodes on fingers or wrists to record micro-sweat conductance.",
-      principle: "Sympathetic Nervous Sweat Arousal",
-      marketingUse: "Diagnosing emotional stress barriers during Aadhaar or document upload checkpoints.",
-      mahindraApp: "Identifying which fields in digital loan calculators trigger user hesitation or panic.",
-      campaignExample: "Revolut biometric KYC: Mapped fear alerts, prompting reassuring badges to lift completions.",
-      bestFor: "Form friction diagnostics, KYC flow optimization, trust calibration.",
-      limitations: "Measures emotional intensity (arousal) but not valence (excitement vs fear).",
-      team: "UX Research, Customer Journey Design, Risk Compliance",
-      related: ["Pupillometry", "HRV & ECG"],
-      realInsight: "An acute sweat spike occurred precisely when users were prompted for document uploads before trust symbols appeared."
-    }
-  },
-  {
-    id: "eye-tracking",
-    name: "Eye Tracking",
-    group: "ans",
-    icon: Eye,
-    category: "ANS Visual Attention",
-    color: "text-cyan-500 bg-cyan-50 border-cyan-100 dark:bg-cyan-950/20 dark:border-cyan-900/30",
-    accent: "cyan",
-    oneLinePurpose: "Tracks gaze coordinates and visual fixation duration to map visual attention.",
-    primaryCapability: "Identifies what users notice, ignore, and read within 250ms of exposure.",
-    bestUseCase: "Optimizing print poster CTA visibility and mobile landing page layouts.",
-    detail: {
-      whatItMeasures: "Focal gaze coordinates, pupil coordinates, saccade paths, and dwell durations.",
-      howItWorks: "Infrared cameras or calibrated webcam computer vision algorithms process pupil coordinates.",
-      principle: "Visual Salience & Foveal Focus Hierarchy",
-      marketingUse: "Ensuring tractor loan print ad terms are readable and focus paths flow naturally.",
-      mahindraApp: "Redesigning branch mobile loan KYC forms to locate crucial terms in focal start-zones.",
-      campaignExample: "CRED CTA: Isolated visual clutter, siphoning background noise to lift conversions by 24%.",
-      bestFor: "CTA visibility, poster scanning audits, page layout audits.",
-      limitations: "Indicates precisely where a user looks, but cannot measure emotional trust.",
-      team: "UX Design, Conversion Optimization, Agency Creative Audits",
-      related: ["DeepGaze AI", "Predictive Attention AI"],
-      realInsight: "42% of rural branch customers ignored the primary mobile financing CTA because it sat in a visual neglect zone below high-contrast tractor imagery."
-    }
-  },
-  {
-    id: "pupillometry",
-    name: "Pupillometry",
-    group: "ans",
-    icon: Eye,
-    category: "ANS Cognitive Load",
-    color: "text-cyan-500 bg-cyan-50 border-cyan-100 dark:bg-cyan-950/20 dark:border-cyan-900/30",
-    accent: "cyan",
-    oneLinePurpose: "Measures subconscious pupil dilation changes to track cognitive effort.",
-    primaryCapability: "Detects emotional arousal levels and working memory processing limits.",
-    bestUseCase: "Simplifying difficult pricing calculators and loan selection screens.",
-    detail: {
-      whatItMeasures: "Sub-millimeter pupil diameter expansions, siphoning light reflex variations.",
-      howItWorks: "High-resolution camera tracking streams measure continuous pupil expansion in real-time.",
-      principle: "Locus Coeruleus-Norepinephrine Autonomic Dilation",
-      marketingUse: "Stripping complex visual formatting to prevent mental exhaustion.",
-      mahindraApp: "Auditing regional EMI selectors to ensure rural buyers are not overwhelmed by terms.",
-      campaignExample: "SBI loan portal audit: normalized pricing grids after spotting pupil dilation spikes.",
-      bestFor: "Calculator layout testing, onboarding complexity checks.",
-      limitations: "Highly sensitive to background screen luminance fluctuations.",
-      team: "UX Design, Digital Product, Analytics Division",
-      related: ["Eye Tracking", "GSR / EDA (Galvanic Skin)"],
-      realInsight: "Pupils expanded by 45% when borrowers faced more than three distinct dynamic variables simultaneously."
-    }
-  },
-  {
-    id: "hrv-ecg",
-    name: "HRV & ECG",
-    group: "ans",
-    icon: Activity,
-    category: "ANS Autonomic Arousal",
-    color: "text-cyan-500 bg-cyan-50 border-cyan-100 dark:bg-cyan-950/20 dark:border-cyan-900/30",
-    accent: "cyan",
-    oneLinePurpose: "Tracks Heart Rate Variability and cardiac cycles to analyze stress shifts.",
-    primaryCapability: "Measures somatic stress peaks and cardiac acceleration.",
-    bestUseCase: "Testing dynamic video advertising narrative arcs and branch environment comfort.",
-    detail: {
-      whatItMeasures: "R-R heart wave intervals, baseline heart rate, and low-frequency heart oscillations.",
-      howItWorks: "ECG sensors or high-resolution photoplethysmography (PPG) track continuous blood volume pulse.",
-      principle: "Autonomic Cardiac Vagal Tone",
-      marketingUse: "Ensuring collections and CRM calls maintain a comforting, stress-reducing pace.",
-      mahindraApp: "Optimizing automated IVR scripts and agent talking paces for rural borrowers.",
-      campaignExample: "PhonePe regional IVR audit: mapped heart rate stabilization with warm, local dialects.",
-      bestFor: "Acoustic stress diagnostics, TVC storyboard pacing, customer care scripting.",
-      limitations: "Requires sensor contact; complex to deploy at scale without smart wearables.",
-      team: "CRM Operations, Brand Strategy, Customer Experience",
-      related: ["Respiration Rate", "GSR / EDA (Galvanic Skin)"],
-      realInsight: "Customer heart rate variance stabilized and stress indicators dropped 30% when IVR assistants swapped formal corporate jargon for warm local guidance."
-    }
-  },
-  {
-    id: "respiration",
-    name: "Respiration Rate Tracking",
-    group: "ans",
-    icon: Activity,
-    category: "ANS Autonomic Stress",
-    color: "text-cyan-500 bg-cyan-50 border-cyan-100 dark:bg-cyan-950/20 dark:border-cyan-900/30",
-    accent: "cyan",
-    oneLinePurpose: "Monitors breathing cadence and depth to track sudden cognitive blocks.",
-    primaryCapability: "Highlights sudden breath-holding events indicating confusion or surprise.",
-    bestUseCase: "Evaluating usability friction in complex web and mobile sign-up flows.",
-    detail: {
-      whatItMeasures: "Breathing rate, inhalation amplitude, and micro-hesitation breath-holds.",
-      howItWorks: "Chest belts or high-precision computer vision cameras track micro-shoulder displacement.",
-      principle: "Sympathetic Respiration Resynchronization",
-      marketingUse: "Redesigning multi-stage forms to ensure breathing patterns remain calm and regular.",
-      mahindraApp: "Testing online vehicle finance applications to identify high-friction compliance fields.",
-      campaignExample: "Nubank KYC progressive flow: stripped form steps to protect user breathing stability.",
-      bestFor: "Usability diagnostics, digital layout check, compliance testing.",
-      limitations: "Requires stable camera visuals or wearable straps.",
-      team: "UX Design, Usability Analytics, Product Operations",
-      related: ["HRV & ECG", "GSR / EDA (Galvanic Skin)"],
-      realInsight: "Users commonly hold their breath for 2-3 seconds when confronted with unexpected interest calculations."
-    }
-  },
-
-  // ─── SOMATIC & MUSCULAR RESPONSE TOOLS (3 Tools) ───
-  {
-    id: "facial-coding",
-    name: "Facial Coding (Emotion AI)",
-    group: "somatic",
-    icon: Smile,
-    category: "Somatic Emotional Valence",
-    color: "text-rose-500 bg-rose-50 border-rose-100 dark:bg-rose-950/20 dark:border-rose-900/30",
-    accent: "pink",
-    oneLinePurpose: "Maps webcam micro-muscle movements to analyze authentic emotional sentiment.",
-    primaryCapability: "Categorizes micro-expressions into joy, skepticism, surprise, and confusion.",
-    bestUseCase: "Testing creative drafts and video thumbnails across decentralized consumer panels.",
-    detail: {
-      whatItMeasures: "Facial landmark vectors, skeletal action units, and positive/negative emotional direction.",
-      howItWorks: "Computer vision algorithms map webcam video feeds to analyze micro-expression movements.",
-      principle: "Ekman's Universal Emotion Expressions",
-      marketingUse: "Auditing draft storyboard pacing to ensure brand reveals evoke excitement.",
-      mahindraApp: "Testing rural panel emotional reactions to draft tractor loan marketing flyer designs.",
-      campaignExample: "Realeyes thumbnail pre-testing: selected high-joy creatives to lift ad clicks by 18%.",
-      bestFor: "Creative layout audits, unmoderated panel feedback, video editing checks.",
-      limitations: "Vulnerable to poor room lighting and participant facial angles.",
-      team: "Creative Production, Growth Marketing, Agency Lead",
-      related: ["fEMG (Facial Muscle)", "Voice Pitch Analysis"],
-      realInsight: "Webcam panels in rural towns registered high micro-expressions of skepticism when flyers claimed '0% dynamic rates' without contextual clarity."
-    }
-  },
-  {
-    id: "femg",
-    name: "fEMG (Facial electromyography)",
-    group: "somatic",
-    icon: Smile,
-    category: "Somatic Micro-muscular",
-    color: "text-rose-500 bg-rose-50 border-rose-100 dark:bg-rose-950/20 dark:border-rose-900/30",
-    accent: "pink",
-    oneLinePurpose: "Measures sub-sensory facial muscle activity to detect early skepticism.",
-    primaryCapability: "Detects microscopic frowns (skepticism) invisible to standard cameras.",
-    bestUseCase: "Testing highly sensitive pricing tables and trust-critical legal claims.",
-    detail: {
-      whatItMeasures: "Action potentials inside corrugator (frown) and zygomaticus (smile) muscles.",
-      howItWorks: "Surface electrodes on key facial muscle nodes capture micro-voltage adjustments.",
-      principle: "Sub-sensory Facial Electromyographic Activity",
-      marketingUse: "Isolating complex rate tables that trigger micro-skepticism before user rationalization.",
-      mahindraApp: "Auditing vehicle financing print flyer statements to confirm zero-interest statements feel secure.",
-      campaignExample: "Global insurer trust audit: changed complex clauses to lift user trust levels by 35%.",
-      bestFor: "Compliance copy auditing, trust validation, disclaimer layout checks.",
-      limitations: "Requires physical electrode attachment, limiting field scalability.",
-      team: "Risk Management, Legal Compliance, Creative Strategy",
-      related: ["Facial Coding", "Implicit Association (IAT)"],
-      realInsight: "Micro-frowning was detected in the corrugator muscles 150ms before users verbally confirmed they trusted a pricing statement."
-    }
-  },
-  {
-    id: "voice-pitch",
-    name: "Voice Pitch & Vocal Prosody",
-    group: "somatic",
-    icon: Activity,
-    category: "Somatic Vocal Sentiment",
-    color: "text-rose-500 bg-rose-50 border-rose-100 dark:bg-rose-950/20 dark:border-rose-900/30",
-    accent: "pink",
-    oneLinePurpose: "Monitors speech cadence and pitch variability to capture call frustration.",
-    primaryCapability: "Detects customer stress and conversational blocks in audio streams.",
-    bestUseCase: "Auditing call-center collections loops to optimize helpful customer care.",
-    detail: {
-      whatItMeasures: "Fundamental vocal frequency pitch (F0), speech pacing, and conversational pauses.",
-      howItWorks: "Processes spoken audio signals using acoustic neural networks to map pitch variance.",
-      principle: "Acoustic Prosody & Affective Classification",
-      marketingUse: "Refining voice bot templates to reduce customer stress during payment reminders.",
-      mahindraApp: "Optimizing regional dialect collections scripts to maintain supportive relationships with borrowers.",
-      campaignExample: "PhonePe acoustic soundbox: calibrated tone sweeps to confirm successful transactions.",
-      bestFor: "Collections script audits, customer support training, voice bot calibration.",
-      limitations: "Subject to environmental background noise levels.",
-      team: "Collections Division, Customer Support, CRM Operations",
-      related: ["Facial Coding", "HRV & ECG"],
-      realInsight: "Warm, slow regional dialect speech templates with a lower average pitch reduced user vocal stress indices by 25%."
-    }
-  },
-
-  // ─── BEHAVIORAL & IMPLICIT COGNITIVE TOOLS (4 Tools) ───
-  {
-    id: "iat",
-    name: "Implicit Association (IAT)",
-    group: "behavioral",
-    icon: Fingerprint,
-    category: "Implicit Association Latency",
-    color: "text-emerald-500 bg-emerald-50 border-emerald-100 dark:bg-emerald-950/20 dark:border-emerald-900/30",
-    accent: "green",
-    oneLinePurpose: "Measures millisecond sorting latency to map subconscious brand associations.",
-    primaryCapability: "Bypasses rationalization bias to reveal raw, authentic consumer trust alignment.",
-    bestUseCase: "Quarterly tracking of subconscious brand associations in rural markets.",
-    detail: {
-      whatItMeasures: "Subconscious conceptual strength (D-score indices) and word-to-category latency.",
-      howItWorks: "Users classify concepts across concepts using rapid click choices, measuring latency trends.",
-      principle: "Semantic Priming & Reaction Time Latency",
-      marketingUse: "Confirming if local campaigns successfully associate our brand with 'Security'.",
-      mahindraApp: "Comparing subconscious brand associations against local lenders in Tier-2/3 regions.",
-      campaignExample: "Google Brand strategy: used implicit latency diagnostics to shape secure logo transitions.",
-      bestFor: "Brand equity tracking, positioning audits, trust audits.",
-      limitations: "Requires digital screen testing; does not isolate situational internet delay noise.",
-      team: "Market Research, Strategy Lead, Brand Division",
-      related: ["Fast Response Testing", "Mouse Tracking"],
-      realInsight: "Subconscious trust associations fell by 50% when digital layouts omitted recognizable local branch details."
-    }
-  },
-  {
-    id: "frt",
-    name: "FRT (Fast Response Testing)",
-    group: "behavioral",
-    icon: Fingerprint,
-    category: "Implicit forced-choice",
-    color: "text-emerald-500 bg-emerald-50 border-emerald-100 dark:bg-emerald-950/20 dark:border-emerald-900/30",
-    accent: "green",
-    oneLinePurpose: "Uses sub-second forced choice loops to capture raw brand validation.",
-    primaryCapability: "Differentiates true conviction from polite survey answers.",
-    bestUseCase: "Validating primary creative benefit claims (e.g. speed vs low interest).",
-    detail: {
-      whatItMeasures: "Sub-750ms forced choices, item validation accuracy, and response delays.",
-      howItWorks: "Displays rapid claims, forcing active clicks within tight time constraints.",
-      principle: "Dual-Process Cognitive Reasoning Loop",
-      marketingUse: "Identifying the single most trusted marketing claim in target states.",
-      mahindraApp: "Testing rural ad taglines to identify if users believe loans are easy to acquire.",
-      campaignExample: "PhonePe ad tagline audit: prioritized speed benefits, lifting ad recall by 28%.",
-      bestFor: "Tagline optimization, ad copy validation, value proposition checks.",
-      limitations: "Strict time limits can stress elderly or low-literacy panels.",
-      team: "Performance Copywriting, Brand Management, Research Lead",
-      related: ["Implicit Association (IAT)", "Keystroke Dynamics"],
-      realInsight: "Taglines focusing on 'Direct Branch Manager Support' achieved 40% faster sub-second trust scores than 'Easy Online Approval'."
-    }
-  },
-  {
-    id: "mouse-tracking",
-    name: "Mouse Tracking",
-    group: "behavioral",
-    icon: FileText,
-    category: "Implicit Cursor Flow",
-    color: "text-emerald-500 bg-emerald-50 border-emerald-100 dark:bg-emerald-950/20 dark:border-emerald-900/30",
-    accent: "green",
-    oneLinePurpose: "Tracks continuous cursor paths to identify layout confusion and hesitation.",
-    primaryCapability: "Reveals exact layout coordinates where decision doubt triggers pointer stalls.",
-    bestUseCase: "Improving mobile and web lending funnel stages and rate sliders.",
-    detail: {
-      whatItMeasures: "Cursor velocity maps, angular direction shifts, coordinate drift, and hover durations.",
-      howItWorks: "Logs continuous browser coordinate streams to analyze spatial tracking trajectories.",
-      principle: "Motor-Cognitive Coordination Alignment",
-      marketingUse: "Redesigning menu lists to ensure users scan layout options in a logical flow.",
-      mahindraApp: "Auditing dealer financing portals to locate and remove form entry friction.",
-      campaignExample: "CRED dynamic checkout: replaced complex slider paths with focal cards to streamline clicks.",
-      bestFor: "Funnel checkout optimization, landing page clarity, portal layout audits.",
-      limitations: "Applies to desktop pointer coordinates only (not mobile touchscreen taps).",
-      team: "UX Design, Conversion Optimization, Digital Funnel Lead",
-      related: ["Implicit Association (IAT)", "Keystroke Dynamics"],
-      realInsight: "Erratic cursor paths ('bird's nesting') rose by 70% when menus displayed competing, non-integrated loan codes."
-    }
-  },
-  {
-    id: "keystroke",
-    name: "Keystroke Dynamics",
-    group: "behavioral",
-    icon: FileText,
-    category: "Implicit Tap Dynamics",
-    color: "text-emerald-500 bg-emerald-50 border-emerald-100 dark:bg-emerald-950/20 dark:border-emerald-900/30",
-    accent: "green",
-    oneLinePurpose: "Monitors typing rhythms to spot user confusion during forms.",
-    primaryCapability: "Maps micro-hesitation and keystroke delays indicating input stress.",
-    bestUseCase: "Evaluating onboarding flow simplicity on mobile self-service portals.",
-    detail: {
-      whatItMeasures: "Flight time (dwell between keys) and press durations across form input fields.",
-      howItWorks: "Passively tracks keyboard typing rhythm metrics during document submission fields.",
-      principle: "Psychomotor Input Fluency",
-      marketingUse: "Detecting fields where personal information prompts drive user hesitation.",
-      mahindraApp: "Auditing fixed deposit sign-up portals to streamline address entries.",
-      campaignExample: "Banca Widiba portal: optimized form entry fields after mapping user typing pauses.",
-      bestFor: "Form usability optimization, technophobia audits, KYC streamlining.",
-      limitations: "Dwell calculations are relative to device keyboard specifications.",
-      team: "Usability Testing, Product Operations, Analytics Lead",
-      related: ["Mouse Tracking", "UX Behavioral Analytics"],
-      realInsight: "Typing speeds decelerated by 60% when users entered compliance fields lacking simple, helpful micro-copy explanations."
-    }
-  },
-
-  // ─── AI & COMPUTATIONAL TOOLS (9 Tools) ───
-  {
-    id: "predictive-behavior",
-    name: "Predictive Behavior AI",
-    group: "ai",
-    icon: Cpu,
-    category: "Computational choice mapping",
-    color: "text-blue-500 bg-blue-50 border-blue-100 dark:bg-blue-950/20 dark:border-blue-900/30",
-    accent: "blue",
-    oneLinePurpose: "Uses generative deep learning to predict choice timelines and campaign success.",
-    primaryCapability: "Calculates cohort conversion probabilities and dropout risks pre-deployment.",
-    bestUseCase: "Sifting ad layouts and pricing options before investing in media buying.",
-    detail: {
-      whatItMeasures: "Simulated cohort conversions, choice timelines, and attrition probabilities.",
-      howItWorks: "Runs agent-based models simulating biological consumer preferences over visual variables.",
-      principle: "Agent-Based Generative Behavioral Simulation",
-      marketingUse: "Recommending personalized loan repayment terms that align with local farming harvests.",
-      mahindraApp: "Simulating campaign benefit combinations (e.g. low EMI vs fast processing) before launch.",
-      campaignExample: "SBI loan portal simulation: selected optimal benefit structures via AI prior to pilot testing.",
-      bestFor: "Pre-launch ad checks, benefit combinations, conversion optimization.",
-      limitations: "Simulated predictions require local cohort surveys to stay aligned with market shifts.",
-      team: "Performance Marketing, Strategy Lead, Data Engineering",
-      related: ["DeepGaze AI", "Predictive Attention AI"],
-      realInsight: "Simulated buyer cohorts chose 'Zero Land-Guarantee' benefits 3x faster than '0.5% lower interest' statements."
-    }
-  },
-  {
-    id: "deep-gaze",
-    name: "DeepGaze AI",
-    group: "ai",
-    icon: Zap,
-    category: "Computational Visual Saliency",
-    color: "text-blue-500 bg-blue-50 border-blue-100 dark:bg-blue-950/20 dark:border-blue-900/30",
-    accent: "blue",
-    oneLinePurpose: "Uses generative deep learning to predict human attention maps instantly.",
-    primaryCapability: "Generates visual focus heatmaps and ignore zone maps instantly without live cohorts.",
-    bestUseCase: "Rapidly auditing visual layouts and social media ad creatives during design stages.",
-    detail: {
-      whatItMeasures: "Predicted eye fixation density, salience percentages, and layout clarity indexes.",
-      howItWorks: "Deep convolutional neural networks process contrast, color, and structure to predict human gaze patterns.",
-      principle: "Bottom-Up Attention Saliency Emulation",
-      marketingUse: "Providing performance marketing teams with instant feedback on CTA visibility.",
-      mahindraApp: "Iterating localized WhatsApp promotional creatives to prevent visual ignore zones.",
-      campaignExample: "SBI branch kiosks: optimized dynamic layouts using predicted attention maps pre-launch.",
-      bestFor: "A/B visual testing, creative saliency checks, layout clarity audits.",
-      limitations: "Does not evaluate copy comprehension or deep emotional trust.",
-      team: "Creative Designers, Growth Marketing, Agency Lead",
-      related: ["Eye Tracking", "Predictive Attention AI"],
-      realInsight: "Generative AI analysis predicted that placing a dark tractor silhouette directly next to the CTA would siphon off 50% of visual focus."
-    }
-  },
-  {
-    id: "predictive-attention",
-    name: "Predictive Attention AI",
-    group: "ai",
-    icon: Award,
-    category: "Computational Feed Simulation",
-    color: "text-blue-500 bg-blue-50 border-blue-100 dark:bg-blue-950/20 dark:border-blue-900/30",
-    accent: "blue",
-    oneLinePurpose: "Simulates visual attention across competitive social media and digital feeds.",
-    primaryCapability: "Calculates brand noticeability and visual weight of details within 3s.",
-    bestUseCase: "Auditing social media creative assets to ensure branding stands out.",
-    detail: {
-      whatItMeasures: "Branding visibility score, visual weight distribution, and layout clarity metrics.",
-      howItWorks: "Simulates how eye sweeps scan busy feeds, comparing the visual capture of competing assets.",
-      principle: "Pre-attentive Visual Capture",
-      marketingUse: "Ensuring the Mahindra Finance wordmark commands attention before users scroll past.",
-      mahindraApp: "Testing YouTube bumper and Facebook feed thumbnails for instant brand recall.",
-      campaignExample: "PhonePe merchant codes: pre-tested dynamic visual designs to maximize recall.",
-      bestFor: "Social media visual audits, display banner calibration, thumbnail testing.",
-      limitations: "Cannot measure long-term brand affinity or conceptual trust.",
-      team: "Performance Marketing, Social Media Creative, Growth Lead",
-      related: ["DeepGaze AI", "Eye Tracking"],
-      realInsight: "Branding visibility fell to 3% when enclosed in a thick, high-contrast gold border box, as the frame siphoned visual focus."
-    }
-  },
-  {
-    id: "bci",
-    name: "BCI Analytics (Brain-Computer Interface)",
-    group: "ai",
-    icon: Cpu,
-    category: "Computational neuro-interfaces",
-    color: "text-blue-500 bg-blue-50 border-blue-100 dark:bg-blue-950/20 dark:border-blue-900/30",
-    accent: "blue",
-    oneLinePurpose: "Synthesizes multi-sensor neural signals to track operational efficiency.",
-    primaryCapability: "Monitors real-time fatigue levels and cognitive transitions in digital workspaces.",
-    bestUseCase: "Improving workflows for high-volume enterprise systems.",
-    detail: {
-      whatItMeasures: "P300 cognitive potentials, sensory-motor neural patterns, and work stress ratios.",
-      howItWorks: "Processes neural datasets through machine learning to map active cognitive focus states.",
-      principle: "Operational Cognitive Interface Sync",
-      marketingUse: "Refining branch dealer portals to lower administrative friction for field officers.",
-      mahindraApp: "Designing responsive progressive steps in branch dealer systems to prevent entry fatigue.",
-      campaignExample: "Global financial portal: optimized layout after mapping user BCI fatigue thresholds.",
-      bestFor: "Operational efficiency, branch software audit, dashboard layout checks.",
-      limitations: "Requires highly specialized neural headband systems.",
-      team: "UX Engineering, Digital Product, Systems Division",
-      related: ["Cognitive Load Analysis", "fNIRS (Functional Near-Infrared)"],
-      realInsight: "Branch manager processing speed rose by 25% when dealer forms automated calculations, preventing mental calculation blocks."
-    }
-  },
-  {
-    id: "heatmap-analytics",
-    name: "Heatmap Analytics",
-    group: "ai",
-    icon: BarChart3,
-    category: "Computational focus aggregation",
-    color: "text-blue-500 bg-blue-50 border-blue-100 dark:bg-blue-950/20 dark:border-blue-900/30",
-    accent: "blue",
-    oneLinePurpose: "Aggregates visual focus points across large panel coordinate matrices.",
-    primaryCapability: "Displays macro-level visual focus trends and ignore zones in production.",
-    bestUseCase: "Auditing fixed deposit and dynamic loan calculator portals.",
-    detail: {
-      whatItMeasures: "Focal density hotspots, scroll boundaries, and hover focus indexes.",
-      howItWorks: "Aggregates absolute pixel coordinate dwell points across user cohorts to construct a thermal gradient map.",
-      principle: "Aggregated Visual Salience",
-      marketingUse: "Highlighting whether users focus on tax-saving disclaimers or scroll past blindly.",
-      mahindraApp: "Auditing fixed deposit onboarding portals to ensure key rates command visual focus.",
-      campaignExample: "Nubank KYC progressive layout: siphoned layout noise, raising conversions.",
-      bestFor: "UX layouts, conversion rate optimization, layout hierarchy check.",
-      limitations: "Requires high-volume user cohorts to generate clean focus clusters.",
-      team: "UX Design, Conversion Optimization, Web Analytics",
-      related: ["Eye Tracking", "UX Behavioral Analytics"],
-      realInsight: "64% of users hovered on the interest rate calculator for over 15 seconds before reading terms, indicating strong math-driven intent."
-    }
-  },
-  {
-    id: "ux-analytics",
-    name: "UX Behavioral Analytics",
-    group: "ai",
-    icon: FileText,
-    category: "Computational UX Dynamics",
-    color: "text-blue-500 bg-blue-50 border-blue-100 dark:bg-blue-950/20 dark:border-blue-900/30",
-    accent: "blue",
-    oneLinePurpose: "Analyzes rage clicks, touchscreen stalls, and navigation loops to map friction.",
-    primaryCapability: "Identifies digital technophobia barriers and input confusion in real-time.",
-    bestUseCase: "Auditing self-service loan portals for unbanked Tier-2/3 users.",
-    detail: {
-      whatItMeasures: "Rage click coordinates, rapid erratic pointer movements, and input hesitation duration.",
-      howItWorks: "Tracks scroll pacing, hover points, and input stalling in the active web session.",
-      principle: "Psychomotor Fluency & Usability Hesitation",
-      marketingUse: "Spotting fields where users freeze, alerting customer support to assist.",
-      mahindraApp: "Auditing mobile financing flows to prevent user exits on verification screens.",
-      campaignExample: "SBI branch kiosks: standardized tactile interfaces to reduce entry stress in rural areas.",
-      bestFor: "Funnel drop audits, KYC layout simplification, mobile form design.",
-      limitations: "Logs behavioral data but requires user surveys to clarify systemic drop causes.",
-      team: "Digital Product, Usability Testing, Web Analytics Lead",
-      related: ["Mouse Tracking", "Cognitive Load Analysis"],
-      realInsight: "52% of regional users stalled on the OTP verification screen due to confusion regarding automated messaging folders."
-    }
-  },
-  {
-    id: "cognitive-load",
-    name: "Cognitive Load Analysis",
-    group: "ai",
-    icon: Sliders,
-    category: "Computational memory load",
-    color: "text-blue-500 bg-blue-50 border-blue-100 dark:bg-blue-950/20 dark:border-blue-900/30",
-    accent: "blue",
-    oneLinePurpose: "Theta/beta frequency approximations quantifying active informational burden.",
-    primaryCapability: "Highlights specific layout sections where text complexity triggers task exits.",
-    bestUseCase: "Streamlining complex loan disclaimers and multi-step applications.",
-    detail: {
-      whatItMeasures: "Working memory capacity limits, processing hesitation, and mental fatigue thresholds.",
-      howItWorks: "Analyzes prefrontal theta-to-beta frequency ratio benchmarks to map cognitive processing effort.",
-      principle: "Sweller's Cognitive Load Theory",
-      marketingUse: "Ensuring compliance layouts remain below the processing threshold of rural buyers.",
-      mahindraApp: "Redesigning addresses and calculator fields to prevent decision exhaustion.",
-      campaignExample: "Nubankprogressive KYC: slashes mental load, raising active digital registrations by 15%.",
-      bestFor: "KYC funnel design, calculator design, mobile layout checking.",
-      limitations: "Subject to environmental noise and screen size variation.",
-      team: "UX Design, Digital Product, Analytics Division",
-      related: ["BCI Analytics", "UX Behavioral Analytics"],
-      realInsight: "Borrowers hold their breath and exit mobile forms when confronted with more than three simultaneous decisions."
-    }
-  },
-  {
-    id: "memory-encoding",
-    name: "Memory Encoding Analysis",
-    group: "ai",
-    icon: Brain,
-    category: "Computational memory commit",
-    color: "text-blue-500 bg-blue-50 border-blue-100 dark:bg-blue-950/20 dark:border-blue-900/30",
-    accent: "blue",
-    oneLinePurpose: "Evaluates long-term memory commit rates using steady state visual triggers.",
-    primaryCapability: "Identifies exactly which frames of an advertisement are stored in memory.",
-    bestUseCase: "Ensuring corporate branding assets are encoded within the first 5 seconds of ads.",
-    detail: {
-      whatItMeasures: "Long-term memory commit levels, emotional valence spikes, and detail retrieval.",
-      howItWorks: "Tracks neural phase variations in response to visual triggers to calculate memory storage events.",
-      principle: "Steady State Visual Evoked Potential (SSVEP)",
-      marketingUse: "Positioning the brand logo adjacent to direct-gaze portraits to secure recall.",
-      mahindraApp: "Auditing rural vehicle financing flyers to ensure branch contact details are encoded.",
-      campaignExample: "Spotify sonic ad-recall: proved that audio brand reveals trigger 30% higher memory commit.",
-      bestFor: "Brand equity tracking, TVC final edits, sonic branding audits.",
-      limitations: "Specialized laboratory methodology.",
-      team: "Brand Strategy, Advertising Design, Media lead",
-      related: ["EEG (Brainwaves)", "Predictive Attention AI"],
-      realInsight: "The corporate brand logo committed to long-term memory 4x faster when placed adjacent to warm, direct-gaze human faces."
-    }
-  },
-  {
-    id: "emotional-salience",
-    name: "Emotional Salience Mapping",
-    group: "ai",
-    icon: Sliders,
-    category: "Computational affective mapping",
-    color: "text-blue-500 bg-blue-50 border-blue-100 dark:bg-blue-950/20 dark:border-blue-900/30",
-    accent: "blue",
-    oneLinePurpose: "Blends attention gaze tracks with emotional valence grids to index visual triggers.",
-    primaryCapability: "Highlights visual layout features driving positive/negative emotional responses.",
-    bestUseCase: "Optimizing print poster designs and promotional ad thumbnails pre-launch.",
-    detail: {
-      whatItMeasures: "Attention salience coordinates mapped against facial action emotional valence grids.",
-      howItWorks: "Synthesizes eye scanpath coordinates with facial coding micro-expression vectors.",
-      principle: "Multimodal Affective Visual Processing",
-      marketingUse: "Confirming that regional customer photos command high visual focus and trigger joy.",
-      mahindraApp: "Testing rural print flyers to verify rates do not command focus while furrowing brows.",
-      campaignExample: "Coca-Cola Share a Coke: confirmed that layout designs drove high emotional salience.",
-      bestFor: "Thumbnail design, visual layout check, benefit mapping.",
-      limitations: "Complex calibration required; requires synchronized gaze and facial camera inputs.",
-      team: "Performance Marketing, Social Media Creative, Brand Lead",
-      related: ["DeepGaze AI", "Facial Coding"],
-      realInsight: "Visual joy metrics rose by 40% when vehicle flyers featured real regional agrarian settings rather than generic stock models."
-    }
-  }
-];
-
-export const bentoGoalSelector = [
-  {
-    goal: "Improve Creative Attention",
-    desc: "Ensure the visual hierarchy siphons focus directly to the call-to-action.",
-    recommendations: ["DeepGaze AI", "Eye Tracking", "Predictive Attention AI"],
-    cause: "Bottom-up visual contrast siphons attention loops away from the button coordinates.",
-    nudge: "Isolate the CTA with 40% negative space and high-luminance color contrast.",
-    primaryToolId: "eye-tracking"
-  },
-  {
-    goal: "Increase Consumer Trust",
-    desc: "Lower sympathetic nervous system threat states during document submissions.",
-    recommendations: ["GSR (Skin Conductance)", "Implicit Association (IAT)"],
-    cause: "Identity inputs placed before trust triggers activate danger scans in the amygdala.",
-    nudge: "Introduce direct-gaze team photos and RBI licensed regulatory badges adjacent to forms.",
-    primaryToolId: "gsr"
-  },
-  {
-    goal: "Reduce Onboarding Friction",
-    desc: "Diagnose and eliminate mobile onboarding confusion and tech-hesitation.",
-    recommendations: ["UX Body Language", "Eye Tracking"],
-    cause: "Sustained input hesitations indicate lack of digital fluency and technophobia fear.",
-    nudge: "Deploy progressive disclosure, requesting single identifiers in simple vertical stages.",
-    primaryToolId: "ux-analytics"
-  },
-  {
-    goal: "Improve Emotional Engagement",
-    desc: "Audit the authentic positive/negative valence responses to creative layouts.",
-    recommendations: ["Facial Coding", "Emotion AI", "Voice Emotion AI"],
-    cause: "Vocal and facial micro-stalls reveal skepticism or confusion that focus groups cover up.",
-    nudge: "Test draft storyboards remotely using unmoderated webcam panels across target districts.",
-    primaryToolId: "facial-coding"
-  },
-  {
-    goal: "Improve Memory Recall",
-    desc: "Secure long-term memory encoding rather than short-lived visual capture.",
-    recommendations: ["EEG (Brainwaves)", "Steady State Topography", "Predictive Attention AI"],
-    cause: "Dry numerical interest grids bypass the amygdala's memory tagging networks.",
-    nudge: "Lead campaigns with tractor ownership photos before interest facts.",
-    primaryToolId: "eeg"
-  },
-  {
-    goal: "Understand Rural Consumers",
-    desc: "Decode local hesitation parameters and WhatsApp assisted communication cues.",
-    recommendations: ["UX Body Language", "Facial Coding", "GSR (Skin Conductance)"],
-    cause: "Familiarity bias overrides abstract visual grids; users require relationship-based safety loops.",
-    nudge: "Standardize assisted branch kiosks backed by local field agents using regional templates.",
-    primaryToolId: "ux-analytics"
-  },
-  {
-    goal: "Predict Attention Before Launch",
-    desc: "Verify layout clarity and saliency metrics instantly without live human testing.",
-    recommendations: ["DeepGaze AI", "Predictive Attention AI"],
-    cause: "Aesthetic visual clutter siphons gaze loops, causing immediate banner blindness.",
-    nudge: "Batch process localized programmatic social ads through generative neural visual models.",
-    primaryToolId: "deep-gaze"
-  },
-  {
-    goal: "Optimize CTA Visibility",
-    desc: "Ensure the visual hierarchy commands visual focus within 250ms of exposure.",
-    recommendations: ["Eye Tracking", "DeepGaze AI", "Heatmap Analytics"],
-    cause: "Sensory competition siphons eye scanpaths away from conversion coordinates.",
-    nudge: "Consolidate visual layouts into a single high-contrast focal card with high CTA luminance.",
-    primaryToolId: "eye-tracking"
-  },
-  {
-    goal: "Reduce Cognitive Overload",
-    desc: "Quantify and strip away informational bottlenecks on mobile screens.",
-    recommendations: ["Cognitive Load Analysis", "Mouse Tracking", "Scroll Tracking"],
-    cause: "Exceeding 3-4 visual chunks triggers immediate search fatigue and visual ignore zones.",
-    nudge: "Enforce strict progressive disclosure, presenting singular details per page fold.",
-    primaryToolId: "cognitive-load"
-  }
-];
-
-export const comparisonPairs = [
-  {
-    id: "eye-vs-deepgaze",
-    title: "Eye Tracking vs DeepGaze AI",
-    toolA: {
-      name: "Eye Tracking (Human)",
-      speed: 60, scalability: 45, cost: 75, depth: 50, accuracy: 95, remote: 80
-    },
-    toolB: {
-      name: "DeepGaze AI (Predictive)",
-      speed: 100, scalability: 98, cost: 10, depth: 30, accuracy: 88, remote: 100
-    },
-    insight: "DeepGaze offers instant visual audit checks during design stages, while Eye Tracking provides clinical, post-creative validation with live cohorts."
-  },
-  {
-    id: "eeg-vs-emotion",
-    title: "EEG Brainwaves vs Emotion AI",
-    toolA: {
-      name: "EEG (Brainwaves)",
-      speed: 25, scalability: 20, cost: 95, depth: 98, accuracy: 92, remote: 15
-    },
-    toolB: {
-      name: "Emotion AI (Facial/Voice)",
-      speed: 85, scalability: 90, cost: 45, depth: 75, accuracy: 80, remote: 95
-    },
-    insight: "EEG detects deep cognitive effort and long-term memory commit, while Emotion AI measures surface expressions and spoken sentiment scales remotely."
-  },
-  {
-    id: "ux-vs-facial",
-    title: "UX Analytics vs Facial Coding",
-    toolA: {
-      name: "UX Body Language",
-      speed: 95, scalability: 100, cost: 25, depth: 65, accuracy: 85, remote: 100
-    },
-    toolB: {
-      name: "Facial Coding",
-      speed: 80, scalability: 85, cost: 50, depth: 80, accuracy: 88, remote: 95
-    },
-    insight: "UX Analytics continuous tracks navigation rage clicks in production models, whereas Facial Coding maps specific skeletal visual smiles during prototype testing."
-  }
-];
-
-export const brandCaseStudies = [
-  {
-    company: "CRED payment CTA",
-    tool: "Eye Tracking & DeepGaze",
-    problem: "Landing page clutter siphoned attention loops away from checkout.",
-    insight: "High background contrast siphons attention, creating direct CTA blindness.",
-    outcome: "+24% CTA Clicks",
-    details: "Swapped busy vector images for a singular, high-contrast visual focus card."
-  },
-  {
-    company: "PhonePe soundbox",
-    tool: "GSR & Emotion AI",
-    problem: "Rural transaction anxiety during digital merchant onboarding led to churn.",
-    insight: "Abstract algorithms fail to trigger familiarity-based security loops.",
-    outcome: "+42% Retention",
-    details: "Deployed soundboxes that broadcast transaction approvals in localized regional dialects."
-  },
-  {
-    company: "Nubank progressive KYC",
-    tool: "UX Analytics & Eye Tracking",
-    problem: "Lengthy compliance KYC forms drove massive user registration drop-offs.",
-    insight: "Voluminous multi-step screens exceed working memory limits, driving fatigue.",
-    outcome: "+15% Onboarding",
-    details: "Enforced progressive disclosure, requesting single identifiers in micro-screens."
-  },
-  {
-    company: "Google trust logo",
-    tool: "Implicit Association Test",
-    problem: "Implicit branding disconnects in search layout siphoned click intent.",
-    insight: "Subconscious trust links drop by 50% when layouts violate schema symmetry.",
-    outcome: "Unified Trust",
-    details: "Standardized visual layout parameters to protect cognitive familiarity rules."
-  }
-];
-
-export const recommendedStacks = [
-  {
-    name: "Creative Testing Stack",
-    tools: ["Eye Tracking", "DeepGaze AI", "Emotion AI"],
-    why: "Audits visual attention hotspots and maps raw emotional valence to ensure the brand logo commands attention within 3 seconds of scroll exposure.",
-    goal: "Social & Digital Ad Uplift"
-  },
-  {
-    name: "Rural Trust Stack",
-    tools: ["Facial Coding", "UX Body Language", "GSR (Skin Conductance)"],
-    why: "Triangulates tech-hesitation, physiological anxiety events, and emotional skepticism in unbanked consumer journeys without verbal language bias.",
-    goal: "Tier-2/3 KYC Optimization"
-  },
-  {
-    name: "Onboarding Optimization Stack",
-    tools: ["Mouse Tracking", "Scroll Tracking", "Cognitive Load Analysis"],
-    why: "Maps visual cursor stalls, rapid erratic pointer zig-zags, and scroll drops to systematically streamline high-friction onboarding fields.",
-    goal: "KYC Funnel Drop Reduction"
-  }
-];
+export const Route = createFileRoute("/tools/$toolId")({
+  component: ToolDetailPage,
+});
 
 // ═══════════════════════════════════════════
-// DYNAMIC IMMERSIVE CUSTOM VISUAL STYLES & BENCHMARKS
+// DYNAMIC IMMERSIVE CUSTOM VISUAL STYLES
 // ═══════════════════════════════════════════
 const themeConfig: Record<string, {
   bg: string;
@@ -906,17 +71,9 @@ const themeConfig: Record<string, {
     glowColor: "shadow-blue-500/20",
     badge: "bg-blue-500 text-white",
   },
-  attention: {
-    bg: "from-cyan-950/20 via-card to-card",
-    accent: "cyan",
-    textColor: "text-cyan-500",
-    bgColor: "bg-cyan-500/10",
-    borderColor: "border-cyan-500/30",
-    glowColor: "shadow-cyan-500/20",
-    badge: "bg-cyan-500 text-white",
-  }
 };
 
+// A/B Creative Showcase Data (Before vs After)
 const creativeA_BData: Record<string, {
   beforeTitle: string;
   beforeDesc: string;
@@ -1056,162 +213,8 @@ const creativeA_BData: Record<string, {
 };
 
 // ═══════════════════════════════════════════
-// HELPER WORKFLOW SIMULATORS
+// HELPER INTERACTIVE SIMULATORS
 // ═══════════════════════════════════════════
-export function getCreativeBeforeAfterData(toolId: string, group: string) {
-  // If explicitly defined, return it
-  if (creativeA_BData[toolId]) {
-    return creativeA_BData[toolId];
-  }
-
-  // Custom Category-based Dynamic Fallbacks
-  if (group === "cns") {
-    return {
-      beforeTitle: "Complex Technical Rate Tables",
-      beforeDesc: "Presenting multiple interest formulas and bullet points upon landing.",
-      beforeFriction: [
-        "Prefrontal avoidance waves (Alpha asymmetry) spike instantly.",
-        "High mental fatigue triggers session termination.",
-        "Absence of safety anchors or visual relief points."
-      ],
-      afterTitle: "Agrarian Narrative Hero Flow",
-      afterDesc: "Optimized storyline anchoring customer safety before financing detail disclosure.",
-      afterFixes: [
-        "Prefrontal engagement stabilized via direct-gaze regional photos.",
-        "Alpha approach waves elevated by warm localized voiceovers.",
-        "Repayment milestones simplified into vertical stages."
-      ]
-    };
-  }
-
-  if (group === "ans") {
-    return {
-      beforeTitle: "Lengthy Verification Input Grid",
-      beforeDesc: "Demanding high-volume documents and uploads on step one.",
-      beforeFriction: [
-        "Sympathetic sweat spikes indicate acute user technophobia.",
-        "Visual neglect zones siphon attention away from key disclaimers.",
-        "Pupil dilation shows working memory overload."
-      ],
-      afterTitle: "Progressive Reassured Path",
-      afterDesc: "Onboarding flow structured to prevent cognitive fatigue and trust panic.",
-      afterFixes: [
-        "RBI authorized badges located in direct focal view.",
-        "Calming trust indicators reduce physiological arousal peaks.",
-        "Onboarding broken down into simple, single-input screens."
-      ]
-    };
-  }
-
-  if (group === "somatic") {
-    return {
-      beforeTitle: "Monotone Institutional Video Ad",
-      beforeDesc: "Video advertising creative featuring high-cost urban stock footage.",
-      beforeFriction: [
-        "Micro-expressions of skepticism and confusion registered.",
-        "Low smile activity and lack of emotional resonance.",
-        "Vocal stress spikes during interest rate disclosures."
-      ],
-      afterTitle: "Warm Vernacular Storytelling",
-      afterDesc: "Video advertising starring local farmers and active branch managers.",
-      afterFixes: [
-        "Agrarian familiarity triggers high joy expressions (+45%).",
-        "Skepticism and frowning drop to absolute baseline.",
-        "Vocal prosody sweeps confirm positive brand trust."
-      ]
-    };
-  }
-
-  if (group === "behavioral") {
-    return {
-      beforeTitle: "Desirability-Biased Survey Forms",
-      beforeDesc: "Interviews prompting users if they trust the brand on a scale of 1-10.",
-      beforeFriction: [
-        "Rationalization bias siphons true, immediate consumer conviction.",
-        "Politeness bias obscures actual loan drop-off factors.",
-        "Erratic pointer trajectories indicate decision paralysis."
-      ],
-      afterTitle: "Implicit Latency Validation",
-      afterDesc: "Forced-choice testing measuring subconscious conceptual association.",
-      afterFixes: [
-        "Calculates exact latency D-score sorting parameters.",
-        "Bypasses cognitive filtering and interview politeness.",
-        "Reveals subconscious brand-to-trust links within 700ms."
-      ]
-    };
-  }
-
-  // Fallback for AI / Computational tools
-  return {
-    beforeTitle: "Cluttered WhatsApp Promo Layout",
-    beforeDesc: "Social media performance banners overloaded with multiple competing text specs.",
-    beforeFriction: [
-      "AI saliency map predicts direct banner blindness.",
-      "Primary call-to-action commands less than 15% visual probability.",
-      "High visual clutter prevents successful message encoding."
-    ],
-    afterTitle: "Saliency-Scored Visual Creative",
-    afterDesc: "Bento-style layout pre-tested and calibrated via generative attention models.",
-    afterFixes: [
-      "Focal visual draws attention directly to the central offer.",
-      "Branding visibility commands 85%+ predictive noticeability.",
-      "Isolated call-to-action siphons maximum attention."
-    ]
-  };
-}
-
-export function getSimulator(toolId: string, group: string) {
-  // 1. Brainwave / EEG / Neural wave simulator
-  if (
-    toolId === "eeg" || 
-    toolId === "fmri" || 
-    toolId === "fnirs" || 
-    toolId === "meg" || 
-    toolId === "pet" || 
-    toolId === "bci" || 
-    toolId === "cognitive-load" || 
-    toolId === "memory-encoding" || 
-    group === "cns"
-  ) {
-    return <BrainwaveSimulator />;
-  }
-
-  // 2. Biometric Sweat / GSR / Cardiovascular simulator
-  if (
-    toolId === "gsr" || 
-    toolId === "hrv-ecg" || 
-    toolId === "respiration"
-  ) {
-    return <BiometricSimulator />;
-  }
-
-  // 3. Emotion / Facial wireframe tracker
-  if (
-    toolId === "facial-coding" || 
-    toolId === "femg" || 
-    toolId === "voice-pitch" || 
-    toolId === "emotional-salience" || 
-    group === "somatic"
-  ) {
-    return <EmotionTrackerSimulator />;
-  }
-
-  // 4. Implicit sorting game
-  if (
-    toolId === "iat" || 
-    toolId === "frt" || 
-    toolId === "mouse-tracking" || 
-    toolId === "keystroke" || 
-    toolId === "predictive-behavior" || 
-    group === "behavioral"
-  ) {
-    return <ImplicitTrustGame />;
-  }
-
-  // 5. Focal attention maps (fallback)
-  return <AttentionSimulator toolId={toolId} />;
-}
-
 function CreativeBeforeAfter({ toolId, toolGroup }: { toolId: string; toolGroup: string }) {
   const [activeTab, setActiveTab] = useState<"before" | "after">("after");
   const data = getCreativeBeforeAfterData(toolId, toolGroup);
@@ -1257,7 +260,7 @@ function CreativeBeforeAfter({ toolId, toolGroup }: { toolId: string; toolGroup:
               <p className="text-[11px] text-muted-foreground mt-0.5 leading-normal font-semibold">{data.beforeDesc}</p>
             </div>
             <div className="space-y-1.5 pt-2">
-              {data.beforeFriction.map((fric: string, idx: number) => (
+              {data.beforeFriction.map((fric, idx) => (
                 <div key={idx} className="flex gap-2 text-[10.5px] leading-relaxed">
                   <span className="text-destructive font-black">❌</span>
                   <span className="text-foreground/90 font-semibold">{fric}</span>
@@ -1275,7 +278,7 @@ function CreativeBeforeAfter({ toolId, toolGroup }: { toolId: string; toolGroup:
               <p className="text-[11px] text-muted-foreground mt-0.5 leading-normal font-semibold">{data.afterDesc}</p>
             </div>
             <div className="space-y-1.5 pt-2">
-              {data.afterFixes.map((fix: string, idx: number) => (
+              {data.afterFixes.map((fix, idx) => (
                 <div key={idx} className="flex gap-2 text-[10.5px] leading-relaxed">
                   <span className="text-emerald-500 font-black">✔</span>
                   <span className="text-foreground/95 font-bold">{fix}</span>
@@ -1321,7 +324,6 @@ function AttentionSimulator({ toolId }: { toolId: string }) {
       </div>
 
       <div className="flex-1 flex flex-col md:flex-row gap-6 items-center">
-        {/* Smartphone Mockup */}
         <div className="w-[180px] h-[310px] rounded-[32px] border-4 border-foreground/95 bg-card relative overflow-hidden flex flex-col shadow-lg shrink-0">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-4 bg-foreground/95 rounded-b-xl z-30" />
           <div className="flex-1 p-3 pt-6 flex flex-col justify-between relative overflow-hidden select-none">
@@ -1804,7 +806,7 @@ function ImplicitTrustGame() {
 }
 
 // ═══════════════════════════════════════════
-// MAIN REDESIGNED MULTI-TECH SYSTEM HUB
+// DETAILED ROUTE PLAYBOOK PAGE VIEWPORT
 // ═══════════════════════════════════════════
 interface EegStorytellingViewProps {
   tool: typeof neuroscienceToolsList[0];
@@ -2040,7 +1042,7 @@ function EegStorytellingView({ tool, activeTheme }: EegStorytellingViewProps) {
                 onClick={() => setActiveTab("before")}
                 className={`h-7 px-3.5 rounded-md text-[10px] font-black uppercase tracking-wider transition ${
                   activeTab === "before"
-                    ? "bg-rose-600 text-white shadow-sm font-black animate-fade-in"
+                    ? "bg-rose-600 text-white shadow-sm font-black"
                     : "text-muted-foreground hover:text-foreground cursor-pointer font-bold"
                 }`}
               >
@@ -2050,7 +1052,7 @@ function EegStorytellingView({ tool, activeTheme }: EegStorytellingViewProps) {
                 onClick={() => setActiveTab("after")}
                 className={`h-7 px-3.5 rounded-md text-[10px] font-black uppercase tracking-wider transition ${
                   activeTab === "after"
-                    ? "bg-emerald-500 text-white shadow-sm font-black animate-fade-in"
+                    ? "bg-emerald-500 text-white shadow-sm font-black"
                     : "text-muted-foreground hover:text-foreground cursor-pointer font-bold"
                 }`}
               >
@@ -2104,7 +1106,7 @@ function EegStorytellingView({ tool, activeTheme }: EegStorytellingViewProps) {
       </div>
 
       {/* ─── SECTION 4: REAL ACTION BLUEPRINT FOR MAHINDRA FINANCE ─── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch font-sans">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
         
         {/* Action Blueprint Card */}
         <div className="rounded-3xl border border-purple-500/10 bg-card/65 p-6 md:p-8 shadow-md flex flex-col justify-between gap-6">
@@ -2225,11 +1227,11 @@ function EegStorytellingView({ tool, activeTheme }: EegStorytellingViewProps) {
   );
 }
 
-function ToolsPage() {
-  const [activeCategory, setActiveCategory] = useState<string>("cns");
-  const [activeToolId, setActiveToolId] = useState<string>("eeg");
+function ToolDetailPage() {
+  const { toolId } = Route.useParams();
+  const navigate = useNavigate();
 
-  // Category parameters
+  // Categories list
   const categoriesList = [
     { id: "cns", label: "Central Nervous System (CNS) Tools" },
     { id: "ans", label: "Autonomic Nervous System (ANS) Biometrics" },
@@ -2238,39 +1240,46 @@ function ToolsPage() {
     { id: "ai", label: "AI & Computational Neuroscience Tools" }
   ];
 
-  // Filter tools of selected category
-  const activeCategoryTools = neuroscienceToolsList.filter((t) => t.group === activeCategory);
+  // Match the active tool
+  const tool = neuroscienceToolsList.find((t) => t.id === toolId) || neuroscienceToolsList[0];
+  const activeTheme = themeConfig[tool.group] || themeConfig.ans;
 
-  // Sync activeToolId when category shifts to ensure it loads a valid tool of that category
-  useEffect(() => {
-    if (activeCategoryTools.length > 0) {
-      // Find if activeToolId belongs to new category, otherwise load first tool
-      const isValid = activeCategoryTools.some((t) => t.id === activeToolId);
-      if (!isValid) {
-        setActiveToolId(activeCategoryTools[0].id);
-      }
+  // Filter tools of the active tool's category to display in the Tier-2 navigator bar
+  const activeCategoryTools = neuroscienceToolsList.filter((t) => t.group === tool.group);
+
+  const handleCategoryShift = (catId: string) => {
+    const matchingTools = neuroscienceToolsList.filter((t) => t.group === catId);
+    if (matchingTools.length > 0) {
+      navigate({ to: "/tools/$toolId", params: { toolId: matchingTools[0].id } });
     }
-  }, [activeCategory]);
+  };
 
-  const tool = neuroscienceToolsList.find((t) => t.id === activeToolId) || neuroscienceToolsList[0];
-  const activeTheme = themeConfig[tool.group] || themeConfig.attention;
+  const handleToolShift = (tId: string) => {
+    navigate({ to: "/tools/$toolId", params: { toolId: tId } });
+  };
 
   return (
     <AppLayout>
       {/* 
         ═══════════════════════════════════════════
-        TWO-TIER FIGMA-STYLE NEURO PLATFORM NAVIGATOR
+        1. FLOATING STRATEGIC TWO-TIER SYSTEM SELECTOR BAR
         ═══════════════════════════════════════════ 
       */}
       <div className="sticky top-0 z-40 w-full bg-background/80 backdrop-blur-md border-b border-border/40 py-3 mb-6 select-none space-y-3">
-        {/* Tier 1: Modality Category selectors */}
+        {/* Tier 1: Modality Categories */}
         <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 scrollbar-none">
+          <Link 
+            to="/tools"
+            className="inline-flex items-center gap-1 text-[10.5px] font-black uppercase text-muted-foreground hover:text-foreground transition tracking-wider shrink-0 mr-3 cursor-pointer"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" /> Tools Hub
+          </Link>
           {categoriesList.map((cat) => (
             <button
               key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
+              onClick={() => handleCategoryShift(cat.id)}
               className={`h-9 px-4 rounded-xl text-[10.5px] font-black uppercase tracking-wider shrink-0 transition-all ${
-                activeCategory === cat.id
+                tool.group === cat.id
                   ? "bg-primary text-white shadow-sm"
                   : "bg-secondary/40 text-foreground/80 hover:bg-secondary border border-border/40"
               }`}
@@ -2280,14 +1289,14 @@ function ToolsPage() {
           ))}
         </div>
 
-        {/* Tier 2: Modality Specific subpage triggers */}
+        {/* Tier 2: Modality Specific tools */}
         <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 scrollbar-none border-t border-border/30 pt-2.5">
           {activeCategoryTools.map((t) => (
             <button
               key={t.id}
-              onClick={() => setActiveToolId(t.id)}
+              onClick={() => handleToolShift(t.id)}
               className={`h-8 px-3 rounded-lg text-[10px] font-black tracking-wide capitalize shrink-0 transition-all ${
-                activeToolId === t.id
+                tool.id === t.id
                   ? `${activeTheme.badge} shadow-inner scale-[1.02]`
                   : "bg-secondary/20 text-muted-foreground hover:text-foreground border border-border/30"
               }`}
@@ -2300,7 +1309,7 @@ function ToolsPage() {
 
       {/* 
         ═══════════════════════════════════════════
-        DYNAMIC ENVIRONMENT VIEWPORT (Single active technique)
+        2. DYNAMIC ENVIRONMENT WINDOW (NoStacked scrolling)
         ═══════════════════════════════════════════ 
       */}
       {tool.id === "eeg" ? (
@@ -2309,7 +1318,7 @@ function ToolsPage() {
         <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 pb-16 relative rounded-3xl p-4 md:p-6 bg-gradient-to-b ${activeTheme.bg} border ${activeTheme.borderColor} transition-all duration-500`}>
         
         {/* Glow dots */}
-        <div className="absolute inset-0 bg-radial from-primary/2 via-transparent to-transparent pointer-events-none opacity-30 blur-3xl" />
+        <div className="absolute inset-0 bg-radial from-primary/2 via-transparent to-transparent pointer-events-none opacity-35 blur-3xl" />
         
         {/* BENTO 1: IMMERSIVE HERO VISUAL SIMULATOR (Span 8) */}
         <div className="col-span-12 lg:col-span-8 rounded-3xl border border-border bg-card/95 p-6 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[350px]">

@@ -61,12 +61,16 @@ export function NeuroCopilot() {
       {open && (
         <div className="fixed bottom-6 right-6 z-40 w-[min(420px,calc(100vw-2rem))] h-[min(620px,calc(100vh-3rem))] soft-card rounded-2xl flex flex-col overflow-hidden fade-up">
           <div className="px-4 py-3 border-b border-border flex items-center gap-2.5 bg-primary/5">
-            <div className="h-8 w-8 rounded-lg bg-primary text-primary-foreground grid place-items-center">
-              <Sparkles className="h-4 w-4" />
-            </div>
+            <img
+              src="/logos/mahindra-finance-square.png"
+              onError={(e) => { const t = e.currentTarget; if (!t.src.endsWith('.svg')) t.src = '/logos/mahindra-finance-square.svg'; }}
+              alt="Mahindra Finance"
+              className="h-8 w-8 rounded-lg object-contain shadow-sm"
+              draggable={false}
+            />
             <div className="leading-tight">
               <div className="font-display text-sm font-semibold">NeuroCopilot</div>
-              <div className="text-[10px] text-muted-foreground uppercase tracking-wider">AI Behavioral Advisor</div>
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Mahindra Finance AI Advisor</div>
             </div>
             <button onClick={() => setOpen(false)} className="ml-auto p-1.5 rounded-md hover:bg-secondary">
               <X className="h-4 w-4" />

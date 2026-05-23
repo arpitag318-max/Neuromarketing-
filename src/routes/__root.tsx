@@ -61,9 +61,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Neuromarketing Capsule" },
       { property: "og:description", content: "Behavioral Intelligence Platform for Rural Financial Marketing" },
       { property: "og:type", content: "website" },
+      { name: "theme-color", content: "#8B1E1E" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/png", href: "/logos/mahindra-finance-square.png" },
+      { rel: "apple-touch-icon", href: "/logos/mahindra-finance-square.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" },

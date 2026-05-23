@@ -23,9 +23,12 @@ export function PageHeader({ eyebrow, title, subtitle, icon: Icon, action }: {
   );
 }
 
-export function Card({ children, className = "", hover = false }: { children: ReactNode; className?: string; hover?: boolean }) {
+export function Card({ children, className = "", hover = false, onClick }: { children: ReactNode; className?: string; hover?: boolean; onClick?: React.MouseEventHandler<HTMLDivElement> }) {
   return (
-    <div className={`soft-card rounded-2xl ${hover ? "soft-hover" : ""} ${className}`}>
+    <div 
+      onClick={onClick}
+      className={`soft-card rounded-2xl ${hover ? "soft-hover" : ""} ${className}`}
+    >
       {children}
     </div>
   );

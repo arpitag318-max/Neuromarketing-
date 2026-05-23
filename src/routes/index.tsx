@@ -113,20 +113,20 @@ function Dashboard() {
               <AreaChart data={trustData} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="oklch(0.46 0.18 25)" stopOpacity={0.4}/>
-                    <stop offset="100%" stopColor="oklch(0.46 0.18 25)" stopOpacity={0}/>
+                    <stop offset="0%" stopColor="oklch(0.40 0.14 22)" stopOpacity={0.4}/>
+                    <stop offset="100%" stopColor="oklch(0.40 0.14 22)" stopOpacity={0}/>
                   </linearGradient>
                   <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="oklch(0.7 0.07 200)" stopOpacity={0.35}/>
-                    <stop offset="100%" stopColor="oklch(0.7 0.07 200)" stopOpacity={0}/>
+                    <stop offset="0%" stopColor="oklch(0.67 0.065 195)" stopOpacity={0.35}/>
+                    <stop offset="100%" stopColor="oklch(0.67 0.065 195)" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="oklch(0.22 0.02 260 / 0.06)" />
-                <XAxis dataKey="d" stroke="oklch(0.5 0.018 260)" fontSize={10} />
-                <YAxis stroke="oklch(0.5 0.018 260)" fontSize={10} />
-                <Tooltip contentStyle={{ background: "white", border: "1px solid oklch(0.22 0.02 260 / 0.1)", borderRadius: 8, fontSize: 12 }} />
-                <Area type="monotone" dataKey="trust" stroke="oklch(0.46 0.18 25)" strokeWidth={2} fill="url(#g1)" />
-                <Area type="monotone" dataKey="attention" stroke="oklch(0.7 0.07 200)" strokeWidth={2} fill="url(#g2)" />
+                <CartesianGrid stroke="oklch(0.24 0.03 245 / 0.06)" />
+                <XAxis dataKey="d" stroke="oklch(0.52 0.02 245)" fontSize={10} />
+                <YAxis stroke="oklch(0.52 0.02 245)" fontSize={10} />
+                <Tooltip contentStyle={{ background: "white", border: "1px solid oklch(0.24 0.03 245 / 0.1)", borderRadius: 8, fontSize: 12 }} />
+                <Area type="monotone" dataKey="trust" stroke="oklch(0.40 0.14 22)" strokeWidth={2} fill="url(#g1)" />
+                <Area type="monotone" dataKey="attention" stroke="oklch(0.67 0.065 195)" strokeWidth={2} fill="url(#g2)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -138,9 +138,9 @@ function Dashboard() {
           <div className="h-64">
             <ResponsiveContainer>
               <RadarChart data={radarData}>
-                <PolarGrid stroke="oklch(0.22 0.02 260 / 0.1)" />
-                <PolarAngleAxis dataKey="m" tick={{ fill: "oklch(0.32 0.05 260)", fontSize: 11 }} />
-                <Radar dataKey="v" stroke="oklch(0.46 0.18 25)" fill="oklch(0.46 0.18 25)" fillOpacity={0.25} strokeWidth={2} />
+                <PolarGrid stroke="oklch(0.24 0.03 245 / 0.1)" />
+                <PolarAngleAxis dataKey="m" tick={{ fill: "oklch(0.28 0.05 245)", fontSize: 11 }} />
+                <Radar dataKey="v" stroke="oklch(0.40 0.14 22)" fill="oklch(0.40 0.14 22)" fillOpacity={0.25} strokeWidth={2} />
               </RadarChart>
             </ResponsiveContainer>
           </div>
@@ -162,11 +162,11 @@ function Dashboard() {
           <div className="h-56">
             <ResponsiveContainer>
               <BarChart data={funnelData} margin={{ top: 5, right: 8, left: -20, bottom: 0 }}>
-                <CartesianGrid stroke="oklch(0.22 0.02 260 / 0.06)" vertical={false} />
-                <XAxis dataKey="stage" stroke="oklch(0.5 0.018 260)" fontSize={11} />
-                <YAxis stroke="oklch(0.5 0.018 260)" fontSize={10} />
-                <Tooltip contentStyle={{ background: "white", border: "1px solid oklch(0.22 0.02 260 / 0.1)", borderRadius: 8, fontSize: 12 }} />
-                <Bar dataKey="v" fill="oklch(0.46 0.18 25)" radius={[8, 8, 0, 0]} />
+                <CartesianGrid stroke="oklch(0.24 0.03 245 / 0.06)" vertical={false} />
+                <XAxis dataKey="stage" stroke="oklch(0.52 0.02 245)" fontSize={11} />
+                <YAxis stroke="oklch(0.52 0.02 245)" fontSize={10} />
+                <Tooltip contentStyle={{ background: "white", border: "1px solid oklch(0.24 0.03 245 / 0.1)", borderRadius: 8, fontSize: 12 }} />
+                <Bar dataKey="v" fill="oklch(0.40 0.14 22)" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>

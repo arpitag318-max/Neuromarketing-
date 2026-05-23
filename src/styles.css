@@ -50,49 +50,74 @@
   --color-teal: var(--teal);
   --color-navy: var(--navy);
   --color-gold: var(--gold);
+  --color-mahindra-red: var(--mahindra-red);
+  --color-mahindra-red-light: var(--mahindra-red-light);
+  --color-mahindra-red-dark: var(--mahindra-red-dark);
 }
 
+/*
+ * ═══════════════════════════════════════════════════════════════
+ *  MAHINDRA FINANCE — Brand Design System
+ *  Palette: #8B1E1E · #C62828 · #F8F8F8 · #ECECEC · #243447 · #6CA6A6
+ * ═══════════════════════════════════════════════════════════════
+ */
 :root {
-  --radius: 0.875rem;
-  /* Mahindra Finance: warm light premium consulting aesthetic */
-  --background: oklch(0.985 0.004 80);          /* warm off-white */
-  --foreground: oklch(0.22 0.02 260);            /* soft navy ink */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.22 0.02 260);
+  --radius: 0.75rem;
+
+  /* ── Core brand tokens ── */
+  --mahindra-red: oklch(0.40 0.14 22);          /* #8B1E1E — Primary Red */
+  --mahindra-red-light: oklch(0.50 0.17 24);    /* #C62828 — Secondary Red */
+  --mahindra-red-dark: oklch(0.33 0.12 22);     /* darker shade for pressed */
+
+  /* ── Semantic tokens ── */
+  --background: oklch(0.98 0.002 80);           /* #F8F8F8 — Warm White */
+  --foreground: oklch(0.24 0.03 245);           /* #243447 — Muted Navy */
+  --card: oklch(1 0 0);                         /* pure white */
+  --card-foreground: oklch(0.24 0.03 245);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.22 0.02 260);
-  --primary: oklch(0.46 0.18 25);                /* Mahindra red #8B1E1E */
-  --primary-foreground: oklch(0.99 0.003 80);
-  --secondary: oklch(0.96 0.006 80);             /* warm light gray */
-  --secondary-foreground: oklch(0.28 0.03 260);
-  --muted: oklch(0.955 0.006 80);
-  --muted-foreground: oklch(0.5 0.018 260);
-  --accent: oklch(0.7 0.07 200);                 /* muted teal */
+  --popover-foreground: oklch(0.24 0.03 245);
+  --primary: oklch(0.40 0.14 22);               /* #8B1E1E */
+  --primary-foreground: oklch(0.99 0.003 80);   /* warm white text */
+  --secondary: oklch(0.94 0.004 80);            /* #ECECEC */
+  --secondary-foreground: oklch(0.28 0.04 245);
+  --muted: oklch(0.945 0.004 80);
+  --muted-foreground: oklch(0.52 0.02 245);
+  --accent: oklch(0.67 0.065 195);              /* #6CA6A6 — Accent Teal */
   --accent-foreground: oklch(0.99 0.003 80);
-  --destructive: oklch(0.55 0.22 25);
+  --destructive: oklch(0.50 0.17 24);           /* #C62828 */
   --destructive-foreground: oklch(0.99 0.003 80);
-  --border: oklch(0.22 0.02 260 / 8%);
-  --input: oklch(0.22 0.02 260 / 12%);
-  --ring: oklch(0.46 0.18 25);
-  --chart-1: oklch(0.46 0.18 25);                /* Mahindra red */
-  --chart-2: oklch(0.7 0.07 200);                /* teal */
-  --chart-3: oklch(0.35 0.06 260);               /* soft navy */
-  --chart-4: oklch(0.78 0.13 75);                /* warm gold */
-  --chart-5: oklch(0.6 0.14 35);                 /* terracotta */
-  --sidebar: oklch(0.99 0.004 80);
-  --sidebar-foreground: oklch(0.28 0.03 260);
-  --sidebar-primary: oklch(0.46 0.18 25);
+  --border: oklch(0.24 0.03 245 / 8%);
+  --input: oklch(0.24 0.03 245 / 12%);
+  --ring: oklch(0.40 0.14 22);
+
+  /* ── Chart palette ── */
+  --chart-1: oklch(0.40 0.14 22);               /* Mahindra red */
+  --chart-2: oklch(0.67 0.065 195);             /* teal */
+  --chart-3: oklch(0.28 0.05 245);              /* navy */
+  --chart-4: oklch(0.76 0.12 75);               /* warm gold */
+  --chart-5: oklch(0.50 0.17 24);               /* secondary red */
+
+  /* ── Sidebar ── */
+  --sidebar: oklch(0.993 0.003 80);
+  --sidebar-foreground: oklch(0.28 0.04 245);
+  --sidebar-primary: oklch(0.40 0.14 22);
   --sidebar-primary-foreground: oklch(0.99 0.003 80);
-  --sidebar-accent: oklch(0.955 0.006 80);
-  --sidebar-accent-foreground: oklch(0.22 0.02 260);
-  --sidebar-border: oklch(0.22 0.02 260 / 8%);
-  --sidebar-ring: oklch(0.46 0.18 25);
-  --teal: oklch(0.7 0.07 200);
-  --navy: oklch(0.32 0.05 260);
-  --gold: oklch(0.78 0.13 75);
+  --sidebar-accent: oklch(0.945 0.004 80);
+  --sidebar-accent-foreground: oklch(0.24 0.03 245);
+  --sidebar-border: oklch(0.24 0.03 245 / 7%);
+  --sidebar-ring: oklch(0.40 0.14 22);
+
+  /* ── Extended palette ── */
+  --teal: oklch(0.67 0.065 195);
+  --navy: oklch(0.28 0.05 245);
+  --gold: oklch(0.76 0.12 75);
+
   color-scheme: light;
 }
 
+/* ═══════════════════════════════════════════
+   BASE LAYER
+   ═══════════════════════════════════════════ */
 @layer base {
   * { border-color: var(--color-border); }
   html, body {
@@ -100,63 +125,106 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Warm gradient backdrops */
+/* ═══════════════════════════════════════════
+   BRAND UTILITIES
+   ═══════════════════════════════════════════ */
+
+/* Warm gradient backdrop — Mahindra Finance flavor */
 .warm-bg {
   background:
-    radial-gradient(900px 500px at 100% 0%, oklch(0.46 0.18 25 / 0.06), transparent 60%),
-    radial-gradient(700px 400px at 0% 100%, oklch(0.7 0.07 200 / 0.07), transparent 65%),
-    oklch(0.985 0.004 80);
+    radial-gradient(900px 500px at 100% 0%, oklch(0.40 0.14 22 / 0.04), transparent 60%),
+    radial-gradient(700px 400px at 0% 100%, oklch(0.67 0.065 195 / 0.05), transparent 65%),
+    oklch(0.98 0.002 80);
 }
+
+/* Premium card surface */
 .soft-card {
-  background: linear-gradient(180deg, oklch(1 0 0), oklch(0.985 0.005 80));
-  border: 1px solid oklch(0.22 0.02 260 / 0.07);
-  box-shadow: 0 1px 0 oklch(1 0 0 / 0.6) inset, 0 6px 24px -12px oklch(0.22 0.02 260 / 0.18);
+  background: linear-gradient(180deg, oklch(1 0 0), oklch(0.985 0.003 80));
+  border: 1px solid oklch(0.24 0.03 245 / 0.07);
+  box-shadow:
+    0 1px 0 oklch(1 0 0 / 0.6) inset,
+    0 4px 20px -8px oklch(0.24 0.03 245 / 0.12);
 }
+
+/* Hover lift with brand-tinted shadow */
 .soft-hover {
   transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .3s, box-shadow .3s;
 }
 .soft-hover:hover {
   transform: translateY(-2px);
-  border-color: oklch(0.46 0.18 25 / 0.35);
-  box-shadow: 0 10px 32px -12px oklch(0.46 0.18 25 / 0.22);
+  border-color: oklch(0.40 0.14 22 / 0.25);
+  box-shadow:
+    0 8px 28px -8px oklch(0.40 0.14 22 / 0.16),
+    0 1px 0 oklch(1 0 0 / 0.6) inset;
 }
 
+/* Text gradient — Navy → Mahindra Red */
 .text-gradient {
-  background: linear-gradient(90deg, oklch(0.22 0.02 260) 0%, oklch(0.46 0.18 25) 80%);
+  background: linear-gradient(105deg, oklch(0.24 0.03 245) 0%, oklch(0.40 0.14 22) 65%, oklch(0.50 0.17 24) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
 
+/* ═══════════════════════════════════════════
+   CHIP / BADGE SYSTEM
+   ═══════════════════════════════════════════ */
 .chip {
   display: inline-flex; align-items: center; gap: .35rem;
   padding: .2rem .55rem; border-radius: 9999px;
   font-size: 10.5px; font-weight: 500; letter-spacing: .04em;
-  background: oklch(0.46 0.18 25 / 0.08);
-  color: oklch(0.46 0.18 25);
-  border: 1px solid oklch(0.46 0.18 25 / 0.18);
+  background: oklch(0.40 0.14 22 / 0.08);
+  color: oklch(0.40 0.14 22);
+  border: 1px solid oklch(0.40 0.14 22 / 0.18);
   text-transform: uppercase;
 }
 .chip-teal {
-  background: oklch(0.7 0.07 200 / 0.12);
-  color: oklch(0.42 0.06 200);
-  border-color: oklch(0.7 0.07 200 / 0.3);
+  background: oklch(0.67 0.065 195 / 0.12);
+  color: oklch(0.42 0.06 195);
+  border-color: oklch(0.67 0.065 195 / 0.3);
 }
 .chip-gold {
-  background: oklch(0.78 0.13 75 / 0.15);
-  color: oklch(0.5 0.12 60);
-  border-color: oklch(0.78 0.13 75 / 0.4);
+  background: oklch(0.76 0.12 75 / 0.15);
+  color: oklch(0.50 0.12 60);
+  border-color: oklch(0.76 0.12 75 / 0.4);
 }
 .chip-navy {
-  background: oklch(0.32 0.05 260 / 0.08);
-  color: oklch(0.32 0.05 260);
-  border-color: oklch(0.32 0.05 260 / 0.18);
+  background: oklch(0.28 0.05 245 / 0.08);
+  color: oklch(0.28 0.05 245);
+  border-color: oklch(0.28 0.05 245 / 0.18);
 }
 
+/* ═══════════════════════════════════════════
+   BRAND ACCENT UTILITIES
+   ═══════════════════════════════════════════ */
+
+/* Sidebar logo area — premium backdrop */
+.brand-header-bg {
+  background: linear-gradient(135deg, oklch(0.40 0.14 22 / 0.03), oklch(0.67 0.065 195 / 0.03));
+}
+
+/* Branded focus ring */
+.brand-focus {
+  outline: none;
+}
+.brand-focus:focus-visible {
+  box-shadow: 0 0 0 2px oklch(0.40 0.14 22 / 0.25);
+}
+
+/* Mahindra branded divider */
+.brand-divider {
+  height: 2px;
+  background: linear-gradient(90deg, oklch(0.40 0.14 22 / 0.2), oklch(0.67 0.065 195 / 0.15), transparent 80%);
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════ */
 @keyframes pulse-glow {
   0%, 100% { opacity: 0.7; }
   50% { opacity: 1; }
@@ -175,5 +243,53 @@
 }
 .fade-up { animation: fade-up .7s ease-out both; }
 
-.scrollbar-thin::-webkit-scrollbar { width: 6px; height: 6px; }
-.scrollbar-thin::-webkit-scrollbar-thumb { background: oklch(0.22 0.02 260 / 0.15); border-radius: 999px; }
+@keyframes brand-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.brand-shimmer {
+  background: linear-gradient(90deg,
+    oklch(0.40 0.14 22 / 0.05) 0%,
+    oklch(0.40 0.14 22 / 0.12) 50%,
+    oklch(0.40 0.14 22 / 0.05) 100%);
+  background-size: 200% 100%;
+  animation: brand-shimmer 3s ease-in-out infinite;
+}
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+   ═══════════════════════════════════════════ */
+.scrollbar-thin::-webkit-scrollbar { width: 5px; height: 5px; }
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: oklch(0.24 0.03 245 / 0.12);
+  border-radius: 999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.24 0.03 245 / 0.22);
+}
+
+/* ═══════════════════════════════════════════
+   LOGO UTILITIES
+   ═══════════════════════════════════════════ */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo-container img {
+  object-fit: contain;
+  max-width: 100%;
+  height: auto;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* ═══════════════════════════════════════════
+   PRINT / EXPORT STYLES
+   ═══════════════════════════════════════════ */
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  body { background: white !important; }
+  .soft-card { box-shadow: none !important; border: 1px solid #ddd !important; }
+}

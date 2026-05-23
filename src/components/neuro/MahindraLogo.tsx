@@ -1,8 +1,34 @@
-import { type SVGProps } from "react";
+import React, { type SVGProps } from "react";
 
 /**
- * Official Mahindra wordmark in vector format.
- * Coordinates are sourced from the brand assets.
+ * ═══════════════════════════════════════════════════════════════
+ * MAHINDRA FINANCE — Official Brand Logo Components
+ * ═══════════════════════════════════════════════════════════════
+ *
+ * Uses the official Mahindra Finance logos:
+ *   - Horizontal wordmark: /logos/mahindra-finance-horizontal.png
+ *   - Square icon badge:   /logos/mahindra-finance-square.png
+ *
+ * Fallback: inline SVG vectors for when images are unavailable.
+ */
+
+/* ── Paths to official logo assets in /public ── */
+/* PNG (user-uploaded) takes priority; SVG fallback always available */
+const LOGO_HORIZONTAL_PNG = "/logos/mahindra-finance-horizontal.png";
+const LOGO_HORIZONTAL_SVG = "/logos/mahindra-finance-horizontal.svg";
+const LOGO_SQUARE_PNG = "/logos/mahindra-finance-square.png";
+const LOGO_SQUARE_SVG = "/logos/mahindra-finance-square.svg";
+
+/** Try PNG first, fallback to SVG on error */
+function logoSrc(png: string, svg: string) { return png; }
+function handleLogoError(e: React.SyntheticEvent<HTMLImageElement>, svg: string) {
+  const img = e.currentTarget;
+  if (!img.src.endsWith('.svg')) img.src = svg;
+}
+
+/**
+ * Official Mahindra wordmark — inline SVG fallback.
+ * Used when the PNG asset hasn't loaded yet or as a companion element.
  */
 export function MahindraWordmark({ className = "h-4", ...props }: SVGProps<SVGSVGElement>) {
   return (
@@ -21,8 +47,8 @@ export function MahindraWordmark({ className = "h-4", ...props }: SVGProps<SVGSV
 }
 
 /**
- * A beautiful, premium geometric representation of the Mahindra brand icon.
- * Features a modern red badge with clean stylized brand elements.
+ * Inline SVG icon representing the Mahindra "M" badge.
+ * Used as a fallback and in small-space contexts.
  */
 export function MahindraIcon({ className = "h-6 w-6", ...props }: SVGProps<SVGSVGElement>) {
   return (
@@ -32,22 +58,28 @@ export function MahindraIcon({ className = "h-6 w-6", ...props }: SVGProps<SVGSV
       className={className}
       {...props}
     >
-      {/* Three elegant, energetic parallel slashes (representing the Rise philosophy & 'Road Ahead') */}
+      {/* Stylized "M" icon matching the official Mahindra brand mark */}
       <g fill="currentColor">
-        {/* Left Slash */}
-        <path d="M 22,82 C 22,82 23,26 27,18 C 29,14 34,14 34,14 L 38,14 C 38,14 34,22 32,32 L 27,82 Z" />
-        {/* Middle Slash */}
-        <path d="M 44,82 C 44,82 46,36 51,26 C 53,22 57,20 57,20 L 61,20 C 61,20 57,28 55,38 L 49,82 Z" />
-        {/* Right Slash */}
-        <path d="M 66,82 C 66,82 69,46 75,34 C 77,30 81,26 81,26 L 85,26 C 85,26 81,32 78,44 L 71,82 Z" />
+        {/* Left arch */}
+        <path d="M 20,70 L 20,42 C 20,32 28,22 38,22 L 42,22 L 42,42 C 42,42 42,50 34,50 L 20,50" />
+        {/* Right arch */}
+        <path d="M 58,70 L 58,42 C 58,32 66,22 76,22 L 80,22 L 80,42 C 80,42 80,50 72,50 L 58,50" />
+        {/* Center connector */}
+        <path d="M 42,42 L 42,22 C 42,22 50,22 58,22 L 58,42" />
       </g>
     </svg>
   );
 }
 
 /**
- * Full combined logo for Mahindra Finance.
- * Beautifully styled to fit modern, premium UI layout.
+ * ═══════════════════════════════════════════════
+ *  MAIN LOGO COMPONENT
+ * ═══════════════════════════════════════════════
+ *
+ * Variants:
+ *   - "full"       → Square icon logo + text label (sidebar expanded)
+ *   - "icon"       → Square logo only (sidebar collapsed, favicons, loading)
+ *   - "horizontal" → Horizontal wordmark logo (topbar, reports, exports)
  */
 export function MahindraFinanceLogo({
   variant = "full",
@@ -56,29 +88,89 @@ export function MahindraFinanceLogo({
   variant?: "full" | "icon" | "horizontal";
   className?: string;
 }) {
+  /* ── ICON VARIANT ── */
   if (variant === "icon") {
     return (
-      <div className={`relative flex items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md shadow-primary/20 border border-primary/20 h-10 w-10 shrink-0 ${className}`}>
-        <MahindraIcon className="h-6.5 w-6.5" />
+      <div className={`relative shrink-0 ${className}`}>
+        <img
+          src={logoSrc(LOGO_SQUARE_PNG, LOGO_SQUARE_SVG)}
+          onError={(e) => handleLogoError(e, LOGO_SQUARE_SVG)}
+          alt="Mahindra Finance"
+          className="h-11 w-11 rounded-xl object-contain shadow-md shadow-primary/15"
+          draggable={false}
+          loading="eager"
+        />
         <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-accent pulse-glow ring-2 ring-sidebar" />
       </div>
     );
   }
 
+  /* ── HORIZONTAL VARIANT ── */
+  if (variant === "horizontal") {
+    return (
+      <div className={`logo-container flex items-center justify-start ${className}`}>
+        <img
+          src={logoSrc(LOGO_HORIZONTAL_PNG, LOGO_HORIZONTAL_SVG)}
+          onError={(e) => handleLogoError(e, LOGO_HORIZONTAL_SVG)}
+          alt="Mahindra Finance"
+          className="h-9 w-auto object-contain"
+          draggable={false}
+          loading="eager"
+        />
+      </div>
+    );
+  }
+
+  /* ── FULL VARIANT (default - sidebar header) ── */
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
-      <div className="relative flex items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-md shadow-primary/20 border border-primary/20 h-10 w-10 shrink-0">
-        <MahindraIcon className="h-6.5 w-6.5" />
-        <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-accent pulse-glow ring-2 ring-sidebar" />
-      </div>
-      <div className="flex flex-col leading-tight select-none">
-        <div className="flex items-center gap-1.5">
-          <MahindraWordmark className="h-[11px] text-primary" />
-        </div>
-        <div className="font-display text-[13.5px] font-bold tracking-tight text-foreground/90 uppercase mt-0.5">
-          Finance
-        </div>
-      </div>
+    <div className={`logo-container flex items-center justify-start ${className}`}>
+      <img
+        src={logoSrc(LOGO_HORIZONTAL_PNG, LOGO_HORIZONTAL_SVG)}
+        onError={(e) => handleLogoError(e, LOGO_HORIZONTAL_SVG)}
+        alt="Mahindra Finance"
+        className="h-10 w-auto object-contain max-w-[210px]"
+        draggable={false}
+        loading="eager"
+      />
     </div>
   );
 }
+
+/**
+ * Compact brand watermark for footers, reports, and micro-branding placements.
+ */
+export function MahindraBrandMark({ className = "" }: { className?: string }) {
+  return (
+    <div className={`flex items-center gap-2 select-none ${className}`}>
+      <img
+        src={logoSrc(LOGO_HORIZONTAL_PNG, LOGO_HORIZONTAL_SVG)}
+        onError={(e) => handleLogoError(e, LOGO_HORIZONTAL_SVG)}
+        alt="Mahindra Finance"
+        className="h-7 w-auto object-contain"
+        draggable={false}
+        loading="eager"
+      />
+      <div className="h-4 w-px bg-border/80" />
+      <span className="text-[10px] text-muted-foreground/80 font-medium">Behavioral Intelligence Platform</span>
+    </div>
+  );
+}
+
+/**
+ * Horizontal logo for topbar/header usage with proper spacing.
+ */
+export function MahindraTopbarLogo({ className = "" }: { className?: string }) {
+  return (
+    <div className={`flex items-center ${className}`}>
+      <img
+        src={logoSrc(LOGO_HORIZONTAL_PNG, LOGO_HORIZONTAL_SVG)}
+        onError={(e) => handleLogoError(e, LOGO_HORIZONTAL_SVG)}
+        alt="Mahindra Finance"
+        className="h-9 w-auto object-contain"
+        draggable={false}
+        loading="eager"
+      />
+    </div>
+  );
+}
+

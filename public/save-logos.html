@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Save Mahindra Finance Logos</title>
+  <style>
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #F8F8F8;
+      color: #243447;
+    }
+    h1 { color: #8B1E1E; font-size: 20px; }
+    .zone {
+      border: 2px dashed #8B1E1E40;
+      border-radius: 12px;
+      padding: 30px;
+      text-align: center;
+      margin: 16px 0;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .zone:hover { border-color: #8B1E1E; background: #8B1E1E08; }
+    .zone.done { border-color: #6CA6A6; background: #6CA6A620; }
+    small { color: #666; }
+    .status { margin-top: 16px; padding: 12px; border-radius: 8px; background: #6CA6A620; color: #243447; display: none; }
+  </style>
+</head>
+<body>
+  <h1>🏢 Save Mahindra Finance Logos</h1>
+  <p>Drag and drop or click to save the logos to <code>public/logos/</code></p>
+  
+  <div class="zone" id="hz" onclick="document.getElementById('f1').click()">
+    <p><strong>1. Horizontal Logo</strong></p>
+    <p><small>mahindra-finance-horizontal.png</small></p>
+    <input type="file" id="f1" accept="image/*" hidden>
+  </div>
+  
+  <div class="zone" id="sq" onclick="document.getElementById('f2').click()">
+    <p><strong>2. Square Logo</strong></p>
+    <p><small>mahindra-finance-square.png</small></p>
+    <input type="file" id="f2" accept="image/*" hidden>
+  </div>
+  
+  <div class="status" id="status">✅ Logos saved! You can close this page.</div>
+  
+  <p><small>After saving both logos, restart the dev server to see them in action.</small></p>
+</body>
+</html>

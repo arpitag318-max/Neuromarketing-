@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 80" width="400" height="80">
+  <!-- Mahindra Finance Horizontal Wordmark -->
+  <!-- "mahindra" in bold red, "FINANCE" in dark gray -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@700;800&amp;display=swap');
+    .mahindra-text { font-family: 'Inter', 'Arial Black', sans-serif; font-weight: 800; font-size: 38px; fill: #C62828; letter-spacing: -0.5px; }
+    .finance-text { font-family: 'Inter', 'Arial', sans-serif; font-weight: 700; font-size: 38px; fill: #555555; letter-spacing: 2px; }
+  </style>
+  <text x="10" y="55" class="mahindra-text">mahindra</text>
+  <text x="255" y="55" class="finance-text">FINANCE</text>
+</svg>

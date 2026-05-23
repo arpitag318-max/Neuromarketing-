@@ -125,11 +125,11 @@ function AuditPage() {
                   <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
                     <polyline
                       points={result.gaze_path.sort((a,b)=>a.order-b.order).map(p => `${p.x*100},${p.y*100}`).join(" ")}
-                      fill="none" stroke="oklch(0.46 0.18 25)" strokeWidth="0.6" strokeDasharray="1.5,1" opacity="0.7"
+                      fill="none" stroke="oklch(0.40 0.14 22)" strokeWidth="0.6" strokeDasharray="1.5,1" opacity="0.7"
                     />
                     {result.gaze_path.map((p) => (
                       <g key={p.order}>
-                        <circle cx={p.x*100} cy={p.y*100} r="2.5" fill="oklch(0.46 0.18 25)" opacity="0.85" />
+                        <circle cx={p.x*100} cy={p.y*100} r="2.5" fill="oklch(0.40 0.14 22)" opacity="0.85" />
                         <text x={p.x*100} y={p.y*100 + 0.8} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="700">{p.order}</text>
                       </g>
                     ))}
