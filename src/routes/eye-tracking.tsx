@@ -71,11 +71,11 @@ const AOI_DEFINITIONS = [
 const TRACKING_CONFIG = {
   // --- Calibration Settings ---
   // The horizontal layout of calibration points as a percentage of screen width
-  CALIBRATION_X_PCT: [20, 30, 40, 50, 60, 70, 80],
+  CALIBRATION_X_PCT: equallySpaced(20, 80, 4),
   // The vertical layout of calibration points as a percentage of screen height
-  CALIBRATION_Y_PCT: [15, 30, 45, 60, 75, 90],
+  CALIBRATION_Y_PCT: equallySpaced(10, 90, 3),
   // The number of times the user must click on each calibration dot. Higher = more accurate but longer setup.
-  CALIBRATION_CLICKS_REQUIRED: 2,
+  CALIBRATION_CLICKS_REQUIRED: 3,
   // How long to wait (in ms) for the calibration ready state before timing out.
   CALIBRATION_TIMEOUT_MS: 6000,
   // How long to wait (in ms) for the WebGazer script to load from the CDN.
@@ -117,6 +117,20 @@ const CALIBRATION_POINTS = TRACKING_CONFIG.CALIBRATION_Y_PCT.flatMap((y, rowIdx)
 
 // We dynamically compute the total required clicks
 const TOTAL_REQUIRED_CLICKS = CALIBRATION_POINTS.length * TRACKING_CONFIG.CALIBRATION_CLICKS_REQUIRED;
+
+function equallySpaced(i: number, j: number, n: number): number[] {
+  if (i >= j) {
+    throw new Error("i must be less than j");
+  }
+
+  if (n < 2) {
+    throw new Error("n must be at least 2");
+  }
+
+  const step = (j - i) / (n - 1);
+
+  return Array.from({ length: n }, (_, index) => i + index * step);
+}
 
 function EyeTrackingPage() {
   // Onboarding Wizard steps: 1 = Prep & Camera permission, 2 = Click-Calibration Grid, 3 = Biometric success report, 4 = Main active Gaze Lab
