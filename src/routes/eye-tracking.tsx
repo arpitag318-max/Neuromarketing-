@@ -1244,7 +1244,7 @@ function EyeTrackingPage() {
 
       {/* FULLSCREEN TRACKING / REPLAY OVERLAY */}
       {wizardStep === 4 && (status === "active" || status === "replaying") && uploadedImage && (
-        <div className="fixed inset-0 z-[998] bg-black/95 flex flex-col items-center justify-center select-none">
+        <div className="fixed inset-0 z-[998] bg-white flex flex-col items-center justify-center select-none">
           {/* Top bar with controls */}
           <div className="fixed top-0 left-0 right-0 z-[1000] flex items-center justify-between px-6 py-3 bg-black/80 backdrop-blur-md border-b border-white/10">
             <div className="flex items-center gap-3">
