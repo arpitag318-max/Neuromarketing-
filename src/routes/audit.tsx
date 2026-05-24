@@ -4,7 +4,7 @@ import { AppLayout } from "@/components/neuro/AppLayout";
 import { PageHeader, Card } from "@/components/neuro/Primitives";
 import { Upload, Sparkles, Loader2, FileImage, CheckCircle2, AlertCircle, Lightbulb, Target, Brain, X, Download } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
-import { analyzeCreative } from "@/lib/ai.functions";
+import { analyzeCreativeGemini as analyzeCreative } from "@/lib/ai.functions";
 
 export const Route = createFileRoute("/audit")({ component: AuditPage });
 
@@ -103,41 +103,51 @@ function AuditPage() {
             </div>
           ) : (
             <div className="relative">
-              <div className="relative rounded-xl overflow-hidden bg-secondary aspect-[4/3]">
-                <img ref={imgRef} src={imageUrl} alt="Creative" className="w-full h-full object-contain" />
-                {result && overlay === "heatmap" && (
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <defs>
+              <div className="relative rounded-xl overflow-hidden bg-secondary flex justify-center items-center h-[400px]">
+                <div className="relative h-full w-fit">
+                  <img ref={imgRef} src={imageUrl} alt="Creative" className="h-full w-auto object-contain" />
+                  {result && overlay === "heatmap" && (
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                      <defs>
+                        {result.heatmap_zones.map((z, i) => (
+                          <radialGradient key={i} id={`hz${i}`}>
+                            <stop offset="0%" stopColor={`rgba(239, 68, 68, ${0.6 * (z.intensity ?? 0.7)})`} />
+                            <stop offset="40%" stopColor={`rgba(250, 204, 21, ${0.4 * (z.intensity ?? 0.7)})`} />
+                            <stop offset="100%" stopColor="rgba(59, 130, 246, 0)" />
+                          </radialGradient>
+                        ))}
+                      </defs>
                       {result.heatmap_zones.map((z, i) => (
-                        <radialGradient key={i} id={`hz${i}`}>
-                          <stop offset="0%" stopColor={`rgba(239, 68, 68, ${0.6 * (z.intensity ?? 0.7)})`} />
-                          <stop offset="40%" stopColor={`rgba(250, 204, 21, ${0.4 * (z.intensity ?? 0.7)})`} />
-                          <stop offset="100%" stopColor="rgba(59, 130, 246, 0)" />
-                        </radialGradient>
+                        <circle key={i} cx={`${z.x * 100}%`} cy={`${z.y * 100}%`} r={`${(z.radius ?? 0.15) * 100}%`} fill={`url(#hz${i})`} />
                       ))}
-                    </defs>
-                    {result.heatmap_zones.map((z, i) => (
-                      <circle key={i} cx={z.x * 100} cy={z.y * 100} r={(z.radius ?? 0.15) * 100} fill={`url(#hz${i})`} />
-                    ))}
-                  </svg>
-                )}
-                {result && overlay === "gaze" && (
-                  <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <polyline
-                      points={result.gaze_path.sort((a,b)=>a.order-b.order).map(p => `${p.x*100},${p.y*100}`).join(" ")}
-                      fill="none" stroke="oklch(0.46 0.18 25)" strokeWidth="0.6" strokeDasharray="1.5,1" opacity="0.7"
-                    />
-                    {result.gaze_path.map((p) => (
-                      <g key={p.order}>
-                        <circle cx={p.x*100} cy={p.y*100} r="2.5" fill="oklch(0.46 0.18 25)" opacity="0.85" />
-                        <text x={p.x*100} y={p.y*100 + 0.8} textAnchor="middle" fontSize="2.2" fill="white" fontWeight="700">{p.order}</text>
-                      </g>
-                    ))}
-                  </svg>
-                )}
-                <button onClick={reset} className="absolute top-2 right-2 h-8 w-8 grid place-items-center rounded-lg bg-background/80 backdrop-blur hover:bg-background transition">
-                  <X className="h-4 w-4" />
-                </button>
+                    </svg>
+                  )}
+                  {result && overlay === "gaze" && (
+                    <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                      {result.gaze_path.sort((a,b)=>a.order-b.order).map((p, i, arr) => {
+                        if (i === 0) return null;
+                        const prev = arr[i - 1];
+                        return (
+                          <line 
+                            key={`line-${i}`} 
+                            x1={`${prev.x * 100}%`} y1={`${prev.y * 100}%`} 
+                            x2={`${p.x * 100}%`} y2={`${p.y * 100}%`} 
+                            stroke="oklch(0.46 0.18 25)" strokeWidth="3" strokeDasharray="6,4" opacity="0.7" 
+                          />
+                        );
+                      })}
+                      {result.gaze_path.map((p) => (
+                        <g key={p.order}>
+                          <circle cx={`${p.x * 100}%`} cy={`${p.y * 100}%`} r="14" fill="oklch(0.46 0.18 25)" opacity="0.85" />
+                          <text x={`${p.x * 100}%`} y={`${p.y * 100}%`} dy="4.5" textAnchor="middle" fontSize="13" fill="white" fontWeight="700">{p.order}</text>
+                        </g>
+                      ))}
+                    </svg>
+                  )}
+                  <button onClick={reset} className="absolute top-2 right-2 h-8 w-8 grid place-items-center rounded-lg bg-background/80 backdrop-blur hover:bg-background transition">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
 
               {result && (
