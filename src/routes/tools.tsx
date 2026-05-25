@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppLayout } from "@/components/neuro/AppLayout";
 import { Card } from "@/components/neuro/Primitives";
 import { 
@@ -9,7 +9,15 @@ import {
   Database, Gauge, Terminal, ArrowLeft, ShieldCheck, CheckCircle2
 } from "lucide-react";
 
-export const Route = createFileRoute("/tools")({ component: ToolsPage });
+export const Route = createFileRoute("/tools")({ component: ToolsRedirectPage });
+
+function ToolsRedirectPage() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    navigate({ to: "/tools/$toolId", params: { toolId: "eeg" }, replace: true });
+  }, [navigate]);
+  return null;
+}
 
 // ═══════════════════════════════════════════
 // 1. COMPREHENSIVE DATASET (26 NEUROSCIENCE TOOLS CALIBRATED FOR MARKETING)
@@ -1449,8 +1457,8 @@ function BrainwaveSimulator() {
         <div className="lg:col-span-2 space-y-3 bg-secondary/10 p-3 rounded-2xl border border-border/50">
           <div className="space-y-1">
             <div className="flex justify-between items-center text-[9.5px] font-bold text-purple-500">
-              <span>Frontal Alpha Waves (Engagement Focus)</span>
-              <span className="text-muted-foreground text-[8px]">8 - 12 Hz</span>
+              <span>Calm Engagement & Trust Response (Frontal Alpha Asymmetry)</span>
+              <span className="text-muted-foreground text-[8px]">Approach Valence</span>
             </div>
             <div className="h-14 w-full bg-card/60 rounded-xl border border-border/40 overflow-hidden flex items-center relative">
               <svg className="absolute inset-0 h-full w-full">
@@ -1461,8 +1469,8 @@ function BrainwaveSimulator() {
 
           <div className="space-y-1">
             <div className="flex justify-between items-center text-[9.5px] font-bold text-pink-500">
-              <span>Parietal Beta Waves (Cognitive Overload)</span>
-              <span className="text-muted-foreground text-[8px]">13 - 30 Hz</span>
+              <span>Cognitive Overload & Attention Fatigue (Parietal Beta Activity)</span>
+              <span className="text-muted-foreground text-[8px]">Processing Workload</span>
             </div>
             <div className="h-14 w-full bg-card/60 rounded-xl border border-border/40 overflow-hidden flex items-center relative">
               <svg className="absolute inset-0 h-full w-full">
@@ -1491,8 +1499,16 @@ function BrainwaveSimulator() {
           <div className="p-3 rounded-xl bg-purple-500/4 border border-purple-500/10 space-y-1.5 select-none">
             <span className="text-[8.5px] font-black uppercase text-purple-500 tracking-wider">Cognitive Index</span>
             <div className="flex justify-between text-[11px] font-bold">
-              <span className="text-muted-foreground font-semibold">Approach score:</span>
-              <span className="text-foreground">{(0.72 - stressLevel/250).toFixed(2)}</span>
+              <span className="text-muted-foreground font-semibold">Trust Response:</span>
+              <span className="text-foreground">{(88 - stressLevel/3.5).toFixed(0)}%</span>
+            </div>
+            <div className="flex justify-between text-[11px] font-bold">
+              <span className="text-muted-foreground font-semibold">Emotional Resistance:</span>
+              <span className="text-foreground">{(10 + stressLevel/2.5).toFixed(0)}%</span>
+            </div>
+            <div className="flex justify-between text-[11px] font-bold">
+              <span className="text-muted-foreground font-semibold">Memory Encoding Strength:</span>
+              <span className="text-foreground">{(78 - stressLevel/5).toFixed(0)}%</span>
             </div>
             <div className="flex justify-between text-[11px] font-bold">
               <span className="text-muted-foreground font-semibold">Friction state:</span>
@@ -1803,427 +1819,1738 @@ function ImplicitTrustGame() {
   );
 }
 
-// ═══════════════════════════════════════════
-// MAIN REDESIGNED MULTI-TECH SYSTEM HUB
-// ═══════════════════════════════════════════
-interface EegStorytellingViewProps {
+
+export function getDynamicNeuroData(tool: typeof neuroscienceToolsList[0]) {
+  const isCns = tool.group === "cns";
+  const isAns = tool.group === "ans";
+  const isSomatic = tool.group === "somatic";
+  const isBehavioral = tool.group === "behavioral";
+  const isAi = tool.group === "ai";
+  const isFmri = tool.id === "fmri";
+
+  // HERO SUBTITLES - COMPLETELY DYNAMIC & JARGON-FREE
+  const subName = tool.name.split(" (")[0];
+  let heroSubtitleLine1 = `${subName} measures behavioral activity patterns linked to attention, mental effort, emotional engagement, and cognitive processing during customer experiences.`;
+  let heroSubtitleLine2 = `In behavioral research environments, this technique may help teams understand how customers subconsciously respond to campaigns, onboarding journeys, financial communication, and digital interactions.`;
+
+  if (isFmri) {
+    heroSubtitleLine1 = "FMRI studies changes in blood-flow activity linked to emotional processing, reward response, memory formation, and deep cognitive engagement.";
+    heroSubtitleLine2 = "In behavioral research environments, FMRI may help teams understand how customers emotionally respond to campaigns, financial messaging, onboarding journeys, and trust-building experiences.";
+  }
+
+  // METADATA BLOCKS - BUSINESS HIERARCHY
+  const metadataBlocks = {
+    measures: tool.detail?.principle || "Subconscious Comfort",
+    bestUse: tool.detail?.bestFor || "Creative & Form Audits",
+    relevance: tool.detail?.marketingUse || "Campaign & Workflow Optimization"
+  };
+
+  // 1. SIGNAL GLOSSARY DATA - DE-JARGONIZED & STRATEGIC
+  let waveData: Record<string, { title: string; focus: string; meaning: string; adaptation: string; simulatedPath: string; stroke: string; colorClass: string }> = {};
+
+  if (isCns) {
+    waveData = {
+      alpha: {
+        title: "Trust Signals & Mental Ease",
+        focus: "Measures customer reassurance and ease",
+        meaning: "Reflects relaxed visual alertness and cognitive comfort. Higher levels indicate the customer feels safe and confident.",
+        adaptation: "Verifies if localized branch imagery or familiar advisor presence puts rural consumers at ease.",
+        simulatedPath: "M 0,25 C 20,5 40,45 60,25 C 80,5 100,45 120,25 C 140,5 160,45 180,25 C 200,5 220,45 240,25 C 260,5 280,45 300,25",
+        stroke: "#a855f7",
+        colorClass: "text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20"
+      },
+      beta: {
+        title: "Visual Overload & Confusion",
+        focus: "Measures customer stress and workload",
+        meaning: "Reflects analytical struggle and high mental effort. Spikes indicate that the layout is difficult to parse.",
+        adaptation: "Highlights points of confusion. Ideal for identifying when complex loan pricing charts overwhelm the borrower.",
+        simulatedPath: "M 0,25 L 10,10 L 20,40 L 30,15 L 40,35 L 50,10 L 60,40 L 70,12 L 80,38 L 90,15 L 100,35 L 110,12 L 120,38 L 130,10 L 140,40 L 150,15 L 160,35 L 170,10 L 180,40 L 190,12 L 200,38 L 210,15 L 220,35 L 230,12 L 240,38 L 250,10 L 260,40 L 270,15 L 280,35 L 290,12 L 300,25",
+        stroke: "#ec4899",
+        colorClass: "text-pink-600 dark:text-pink-400 bg-pink-500/10 border-pink-500/20"
+      },
+      theta: {
+        title: "Narrative Comfort & Interest",
+        focus: "Measures story retention and recall",
+        meaning: "Reflects subconscious emotional connection and story synchronization. Indicates when a message resonates personally.",
+        adaptation: "Confirms that regional dialect scripting spoken in conversational tones builds deep personal connection.",
+        simulatedPath: "M 0,25 C 30,0 60,50 90,25 C 120,0 150,50 180,25 C 210,0 240,50 270,25 C 300,0 330,50 360,25",
+        stroke: "#f59e0b",
+        colorClass: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20"
+      },
+      gamma: {
+        title: "Attention Focus & Clarity Peaks",
+        focus: "Measures understanding and decision moments",
+        meaning: "Tracks visual binding and sudden cognitive comprehension. Captures the exact moment the customer gains complete clarity.",
+        adaptation: "Verifies the exact layout zones or frames where interest terms align with borrower expectations.",
+        simulatedPath: "M 0,25 L 5,15 L 10,35 L 15,10 L 20,40 L 25,12 L 30,38 L 35,15 L 40,35 L 45,12 L 50,38 L 55,10 L 60,40 L 65,15 L 70,35 L 75,10 L 80,40 L 85,12 L 90,38 L 95,15 L 100,35 L 105,12 L 110,38 L 115,10 L 120,40 L 125,15 L 130,35 L 135,10 L 140,40 L 145,12 L 150,38 L 155,15 L 160,35 L 165,12 L 170,38 L 175,10 L 180,40 L 185,15 L 190,35 L 195,10 L 200,40 L 205,12 L 210,38 L 215,15 L 220,35 L 225,12 L 230,38 L 235,10 L 240,40 L 245,15 L 250,35 L 255,10 L 260,40 L 265,12 L 270,38 L 275,15 L 280,35 L 285,12 L 290,38 L 295,10 L 300,25",
+        stroke: "#10b981",
+        colorClass: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+      }
+    };
+  } else if (isAns) {
+    waveData = {
+      fixations: {
+        title: "Focal Ownership Points",
+        focus: "Tracks exact visual landing zones",
+        meaning: "Maps coordinates where visual attention locks to absorb critical figures or instructions.",
+        adaptation: "Ensures primary EMI numbers and action buttons capture attention rather than background graphics.",
+        simulatedPath: "M 0,25 H 40 V 10 H 80 V 40 H 120 V 10 H 160 V 40 H 200 V 25 H 300",
+        stroke: "#3b82f6",
+        colorClass: "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20"
+      },
+      saccades: {
+        title: "Visual Path Clarity",
+        focus: "Maps reading rhythm and flow",
+        meaning: "Eye movements between foveal stops. Confirms if visual design guides the customer smoothly.",
+        adaptation: "Erratic jumps suggest heavy visual confusion, indicating the visual layout lacks logical order.",
+        simulatedPath: "M 0,25 L 30,10 L 40,40 L 80,10 L 90,40 L 130,10 L 140,40 L 180,10 L 190,40 L 230,10 L 240,40 L 280,25 L 300,25",
+        stroke: "#ec4899",
+        colorClass: "text-pink-600 dark:text-pink-400 bg-pink-500/10 border-pink-500/20"
+      },
+      pupil: {
+        title: "Mental Focus & Stress Signals",
+        focus: "Measures visual engagement effort",
+        meaning: "Pupil fluctuations triggered by sudden emotional stress or complex calculation steps.",
+        adaptation: "Identifies points where high-tension rates cause immediate subconscious visual stress.",
+        simulatedPath: "M 0,25 C 50,5 100,5 150,25 C 200,45 250,45 300,25",
+        stroke: "#f59e0b",
+        colorClass: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20"
+      },
+      microExpressions: {
+        title: "Affective Responses (Facial Valence)",
+        focus: "Tracks positive vs negative comfort reactions",
+        meaning: "Second-by-second micro-muscle configurations revealing customer delight or skepticism.",
+        adaptation: "Helps verify if friendly, community-based imagery evokes immediate visual comfort.",
+        simulatedPath: "M 0,25 Q 75,50 150,25 Q 225,0 300,25",
+        stroke: "#10b981",
+        colorClass: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+      }
+    };
+  } else if (isSomatic) {
+    waveData = {
+      emg: {
+        title: "Brow & Jaw Tension",
+        focus: "Measures sub-conscious stress responses",
+        meaning: "Micro-tension markers in facial muscles. Spikes indicate subconscious skepticism or irritation.",
+        adaptation: "Flags confusing dynamic rate structures where ambiguous fees trigger jaw clenching.",
+        simulatedPath: "M 0,25 L 15,15 L 30,35 L 45,20 L 60,30 L 75,25 H 150 L 165,10 L 180,40 L 195,12 L 210,38 L 225,25 H 300",
+        stroke: "#ef4444",
+        colorClass: "text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20"
+      },
+      posture: {
+        title: "Lean-In Interest",
+        focus: "Measures active visual engagement",
+        meaning: "Physical movement toward the screen or paper ad, signaling high motivation and interest.",
+        adaptation: "Verifies when transparent loan terms successfully encourage customers to lean forward.",
+        simulatedPath: "M 0,25 C 75,5 150,5 225,45 L 300,25",
+        stroke: "#3b82f6",
+        colorClass: "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20"
+      },
+      pitch: {
+        title: "Voice Tension Tremor",
+        focus: "Measures collections communication comfort",
+        meaning: "Speech pitch fluctuations indicating high borrower stress or confusion during phone support.",
+        adaptation: "Helps design supportive vernacular collection support bots to ensure customer reassurance.",
+        simulatedPath: "M 0,25 L 10,12 L 20,38 L 30,10 L 40,40 L 50,25 H 250 L 260,15 L 270,35 L 280,20 L 290,30 L 300,25",
+        stroke: "#ec4899",
+        colorClass: "text-pink-600 dark:text-pink-400 bg-pink-500/10 border-pink-500/20"
+      },
+      respiratory: {
+        title: "Breathing Ratios & Calmness",
+        focus: "Measures customer relaxation level",
+        meaning: "Stable breathing cycles indicating mental ease, confidence, and lack of visual panic.",
+        adaptation: "Indicates when clear monthly installment diagrams reduce customer anxiety.",
+        simulatedPath: "M 0,25 C 37,0 75,50 112,25 C 150,0 187,50 225,25 C 262,0 300,50 300,25",
+        stroke: "#10b981",
+        colorClass: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+      }
+    };
+  } else if (isBehavioral) {
+    waveData = {
+      latency: {
+        title: "Decision Hesitation Delay",
+        focus: "Measures sub-conscious doubt",
+        meaning: "Millisecond-level action delays when borrowers face conflicting terms or lack trust.",
+        adaptation: "Confirms trust strength. Processing delays signal conceptual doubt or security anxiety.",
+        simulatedPath: "M 0,25 H 100 V 10 H 120 V 40 H 140 V 25 H 300",
+        stroke: "#a855f7",
+        colorClass: "text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20"
+      },
+      association: {
+        title: "Automatic System 1 Trust",
+        focus: "Measures immediate security association",
+        meaning: "Rapid, intuitive pairing of secure brand feelings without active calculations.",
+        adaptation: "Verifies if visual layouts trigger automatic trust and emotional comfort.",
+        simulatedPath: "M 0,25 C 50,15 100,15 150,25 C 200,35 250,35 300,25",
+        stroke: "#10b981",
+        colorClass: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+      },
+      microSaccades: {
+        title: "Choice Preference Indicators",
+        focus: "Tracks choice selection pre-click",
+        meaning: "Sub-visual micro-eye movements tracking decision selection before clicking.",
+        adaptation: "Helps reveal favorite options seconds before the borrower makes their final choice.",
+        simulatedPath: "M 0,25 L 5,20 L 10,30 L 15,22 L 20,28 L 25,25 H 300",
+        stroke: "#ec4899",
+        colorClass: "text-pink-600 dark:text-pink-400 bg-pink-500/10 border-pink-500/20"
+      },
+      schemaFriction: {
+        title: "Conceptual Friction Peaks",
+        focus: "Measures visual conflict factors",
+        meaning: "Momentary visual friction siphoned when ad designs mismatch customer expectations.",
+        adaptation: "Highlights if urban-style ad graphics create cognitive gaps with rural audiences.",
+        simulatedPath: "M 0,25 L 50,15 L 100,35 L 150,20 L 200,30 L 250,25 H 300",
+        stroke: "#f59e0b",
+        colorClass: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20"
+      }
+    };
+  } else {
+    // AI / Computational Family
+    waveData = {
+      saliencyAI: {
+        title: "Predictive Visual Density",
+        focus: "Measures pre-attentive scan paths",
+        meaning: "AI predictions of visual flow matching human pre-attentive focus priorities.",
+        adaptation: "Enables design teams to pre-test button noticeability before writing code.",
+        simulatedPath: "M 0,25 C 25,5 50,45 75,25 C 100,5 125,45 150,25 C 175,5 200,45 225,25 C 250,5 275,45 300,25",
+        stroke: "#a855f7",
+        colorClass: "text-purple-600 dark:text-purple-400 bg-purple-500/10 border-purple-500/20"
+      },
+      voiceProsodyAI: {
+        title: "Simulated Speech Rhythm",
+        focus: "Measures vocal stress reduction",
+        meaning: "Computational modeling of tone and supportive support bot phrasing.",
+        adaptation: "Aligns automated support calls to ensure reassurance and prevent hang-ups.",
+        simulatedPath: "M 0,25 L 10,12 L 20,38 L 30,10 L 40,40 L 50,25 H 250 L 260,15 L 270,35 L 280,20 L 290,30 L 300,25",
+        stroke: "#3b82f6",
+        colorClass: "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20"
+      },
+      pricingElasticityAI: {
+        title: "Repayment Stress Thresholds",
+        focus: "Predicts budget stress comfort zones",
+        meaning: "Models visual threshold comfort levels based on automated anxiety checks.",
+        adaptation: "Helps design dynamic loan products that respect agricultural income cycles.",
+        simulatedPath: "M 0,25 L 50,10 L 100,40 L 150,15 L 200,35 L 250,25 H 300",
+        stroke: "#f59e0b",
+        colorClass: "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20"
+      },
+      digitalTwinAI: {
+        title: "Simulated App Onboarding Flow",
+        focus: "Predicts digital user drop-offs",
+        meaning: "Pre-tests dynamic smartphone KYC application steps to find friction zones.",
+        adaptation: "Spots complex input steps to improve layout paths before deployment.",
+        simulatedPath: "M 0,25 Q 75,50 150,25 Q 225,0 300,25",
+        stroke: "#10b981",
+        colorClass: "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+      }
+    };
+  }
+
+  // 2. BEHAVIORAL SIGNALS (6 HIGH-IMPACT ENTERPRISE CARDS)
+  let signalsList = [
+    {
+      tag: "EMOTIONAL SAFETY",
+      title: "TRUST SIGNALS",
+      image: "/images/eeg_female_rural_trust.png",
+      measuring: "Potential frontal attention stability and relaxed engagement patterns when customers view familiar people, branch environments, or localized communication.",
+      interpreted: "Customers may feel more mentally comfortable when communication feels familiar and community-oriented.",
+      adaptation: "Use recognizable branch advisors, regional storytelling, and reassuring onboarding language."
+    },
+    {
+      tag: "COGNITIVE LOAD",
+      title: "VISUAL OVERLOAD",
+      image: "/images/eeg_kyc_friction.png",
+      measuring: "Potential increases in mental processing effort when customers view dense EMI charts, financial disclosures, or cluttered layouts.",
+      interpreted: "Customers may feel mentally overloaded and stop processing important information clearly.",
+      adaptation: "Replace dense financial comparison grids with simplified repayment journeys and guided layouts."
+    },
+    {
+      tag: "ATTENTION RESPONSE",
+      title: "ATTENTION LOSS",
+      image: "/images/eeg_attention_leakage.png",
+      measuring: "Potential drops in sustained visual attention during complex onboarding or information-heavy experiences.",
+      interpreted: "Important actions or financing details may get ignored when layouts compete for attention.",
+      adaptation: "Improve spacing, visual hierarchy, and CTA visibility across digital journeys."
+    },
+    {
+      tag: "EMOTIONAL ENGAGEMENT",
+      title: "EMOTIONAL REASSURANCE",
+      image: "/images/eeg_brain_engagement.png",
+      measuring: "Potential emotional engagement shifts during aspiration-led storytelling and family-centered campaign moments.",
+      interpreted: "Emotionally relatable narratives may increase comfort and long-term message connection.",
+      adaptation: "Use human-centered stories instead of specification-heavy communication."
+    },
+    {
+      tag: "MEMORY RESPONSE",
+      title: "MEMORY RECALL",
+      image: "/images/eeg_tvc_testing.png",
+      measuring: "Potential memory-related engagement during emotionally meaningful or visually distinctive moments.",
+      interpreted: "Customers may remember emotionally connected campaign moments more strongly than technical information.",
+      adaptation: "Place important brand messaging near emotional storytelling moments."
+    },
+    {
+      tag: "DECISION FRICTION",
+      title: "DECISION HESITATION",
+      image: "/images/eeg_branch_experience.png",
+      measuring: "Potential hesitation patterns during application stages, verification requests, or compliance-heavy interfaces.",
+      interpreted: "Customers may pause before taking action when confidence or clarity drops.",
+      adaptation: "Reduce friction near application steps and simplify action-oriented communication."
+    }
+  ];
+
+  // Tailor signals based on other families with identical clean structures
+  if (isFmri) {
+    signalsList = [
+      {
+        tag: "EMOTIONAL SAFETY",
+        title: "TRUST COMFORT",
+        image: "/images/fmri_trust_comfort.png",
+        measuring: "Potential emotional comfort patterns when customers view familiar people, reassuring environments, or community-centered communication.",
+        interpreted: "Customers may emotionally trust experiences that feel familiar, human, and locally relatable.",
+        adaptation: "Use branch-led storytelling, reassuring onboarding communication, and localized campaign narratives."
+      },
+      {
+        tag: "COGNITIVE STRESS",
+        title: "FINANCIAL ANXIETY",
+        image: "/images/fmri_anxiety.png",
+        measuring: "Potential emotional stress responses during exposure to dense EMI calculations, compliance-heavy screens, or technical repayment structures.",
+        interpreted: "Customers may emotionally disengage when financial information feels intimidating or mentally exhausting.",
+        adaptation: "Simplify repayment communication and reduce visual complexity during comparison journeys."
+      },
+      {
+        tag: "ATTENTION ENGAGEMENT",
+        title: "ATTENTION DROP",
+        image: "/images/fmri_attention_drop.png",
+        measuring: "Potential reductions in sustained engagement during cluttered or information-heavy digital experiences.",
+        interpreted: "Important actions and financing information may lose emotional relevance when layouts compete for attention.",
+        adaptation: "Improve visual hierarchy, spacing, and focus around important actions."
+      },
+      {
+        tag: "EMOTIONAL CONNECTION",
+        title: "NARRATIVE ENGAGEMENT",
+        image: "/images/fmri_narrative.png",
+        measuring: "Potential emotional activation during aspiration-led stories, family-centered journeys, and success-oriented campaign moments.",
+        interpreted: "Emotionally relatable storytelling may create stronger long-term engagement than technical product communication.",
+        adaptation: "Use human-centered narratives instead of specification-heavy messaging."
+      },
+      {
+        tag: "MEMORY FORMATION",
+        title: "MEMORY RETENTION",
+        image: "/images/fmri_memory.png",
+        measuring: "Potential memory-related activation during emotionally meaningful campaign experiences and recognizable visual moments.",
+        interpreted: "Customers may retain emotionally connected messaging more strongly than detailed financial information.",
+        adaptation: "Place key trust-building and product messaging near emotionally engaging campaign moments."
+      },
+      {
+        tag: "DECISION FRICTION",
+        title: "APPLICATION HESITATION",
+        image: "/images/fmri_hesitation.png",
+        measuring: "Potential emotional hesitation during verification requests, onboarding stages, or document-upload experiences.",
+        interpreted: "Customers may pause when confidence, clarity, or emotional reassurance drops.",
+        adaptation: "Introduce reassurance messaging before verification-heavy stages."
+      }
+    ];
+  } else if (isAns) {
+    signalsList = [
+      {
+        tag: "FOCAL ATTENTION",
+        title: "TRUST SIGNALS",
+        image: "/images/eeg_female_rural_trust.png",
+        measuring: "Potential gaze stabilization on direct-gaze personnel and familiar branch icons.",
+        interpreted: "Visual safety is highest when layout guides focus toward friendly regional imagery.",
+        adaptation: "Anchor primary message banners with clean customer relationship officer photos."
+      },
+      {
+        tag: "COGNITIVE LOAD",
+        title: "VISUAL CONFUSION",
+        image: "/images/eeg_kyc_friction.png",
+        measuring: "Potential saccadic eye movements jumping erratically across dense tables.",
+        interpreted: "Erratic paths reveal that the layout lacks clean grid structure or logical reading order.",
+        adaptation: "Structure lending portals into single-column progressive disclosures."
+      },
+      {
+        tag: "ATTENTION PATH",
+        title: "ATTENTION LOSS",
+        image: "/images/eeg_attention_leakage.png",
+        measuring: "Potential visual bypass of key rate disclaimers or dynamic slider prompts.",
+        interpreted: "Visual attention gets siphoned away by gold-gilded borders and massive background imagery.",
+        adaptation: "Apply generous blank margins to make the application button the visual focal point."
+      },
+      {
+        tag: "ENGAGEMENT RATE",
+        title: "INTEREST PEAKS",
+        image: "/images/eeg_brain_engagement.png",
+        measuring: "Potential pupil dilation spikes during interactive payment options.",
+        interpreted: "Momentary arousal can signal excitement, but excessive dilations reveal pricing stress.",
+        adaptation: "Guide pricing calculators with micro-reassurances to stabilize attention."
+      },
+      {
+        tag: "EMOTIONAL VALENCE",
+        title: "COMFORT RESPONSES",
+        image: "/images/eeg_tvc_testing.png",
+        measuring: "Potential second-by-second facial micro-valence smiles or corrugator cheek ease.",
+        interpreted: "Micro-smiles indicate relaxed visual comfort during the borrower journey.",
+        adaptation: "Pre-test ad creative concepts to verify approach motivations."
+      },
+      {
+        tag: "DECISION STALL",
+        title: "HOVER FRICTION",
+        image: "/images/eeg_branch_experience.png",
+        measuring: "Potential visual dwell cycles locked on buttons without clicking action.",
+        interpreted: "Visual interest is captured, but the adjacent jargon prevents decision completion.",
+        adaptation: "Ensure legal copy is separate from the primary execution CTA buttons."
+      }
+    ];
+  } else if (isSomatic) {
+    signalsList = [
+      {
+        tag: "SKEPTICISM CHECK",
+        title: "TRUST SIGNALS",
+        image: "/images/eeg_female_rural_trust.png",
+        measuring: "Potential muscular relaxation and calm posture lean-in parameters during branch briefings.",
+        interpreted: "Physical calm suggests high confidence in transaction transparency.",
+        adaptation: "Conduct lending onboarding in quiet, comfortable cabin discussion rooms."
+      },
+      {
+        tag: "MUSCULAR TENSION",
+        title: "VISUAL OVERLOAD",
+        image: "/images/eeg_kyc_friction.png",
+        measuring: "Potential muscular clenching in brow or jaw areas during calculator sliders.",
+        interpreted: "Physical tension flags momentary confusion or anxiety over hidden pricing terms.",
+        adaptation: "Standardize clean interface margins with clear vernacular descriptions."
+      },
+      {
+        tag: "AROUSAL MODULATION",
+        title: "ATTENTION LOSS",
+        image: "/images/eeg_attention_leakage.png",
+        measuring: "Potential drops in respiration and posture shifts when visual designs trigger boredom.",
+        interpreted: "Important details get ignored when text-heavy pages fail to prompt active posture lean-in.",
+        adaptation: "Insert interactive EMI dials to sustain visual interest."
+      },
+      {
+        tag: "VIBRANT RESPONSE",
+        title: "EMOTIONAL REASSURANCE",
+        image: "/images/eeg_brain_engagement.png",
+        measuring: "Potential relaxed breathing rates and positive lean-in during family milestone ad scenes.",
+        interpreted: "Grounded agrarian narratives keep physical anxiety levels low and stable.",
+        adaptation: "Craft tractor campaigns centered on local farm community stories."
+      },
+      {
+        tag: "VOCAL PROSODY",
+        title: "MEMORY RECALL",
+        image: "/images/eeg_tvc_testing.png",
+        measuring: "Potential pitch stabilization when customers describe brand messaging.",
+        interpreted: "Strong recall is anchored by easy-to-understand conversational brand voiceovers.",
+        adaptation: "Deploy slow, supportive regional dialects in phone support bot configurations."
+      },
+      {
+        tag: "ACTION FRICTION",
+        title: "DECISION HESITATION",
+        image: "/images/eeg_branch_experience.png",
+        measuring: "Potential micro-stalls in manual interaction during loan applications.",
+        interpreted: "Physical action delays reveal visual doubt and processing exhaustion.",
+        adaptation: "Reduce dynamic checklist screens to visual progress gates."
+      }
+    ];
+  } else if (isBehavioral) {
+    signalsList = [
+      {
+        tag: "SCHEMA INTEGRITY",
+        title: "TRUST SIGNALS",
+        image: "/images/eeg_female_rural_trust.png",
+        measuring: "Potential association pairing speed between the brand and secure terms under 300ms limits.",
+        interpreted: "Fast, intuitive associations indicate strong System 1 brand security trust.",
+        adaptation: "Keep the corporate shield logo consistently visible near key branch portals."
+      },
+      {
+        tag: "CONCEPT CONFLATION",
+        title: "VISUAL OVERLOAD",
+        image: "/images/eeg_kyc_friction.png",
+        measuring: "Potential delays siphoned when pairing confusing loan tables with trust terms.",
+        interpreted: "Visual complexity leaks into conceptual doubt, slowing down decision comfort.",
+        adaptation: "Replace academic rate definitions with transparent, flat installment schedules."
+      },
+      {
+        tag: "CHOICE PREFERENCE",
+        title: "ATTENTION LOSS",
+        image: "/images/eeg_attention_leakage.png",
+        measuring: "Potential visual scan path drift away from primary loan action cards.",
+        interpreted: "Choice focus gets divided when too many options compete for priority.",
+        adaptation: "Standardize clean, single-focus visual layouts for WhatsApp banners."
+      },
+      {
+        tag: "SYSTEM 1 ALIGNMENT",
+        title: "EMOTIONAL REASSURANCE",
+        image: "/images/eeg_brain_engagement.png",
+        measuring: "Potential schema congruence during household prosperity stories.",
+        interpreted: "Family-centered campaigns trigger intuitive security feelings.",
+        adaptation: "Design ad visuals featuring regional farm family tractor harrows."
+      },
+      {
+        tag: "IMPLICIT RETENTION",
+        title: "MEMORY RECALL",
+        image: "/images/eeg_tvc_testing.png",
+        measuring: "Potential memory associations linked to regional conversational narration.",
+        interpreted: "Vernacular narration anchors ad messages more strongly than spec sheets.",
+        adaptation: "Place important brand milestones adjacent to regional dialog hooks."
+      },
+      {
+        tag: "ACTION FRICTION",
+        title: "DECISION HESITATION",
+        image: "/images/eeg_branch_experience.png",
+        measuring: "Potential implicit delays before clicking verification checkmarks.",
+        interpreted: "Hesitation spikes when verification requests are presented without trust context.",
+        adaptation: "Simplify action buttons with friendly, supportive guidance copy."
+      }
+    ];
+  } else if (isAi) {
+    signalsList = [
+      {
+        tag: "SALIENCY SCORE",
+        title: "TRUST SIGNALS",
+        image: "/images/eeg_female_rural_trust.png",
+        measuring: "AI-predicted visual saliency scores locking cleanly on the official security badges.",
+        interpreted: "Bottom-up visual flow immediately isolates the trust anchors within 200ms.",
+        adaptation: "Position licensed partner badges at high-saliency visual positions."
+      },
+      {
+        tag: "WORKLOAD PROJECTION",
+        title: "VISUAL OVERLOAD",
+        image: "/images/eeg_kyc_friction.png",
+        measuring: "Digital twin twin simulation mapping visual processing fatigue in multi-step menus.",
+        interpreted: "Heavy information density projects steep drop-offs in Dynamic calculator portals.",
+        adaptation: "Simplify onboarding paths into visual 1-input progressive gates."
+      },
+      {
+        tag: "GAZE SIMULATION",
+        title: "ATTENTION LOSS",
+        image: "/images/eeg_attention_leakage.png",
+        measuring: "AI gaze simulations bypassing primary rate specifications on landing pages.",
+        interpreted: "Visual focus gets siphoned away by excessive graphics and heavy Tractor cliparts.",
+        adaptation: "Structure landing pages with generous negative blank margins."
+      },
+      {
+        tag: "PROSODY ANALYZER",
+        title: "EMOTIONAL REASSURANCE",
+        image: "/images/eeg_brain_engagement.png",
+        measuring: "Speech parameter AI models analyzing bot tones for supportive pacing.",
+        interpreted: "Conversational speed parameters help reassure walk-in borrowers.",
+        adaptation: "Align phone support bot dialers to friendly regional conversational flows."
+      },
+      {
+        tag: "RETENTION PREDICTOR",
+        title: "MEMORY RECALL",
+        image: "/images/eeg_tvc_testing.png",
+        measuring: "Neural networks predicting message retention based on visual flow priorities.",
+        interpreted: "Key branding elements get remembered more strongly when placed near narrative peaks.",
+        adaptation: "Ensure corporate assets are visually active at the climax of TV ads."
+      },
+      {
+        tag: "FRICTION DIAGNOSTICS",
+        title: "DECISION HESITATION",
+        image: "/images/eeg_branch_experience.png",
+        measuring: "AI simulation logs tracking click-delay factors near input gates.",
+        interpreted: "Onboarding hesitation points map directly to complex visual terms.",
+        adaptation: "Simplify button labeling and replace complex actions with clear steps."
+      }
+    ];
+  }
+
+  // 3. 6 MODULAR BUSINESS USE CASES - PERFECTLY SYMMETRICAL & GROUNDED
+  let useCases = [
+    {
+      title: "EMI Calculator Overload",
+      type: "Lending Onboarding Flow",
+      image: "/images/eeg_tvc_testing.png",
+      challenge: "Rural borrowers experience heavy mental effort and drop off when facing interest tables.",
+      reveal: "Displaying compound equations and tenures concurrently causes customer stress.",
+      pathway: "Simplify the dynamic calculator page into a single installment dial slider.",
+      impact: "Potential reduction in customer confusion"
+    },
+    {
+      title: "KYC Upload Hesitation",
+      type: "Digital Onboarding Journeys",
+      image: "/images/eeg_attention_leakage.png",
+      challenge: "High mid-funnel drop-offs occur at dynamic document upload gates.",
+      reveal: "Prompting Aadhaar uploads before establishing brand trust triggers customer stress.",
+      pathway: "Present secure RBI credentials and direct-gaze advisor photos before the prompt.",
+      impact: "May resolve document drop-offs"
+    },
+    {
+      title: "WhatsApp Attention Loss",
+      type: "Regional Marketing Campaigns",
+      image: "/images/eeg_before_after_creatives.png",
+      challenge: "Low click-through rates on vernacular messaging ad banners.",
+      reveal: "Attention is siphoned away by gold-gilded borders and multi-column bullet grids.",
+      pathway: "Standardize clean layout spacing featuring a single-focus farm family visual.",
+      impact: "Could improve campaign engagement"
+    },
+    {
+      title: "TVC Narrative Testing",
+      type: "Creative Ad Reviews",
+      image: "/images/eeg_kyc_friction.png",
+      challenge: "Traditional survey panels fail to capture second-by-second narrative interest drops.",
+      reveal: "Visual disengagement spikes during scientific specification displays in commercials.",
+      pathway: "Swap rate grids with warm regional storytelling of tractor deliveries.",
+      impact: "Could improve long-term ad recall"
+    },
+    {
+      title: "Female Co-Signer Trust",
+      type: "Rural Credit Journeys",
+      image: "/images/eeg_female_rural_trust.png",
+      challenge: "Survey forms fail to represent female rural co-signers who guide purchasing.",
+      reveal: "Visual trust markers rise when marketing displays family-wide farm prosperity.",
+      pathway: "Design ad layouts focused on joint family ownership and regional advisors.",
+      impact: "Potential lift in joint applications"
+    },
+    {
+      title: "Branch Waiting Anxiety",
+      type: "Branch Customer Interactions",
+      image: "/images/eeg_branch_experience.png",
+      challenge: "Walk-in borrowers show high decision hesitation during cabin loan briefings.",
+      reveal: "Ambiguous compliance disclaimers next to calculators trigger visual avoidance.",
+      pathway: "Re-arrange desk tables and simplify flyers with generous negative space.",
+      impact: "May improve walk-in closing comfort"
+    }
+  ];
+
+  if (isFmri) {
+    useCases = [
+      {
+        title: "Campaign Testing",
+        type: "Creative Strategy",
+        image: "/images/fmri_narrative.png",
+        challenge: "Long-form campaigns lose emotional engagement midway through the customer journey.",
+        reveal: "Emotionally familiar storytelling may sustain engagement longer than technical product narration.",
+        pathway: "Introduce aspiration-led storytelling before financing details.",
+        impact: "Sustained customer interest"
+      },
+      {
+        title: "EMI Disclosure Simplification",
+        type: "Repayment Journeys",
+        image: "/images/fmri_anxiety.png",
+        challenge: "Users abandon repayment journeys during calculation stages.",
+        reveal: "High information density may increase emotional fatigue.",
+        pathway: "Present repayment structures progressively instead of displaying all variables simultaneously.",
+        impact: "Reduced visual fatigue"
+      },
+      {
+        title: "KYC Experience Analysis",
+        type: "Onboarding Funnels",
+        image: "/images/fmri_hesitation.png",
+        challenge: "Customers hesitate during verification and upload stages.",
+        reveal: "Immediate exposure to document-heavy screens may reduce emotional confidence.",
+        pathway: "Introduce reassurance and trust-building communication before upload prompts.",
+        impact: "Higher verification confidence"
+      },
+      {
+        title: "Branch Experience Research",
+        type: "In-Branch Experience",
+        image: "/images/fmri_trust_comfort.png",
+        challenge: "Formal branch environments may feel intimidating for first-time customers.",
+        reveal: "Human-centered environments may reduce emotional stress and increase comfort.",
+        pathway: "Create conversational onboarding spaces and guided assistance experiences.",
+        impact: "Enhanced borrower comfort"
+      },
+      {
+        title: "Regional Communication Testing",
+        type: "Campaign Auditing",
+        image: "/images/fmri_memory.png",
+        challenge: "Translated campaigns perform differently across regions.",
+        reveal: "Localized emotional storytelling may perform better than direct translation structures.",
+        pathway: "Use conversational regional narratives and community-centered communication.",
+        impact: "Resonant emotional trust"
+      }
+    ];
+  }
+
+  // 4. HOTSPOT OVERLAYS - STRATEGIC QUALIFIERS
+  const hotspots = [
+    {
+      id: 1,
+      x: "15%",
+      y: "30%",
+      label: "Visual Overload Block",
+      beforeTip: "Dense rate grids trigger visual overload and prefrontal avoidance.",
+      afterTip: "Customer stress could decline when terms are displayed inside progressive tabs."
+    },
+    {
+      id: 2,
+      x: "50%",
+      y: "40%",
+      label: "Focal Path Calibration",
+      beforeTip: "Attention is siphoned away by cluttered golden borders and tractor cliparts.",
+      afterTip: "Clean margins help carry focus smoothly to the core installment benefit."
+    },
+    {
+      id: 3,
+      x: "82%",
+      y: "75%",
+      label: "CTA Decision Ease",
+      beforeTip: "Decision hesitation spikes due to adjacent compliance jargon.",
+      afterTip: "A clean button layout with reassuring checkmarks makes execution simple."
+    }
+  ];
+
+  return {
+    heroSubtitleLine1,
+    heroSubtitleLine2,
+    metadataBlocks,
+    waveData,
+    signalsList,
+    useCases,
+    hotspots
+  };
+}
+
+export interface EegStorytellingViewProps {
   tool: typeof neuroscienceToolsList[0];
   activeTheme: typeof themeConfig[string];
 }
 
-function EegStorytellingView({ tool, activeTheme }: EegStorytellingViewProps) {
-  const [stressLevel, setStressLevel] = useState<number>(30);
-  const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [time, setTime] = useState<number>(0);
-  const [activeTab, setActiveTab] = useState<"before" | "after">("after");
+// Helper functions for fMRI mobile device preview
+function getMobileTitle(tone: "formal" | "reassuring" | "aspirational") {
+  if (tone === "formal") return "Secured Vehicle Lending Facility";
+  if (tone === "reassuring") return "Your Tractor Financing, With Local Guidance";
+  return "Empower Your Farm's Future Today";
+}
 
-  useEffect(() => {
-    if (!isPlaying) return;
-    const interval = setInterval(() => {
-      setTime((prev) => prev + 0.15);
-    }, 30);
-    return () => clearInterval(interval);
-  }, [isPlaying]);
+function getMobileCta(tone: "formal" | "reassuring" | "aspirational") {
+  if (tone === "formal") return "Submit Loan Application";
+  if (tone === "reassuring") return "Confirm with Safe Guidance";
+  return "Secure Your Tractor Today";
+}
 
-  const generateWavePath = (frequency: number, amplitude: number, phase: number) => {
-    let points = [];
-    const step = 2;
-    for (let x = 0; x <= 320; x += step) {
-      const y = 35 + amplitude * Math.sin((x * frequency) / 20 + phase + time);
-      points.push(`${x},${y}`);
-    }
-    return `M ${points.join(" L ")}`;
+function getMobileDescription(density: "simplified" | "moderate" | "dense") {
+  if (density === "dense") {
+    return "The borrower hereby covenants to pay the administrative processing fee of 2.75% amortized over a 36-month period, subject to compound interest accrual under Section 4(a).";
+  }
+  if (density === "moderate") {
+    return "Interest rate: 12% p.a. Processing fee: 2% of loan amount. Repayment tenure options: 12 to 36 months.";
+  }
+  return "Single monthly installment. Zero hidden charges. Flexible payment periods to match your crop harvest.";
+}
+
+function getDynamicInsight(
+  density: "simplified" | "moderate" | "dense", 
+  tone: "formal" | "reassuring" | "aspirational", 
+  layout: "cluttered" | "guided" | "progressive"
+) {
+  if (layout === "cluttered") {
+    return "Cluttered structures increase cognitive load, siphoning attention away from execution buttons and increasing drop-off risks.";
+  }
+  if (density === "dense") {
+    return "Dense technical disclosures trigger prefrontal stress signals, siphoning user emotional comfort and driving decision doubt.";
+  }
+  if (layout === "guided" && tone === "reassuring" && density === "simplified") {
+    return "(Recommended) Simplified layouts with reassuring tone and guided structures reduce cognitive load and significantly lift emotional comfort.";
+  }
+  return "A clean, progressive layout combined with reassuring language reduces cognitive fatigue and sustains user trust during onboarding.";
+}
+
+export function EegStorytellingView({ tool, activeTheme }: EegStorytellingViewProps) {
+  const neuroData = getDynamicNeuroData(tool);
+  const waveKeys = Object.keys(neuroData.waveData);
+  const [selectedWave, setSelectedWave] = useState<string>("");
+  const [activeFrictionTab, setActiveFrictionTab] = useState<"before" | "after">("after");
+  const [activeFrictionHotspot, setActiveFrictionHotspot] = useState<number | null>(null);
+
+  // States for fMRI simulator
+  const [density, setDensity] = useState<"simplified" | "moderate" | "dense">("simplified");
+  const [tone, setTone] = useState<"formal" | "reassuring" | "aspirational">("reassuring");
+  const [layout, setLayout] = useState<"cluttered" | "guided" | "progressive">("guided");
+
+  // Dynamically calculate metrics for fMRI Simulator
+  const calculateMetrics = () => {
+    let comfort = 30;
+    let attention = 25;
+    let cognitive = 40;
+    let trust = 30;
+
+    // Density effects
+    if (density === "simplified") { comfort += 40; attention += 30; cognitive -= 40; trust += 25; }
+    else if (density === "moderate") { comfort += 15; attention += 40; cognitive -= 10; trust += 35; }
+    else if (density === "dense") { comfort -= 20; attention -= 15; cognitive += 45; trust -= 10; }
+
+    // Tone effects
+    if (tone === "formal") { comfort += 10; attention += 15; cognitive += 15; trust += 10; }
+    else if (tone === "reassuring") { comfort += 40; attention += 25; cognitive -= 15; trust += 45; }
+    else if (tone === "aspirational") { comfort += 25; attention += 35; cognitive -= 5; trust += 30; }
+
+    // Layout effects
+    if (layout === "cluttered") { comfort -= 25; attention -= 35; cognitive += 40; trust -= 20; }
+    else if (layout === "guided") { comfort += 35; attention += 45; cognitive -= 25; trust += 40; }
+    else if (layout === "progressive") { comfort += 45; attention += 35; cognitive -= 35; trust += 35; }
+
+    return {
+      comfort: Math.min(98, Math.max(15, comfort)),
+      attention: Math.min(98, Math.max(10, attention)),
+      cognitive: Math.min(95, Math.max(15, cognitive)),
+      trust: Math.min(98, Math.max(20, trust)),
+    };
   };
 
-  const currentAlphaPath = generateWavePath(3.2 + stressLevel / 25, 9 - stressLevel / 18, 1.2);
-  const currentBetaPath = generateWavePath(6.8 + stressLevel / 12, 4 + stressLevel / 9, 2.5);
+  const metrics = calculateMetrics();
 
-  const cognitiveScore = (0.92 - stressLevel / 180).toFixed(2);
-  const motivationUplift = Math.round(92 - stressLevel * 0.7);
+  useEffect(() => {
+    if (waveKeys.length > 0) {
+      setSelectedWave(waveKeys[0]);
+    }
+  }, [tool.id]);
+
+  const activeWaveKey = selectedWave || waveKeys[0] || "";
+  const activeWave = neuroData.waveData[activeWaveKey];
+
+  const isFmri = tool.id === "fmri";
 
   return (
-    <div className="col-span-12 space-y-10 pb-16 relative">
-      {/* Immersive Cinematic Glowing Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-950/20 via-background to-background pointer-events-none rounded-3xl -z-10 animate-fade-in" />
-
-      {/* ─── SECTION 1: IMMERSIVE HERO & STORYTELLING BANNER ─── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-card/45 border border-purple-500/10 rounded-3xl p-6 md:p-10 shadow-lg relative overflow-hidden backdrop-blur-sm">
-        <div className="absolute top-0 right-0 h-96 w-96 bg-radial from-purple-500/5 to-transparent pointer-events-none blur-3xl" />
+    <div className="col-span-12 space-y-12 pb-12 font-sans max-w-7xl mx-auto px-4 md:px-6">
+      
+      {/* ─── SECTION 1: HERO INTRO (Refined, Premium Strategic Layout) ─── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-card border border-border/80 rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden backdrop-blur-sm select-none">
+        <div className="absolute top-0 right-0 h-96 w-96 bg-radial from-primary/5 to-transparent pointer-events-none blur-3xl" />
         
-        <div className="lg:col-span-6 space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-black uppercase tracking-wider select-none">
-            <Brain className="h-3.5 w-3.5" /> Premium CNS Neural Telemetry
-          </div>
-          <h1 className="font-display font-black text-3xl md:text-4xl text-foreground uppercase tracking-tight leading-none">
-            Electroencephalography
-          </h1>
-          <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-xl">
-            Neuromarketing Capsule translates subconscious brain activity into strategic marketing verdicts. By mapping micro-volt fluctuations directly from the prefrontal cortex, we unlock how consumers emotionally encode your messaging—instantly bypassing survey politeness and rationalization bias.
-          </p>
+        {/* Left Content - 55% Text Area */}
+        <div className="lg:col-span-7 space-y-5">
           
-          <div className="grid grid-cols-3 gap-4 border-t border-border/30 pt-6 select-none">
-            <div>
-              <div className="text-[10px] uppercase font-black text-muted-foreground tracking-wider">Neurological Modality</div>
-              <div className="text-xs font-bold text-foreground mt-1 uppercase tracking-wide">CNS Brainwaves</div>
-            </div>
-            <div>
-              <div className="text-[10px] uppercase font-black text-muted-foreground tracking-wider">Temporal Resolution</div>
-              <div className="text-xs font-bold text-purple-400 mt-1 uppercase tracking-wide">Sub-Millisecond</div>
-            </div>
-            <div>
-              <div className="text-[10px] uppercase font-black text-muted-foreground tracking-wider">Feasibility</div>
-              <div className="text-xs font-bold text-foreground mt-1 uppercase tracking-wide">Branch Sandbox</div>
-            </div>
+          {/* Subtle compact pill badge */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-500/5 dark:bg-purple-950/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 text-[10px] font-black uppercase tracking-wider">
+            {isFmri ? "DEEP EMOTIONAL RESPONSE RESEARCH" : "BEHAVIORAL RESEARCH TECHNIQUE"}
           </div>
-        </div>
-
-        {/* Cinematic Human Context Image */}
-        <div className="lg:col-span-6 relative rounded-2xl overflow-hidden shadow-2xl border border-purple-500/20 aspect-[4/3] group select-none">
-          <img 
-            src="/images/eeg_headset_participant.png" 
-            alt="Mahindra Finance EEG testing participant wearing wireless neural headset" 
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-6">
-            <span className="text-[9px] font-black uppercase text-amber-400 tracking-wider mb-1 flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" /> Active Research Field Study
-            </span>
-            <h3 className="font-display font-black text-sm text-white uppercase tracking-wide">
-              Mahindra Finance Rural Consumer Demographics
-            </h3>
-            <p className="text-[11px] text-stone-300 mt-1 leading-normal font-semibold max-w-md">
-              EEG telemetry deployed in regional branches to capture deep cognitive engagement with seasonal financing flyers.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ─── SECTION 2: LIVE METRICS & INTERACTIVE BRAINWAVE ENGINE ─── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        
-        {/* Animated Waveforms Panel */}
-        <div className="lg:col-span-8 bg-card/60 border border-purple-500/10 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-md relative overflow-hidden">
-          <div className="absolute inset-0 bg-radial from-purple-500/2 via-transparent to-transparent pointer-events-none" />
           
-          <div className="flex items-center justify-between border-b border-border/30 pb-4 mb-6 select-none">
-            <div>
-              <span className="text-[10px] font-black uppercase text-purple-400 tracking-wider">Real-Time Neural Oscilloscope</span>
-              <h3 className="font-display font-black text-sm text-foreground uppercase tracking-wide mt-1">Prefrontal Signal Calibration</h3>
-            </div>
-            <button 
-              onClick={() => setIsPlaying(!isPlaying)}
-              className="h-7 px-3 rounded-lg text-[9.5px] font-black uppercase tracking-wider border border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10 text-purple-300 flex items-center gap-1.5 transition cursor-pointer"
-            >
-              {isPlaying ? <Pause className="h-3.5 w-3.5 fill-current" /> : <Play className="h-3.5 w-3.5 fill-current" />}
-              {isPlaying ? "Pause Oscilloscope" : "Resume Oscilloscope"}
-            </button>
-          </div>
-
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <div className="flex justify-between items-center text-[10.5px] font-bold text-purple-400 select-none">
-                <span>Frontal Alpha Waves (Approach / Engagement Focus)</span>
-                <span className="text-muted-foreground text-[9px] font-mono">8 - 12 Hz</span>
-              </div>
-              <div className="h-20 w-full bg-[#0D0915] rounded-2xl border border-purple-500/10 overflow-hidden flex items-center relative shadow-inner">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
-                <svg className="absolute inset-0 h-full w-full pointer-events-none">
-                  <path d={currentAlphaPath} fill="none" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round" />
-                </svg>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-center text-[10.5px] font-bold text-pink-400 select-none">
-                <span>Parietal Beta Waves (Cognitive Overload / Friction)</span>
-                <span className="text-muted-foreground text-[9px] font-mono">13 - 30 Hz</span>
-              </div>
-              <div className="h-20 w-full bg-[#0D0915] rounded-2xl border border-purple-500/10 overflow-hidden flex items-center relative shadow-inner">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
-                <svg className="absolute inset-0 h-full w-full pointer-events-none">
-                  <path d={currentBetaPath} fill="none" stroke="#ec4899" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-6 border-t border-border/30 flex flex-col md:flex-row gap-6 items-center justify-between select-none">
-            <p className="text-[11px] text-muted-foreground leading-normal font-semibold max-w-sm">
-              Use the simulator deck on the right to test how complex financing layouts trigger high cognitive workload in rural consumers.
-            </p>
-            <div className="text-[10px] text-purple-400 bg-purple-500/6 px-3 py-1.5 rounded-lg border border-purple-500/10 font-mono tracking-wide leading-none">
-              *Mathematical asymmetry calibration based on Frontal Alpha Asymmetry.
-            </div>
-          </div>
-        </div>
-
-        {/* Interactive Simulation Control Deck */}
-        <div className="lg:col-span-4 bg-card/60 border border-purple-500/10 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-md relative">
-          <div className="space-y-6">
-            <div className="select-none">
-              <span className="text-[10px] font-black uppercase text-amber-500 tracking-wider">Interactive Simulator</span>
-              <h3 className="font-display font-black text-sm text-foreground uppercase tracking-wide mt-1">Stimulus Friction Level</h3>
-            </div>
+          <div className="max-w-2xl space-y-4">
+            <h1 className="font-display font-black text-2xl md:text-3xl lg:text-4xl text-foreground uppercase tracking-tight leading-tight max-w-2xl break-words">
+              {tool.name}
+            </h1>
             
-            <p className="text-[11px] text-muted-foreground font-semibold leading-relaxed select-none">
-              Slide to simulate a complex, text-heavy layout versus a clean, visual-first storytelling card:
-            </p>
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center text-xs select-none">
-                <span className="font-black text-foreground uppercase tracking-tight">Creative Complexity</span>
-                <span className="text-xs font-black text-pink-500 font-mono">{stressLevel}%</span>
-              </div>
-              <input 
-                type="range" 
-                min="10" 
-                max="90" 
-                value={stressLevel} 
-                onChange={(e) => setStressLevel(Number(e.target.value))}
-                className="w-full accent-purple-500 cursor-pointer h-2 bg-secondary rounded-lg appearance-none" 
-              />
-              <div className="flex justify-between text-[9px] text-muted-foreground font-black uppercase tracking-wider select-none">
-                <span>Optimized Visual</span>
-                <span>Un-Optimized Text</span>
+            <div className="space-y-3 pt-1 text-xs md:text-sm text-stone-700 dark:text-stone-300 font-semibold leading-relaxed">
+              <p>{neuroData.heroSubtitleLine1}</p>
+              <p>{neuroData.heroSubtitleLine2}</p>
+            </div>
+          </div>
+          
+          {/* Quick Insight Row - 3 Clean Blocks */}
+          <div className="grid grid-cols-3 gap-4 border-t border-border/40 pt-5">
+            <div className="p-3.5 bg-secondary/25 rounded-xl border border-border/40 space-y-1">
+              <div className="text-[8px] uppercase font-black text-muted-foreground tracking-wider leading-none">Measures</div>
+              <div className="text-[9.5px] font-bold text-foreground uppercase tracking-wide leading-tight mt-1.5">
+                {isFmri ? "Emotional engagement, stress response, and memory-related activation" : "Attention patterns, mental effort, and engagement shifts"}
               </div>
             </div>
-
-            {/* Cognitive Index Results */}
-            <div className="p-4 rounded-2xl bg-purple-500/5 border border-purple-500/15 space-y-3">
-              <span className="text-[9px] font-black uppercase text-purple-400 tracking-wider block select-none">Cognitive Readout Indicators</span>
-              
-              <div className="flex justify-between text-xs font-bold items-center border-b border-border/30 pb-2">
-                <span className="text-muted-foreground font-semibold">Approach score:</span>
-                <span className="text-foreground font-mono font-black">{cognitiveScore}</span>
+            <div className="p-3.5 bg-secondary/25 rounded-xl border border-border/40 space-y-1">
+              <div className="text-[8px] uppercase font-black text-muted-foreground tracking-wider leading-none">Best Used For</div>
+              <div className="text-[9.5px] font-bold text-foreground uppercase tracking-wide leading-tight mt-1.5">
+                {isFmri ? "Deep campaign testing and emotional-response analysis" : "Campaign testing and onboarding analysis"}
               </div>
-              
-              <div className="flex justify-between text-xs font-bold items-center border-b border-border/30 pb-2">
-                <span className="text-muted-foreground font-semibold">Motivation Uplift:</span>
-                <span className="text-emerald-500 font-mono font-black">+{motivationUplift}%</span>
-              </div>
-
-              <div className="flex justify-between text-xs font-bold items-center">
-                <span className="text-muted-foreground font-semibold">Friction state:</span>
-                <span className={`font-black uppercase text-[10px] ${stressLevel > 50 ? "text-rose-500" : "text-emerald-500"}`}>
-                  {stressLevel > 50 ? "🧠 COGNITIVE FRICTION" : "✨ CALMED ENGAGEMENT"}
-                </span>
+            </div>
+            <div className="p-3.5 bg-secondary/25 rounded-xl border border-border/40 space-y-1">
+              <div className="text-[8px] uppercase font-black text-muted-foreground tracking-wider leading-none">Research Setting</div>
+              <div className="text-[9.5px] font-bold text-foreground uppercase tracking-wide leading-tight mt-1.5">
+                {isFmri ? "Controlled lab-based behavioral studies" : "Controlled behavioral research studies"}
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="mt-6 text-[10px] text-muted-foreground/80 leading-normal font-semibold pt-4 border-t border-border/30 flex items-start gap-1.5 select-none">
-            <ShieldCheck className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-            <span>Simulated metrics reflect actual testing metrics recorded from Indian farmers.</span>
+        {/* Right Content - 45% Visual Area (Single Cinematic Grounded Image) */}
+        <div className="lg:col-span-5 relative rounded-2xl overflow-hidden shadow border border-border aspect-[4/3] group bg-secondary/10 shrink-0">
+          <img 
+            src={isFmri ? "/images/fmri_hero.png" : "/images/eeg_headset_participant.png"} 
+            alt={`Mahindra Finance ${tool.name} illustrative research environment`} 
+            className="w-full h-full object-cover"
+          />
+          {/* Dark gradient panel overlay at bottom-left */}
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent flex flex-col justify-end p-5 pt-16">
+            <span className="text-[8px] font-black uppercase text-amber-500 tracking-wider mb-1 flex items-center gap-1.5">
+              {isFmri ? "ILLUSTRATIVE RESEARCH ENVIRONMENT" : "ILLUSTRATIVE RESEARCH SCENARIO"}
+            </span>
+            <h3 className="font-display font-black text-[12px] text-white uppercase tracking-wide">
+              {isFmri ? "UNDERSTANDING DEEP CUSTOMER EMOTIONS" : "UNDERSTANDING CUSTOMER RESPONSE PATTERNS"}
+            </h3>
+            <p className="text-[10px] text-stone-300 mt-1 leading-relaxed font-semibold">
+              {isFmri 
+                ? "Potential FMRI-based behavioral studies may help identify emotional comfort, stress triggers, trust formation, memory retention, and response patterns during financial experiences."
+                : "Potential EEG-based research environments may help identify moments of attention loss, hesitation, overload, emotional engagement, and message recall during financial experiences."}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* ─── SECTION 3: BEFORE VS AFTER VISUAL SHOWCASE ─── */}
-      <div className="bg-card/45 border border-purple-500/10 rounded-3xl p-6 md:p-8 shadow-lg relative overflow-hidden backdrop-blur-sm">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          
-          <div className="lg:col-span-5 space-y-6 select-none">
-            <span className="text-[9px] font-black uppercase text-purple-400 tracking-wider px-2.5 py-1 rounded bg-purple-500/10 border border-purple-500/20">
-              A/B Campaign Comparison
-            </span>
-            <div>
-              <h3 className="font-display font-black text-xl text-foreground uppercase tracking-wide leading-tight">
-                Calibrating Farm Loan Ads
-              </h3>
-              <p className="text-xs text-muted-foreground leading-relaxed mt-2 font-semibold">
-                Text-heavy financial advertisements overwhelm working memory, causing instant prefrontal avoidance. By transitioning to progressive visual layouts, we align key elements with foveal focus and prefrontal motivation channels.
+      {/* ─── SECTION 2: BEHAVIORAL SIGNALS / WHAT IT HELPS UNDERSTAND (Clean 3-Column Grid) ─── */}
+      <div className="space-y-5 select-none">
+        <div className="space-y-1">
+          <span className="text-[9px] font-black uppercase text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+            {isFmri ? "Emotional-Behavior Interpretation Framework" : "Behavioral Insight Modules"}
+          </span>
+          <h2 className="font-display font-black text-xl md:text-2xl text-foreground uppercase tracking-wide mt-2">
+            {isFmri ? "What FMRI Can Potentially Help Understand" : `What ${tool.name.split(" (")[0]} Can Potentially Detect`}
+          </h2>
+          <p className="text-xs text-muted-foreground max-w-xl font-semibold leading-relaxed">
+            Mapping raw emotional markers helps financial teams understand how campaign copy, mobile journeys, and support environments perform at a subconscious level.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {neuroData.signalsList.map((sig, idx) => (
+            <div key={idx} className="group rounded-2xl border border-border bg-card overflow-hidden flex flex-col justify-between hover:border-primary/20 transition-all duration-300">
+              
+              {/* Image Container with Solid Top-Left Category Tag */}
+              <div className="relative h-44 overflow-hidden bg-secondary/15 shrink-0">
+                <img 
+                  src={sig.image} 
+                  alt={sig.title} 
+                  className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+                />
+                
+                {/* Category Tag Overlay (Solid background, compact uppercase, top-left) */}
+                <div className="absolute top-3 left-3 z-10 shrink-0">
+                  <span className="text-[7.5px] font-black uppercase text-primary bg-background border border-primary/20 px-2 py-0.5 rounded shadow-sm">
+                    {sig.tag}
+                  </span>
+                </div>
+              </div>
+
+              {/* Card Details: Large Bold Heading and Three Structured Blocks */}
+              <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                <div className="space-y-4 flex-1 flex flex-col justify-between font-sans">
+                  <div>
+                    <h3 className="font-display font-black text-base text-foreground uppercase tracking-wide">
+                      {sig.title}
+                    </h3>
+                  </div>
+
+                  <div className="space-y-3.5 text-[11px] leading-relaxed flex-1 pt-1">
+                    <div>
+                      <span className="text-muted-foreground tracking-wider text-[9px] font-black block mb-0.5">
+                        {isFmri ? "What fMRI may be observing" : `WHAT ${tool.name.split(" (")[0].toUpperCase()} MAY BE MEASURING`}
+                      </span>
+                      <p className="text-stone-700 dark:text-stone-300 font-semibold leading-normal">
+                        {sig.measuring}
+                      </p>
+                    </div>
+
+                    <div className="border-t border-border/40 pt-3">
+                      <span className="text-primary tracking-wider text-[9px] font-black block mb-0.5">
+                        {isFmri ? "How it may be interpreted" : "HOW IT MAY BE INTERPRETED"}
+                      </span>
+                      <p className="text-stone-700 dark:text-stone-300 font-semibold leading-normal">
+                        {sig.interpreted}
+                      </p>
+                    </div>
+
+                    <div className="border-t border-border/40 pt-3">
+                      <span className="text-emerald-600 dark:text-emerald-500 tracking-wider text-[9px] font-black block mb-0.5">
+                        {isFmri ? "Potential business adaptation" : "POTENTIAL BUSINESS ADAPTATION"}
+                      </span>
+                      <p className="text-stone-800 dark:text-stone-200 font-bold leading-normal">
+                        {sig.adaptation}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ─── SECTION 3: INTERACTIVE SIGNAL GLOSSARY (Hiding for fMRI - Hemodynamic / Wave Decoupling) ─── */}
+      {!isFmri && (
+        <div className="bg-card border border-border rounded-3xl p-5 md:p-6 shadow-sm space-y-5">
+          <div className="flex flex-col md:flex-row md:items-end justify-between select-none gap-2">
+            <div className="space-y-1">
+              <span className="text-[9px] font-black uppercase text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+                Interactive Calibration
+              </span>
+              <h2 className="font-display font-black text-xl text-foreground uppercase tracking-wide mt-2">
+                How {tool.name.split(" (")[0]} Signals Are Interpreted
+              </h2>
+              <p className="text-xs text-muted-foreground max-w-xl font-semibold leading-relaxed">
+                Explore primary physiological variables in neuromarketing and how their fluctuations correspond to key customer behaviors.
               </p>
             </div>
+            <div className="text-[8px] text-muted-foreground bg-secondary/40 px-3 py-1.5 rounded-lg border border-border/50 font-mono tracking-wide leading-none select-none">
+              *Simulated interpretations based on physiological reference models.
+            </div>
+          </div>
 
-            <div className="flex bg-secondary/40 p-0.5 rounded-lg border border-border/40 w-fit">
-              <button
-                onClick={() => setActiveTab("before")}
-                className={`h-7 px-3.5 rounded-md text-[10px] font-black uppercase tracking-wider transition ${
-                  activeTab === "before"
-                    ? "bg-rose-600 text-white shadow-sm font-black animate-fade-in"
-                    : "text-muted-foreground hover:text-foreground cursor-pointer font-bold"
-                }`}
-              >
-                ❌ Before (Friction)
-              </button>
-              <button
-                onClick={() => setActiveTab("after")}
-                className={`h-7 px-3.5 rounded-md text-[10px] font-black uppercase tracking-wider transition ${
-                  activeTab === "after"
-                    ? "bg-emerald-500 text-white shadow-sm font-black animate-fade-in"
-                    : "text-muted-foreground hover:text-foreground cursor-pointer font-bold"
-                }`}
-              >
-                ✔ After (Optimized)
-              </button>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            {/* Left: Wave selector buttons */}
+            <div className="lg:col-span-7 space-y-2 select-none">
+              {Object.entries(neuroData.waveData).map(([key, data]) => {
+                const active = activeWaveKey === key;
+                return (
+                  <button
+                    key={key}
+                    onClick={() => setSelectedWave(key)}
+                    className={`w-full text-left p-3.5 rounded-xl border transition-all duration-300 flex items-start gap-4 cursor-pointer ${
+                      active 
+                        ? "bg-primary/5 border-primary/45 shadow-sm scale-[1.005]" 
+                        : "bg-secondary/15 border-border/50 hover:bg-secondary/30 hover:border-border"
+                    }`}
+                  >
+                    <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 border text-[9.5px] font-black uppercase tracking-wider ${
+                      active ? data.colorClass : "bg-muted text-muted-foreground border-border/80"
+                    }`}>
+                      {key.slice(0, 2)}
+                    </div>
+                    <div className="space-y-0.5">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-display font-black text-[12.5px] uppercase tracking-wide text-foreground">{data.title}</span>
+                        <span className="text-[8px] font-bold text-muted-foreground">{data.focus}</span>
+                      </div>
+                      <p className="text-[10.5px] text-muted-foreground font-semibold leading-normal">
+                        {data.meaning}
+                      </p>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
-            {/* Scientific Impact Readout */}
-            <div className="p-4 bg-secondary/25 rounded-2xl border border-border/80 space-y-3">
-              {activeTab === "before" ? (
-                <div className="space-y-2">
-                  <h4 className="text-xs font-black text-rose-500 uppercase">Text-Heavy Layout Friction</h4>
-                  <p className="text-[11px] text-muted-foreground font-semibold leading-relaxed">
-                    * Alpha Hemispheric Asymmetry spikes in the right prefrontal cortex, indicating direct visual avoidance. Users ignore the call-to-action within 150ms of exposure.
-                  </p>
+            {/* Right: Immersive Wave details panel */}
+            <div className="lg:col-span-5 bg-stone-950 text-stone-200 rounded-2xl border border-border p-5 flex flex-col justify-between shadow-inner relative overflow-hidden select-none">
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:15px_15px] pointer-events-none" />
+              
+              {activeWave ? (
+                <div className="space-y-4 relative z-10">
+                  <div className="flex justify-between items-center border-b border-white/5 pb-2.5">
+                    <div>
+                      <span className="text-[7.5px] font-black uppercase text-primary/80 tracking-widest block">Active Telemetry Calibration</span>
+                      <span className="font-display font-black text-xs uppercase tracking-wide text-white mt-0.5 block">
+                        {activeWave.title.split(" (")[0]}
+                      </span>
+                    </div>
+                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" />
+                  </div>
+
+                  {/* Animated Waveform Display */}
+                  <div className="h-20 w-full bg-black/40 rounded-xl border border-white/5 flex items-center justify-center overflow-hidden relative shadow-inner">
+                    <svg className="absolute inset-0 h-full w-full pointer-events-none" viewBox="0 0 300 50" preserveAspectRatio="none">
+                      <path 
+                        d={activeWave.simulatedPath} 
+                        fill="none" 
+                        stroke={activeWave.stroke} 
+                        strokeWidth="2" 
+                        strokeLinecap="round"
+                        className="opacity-90"
+                      />
+                    </svg>
+                  </div>
+
+                  <div className="space-y-2.5 pt-1">
+                    <div className="p-3 bg-white/5 rounded-xl border border-white/5">
+                      <span className="text-[7.5px] font-black uppercase text-primary/80 tracking-widest block mb-0.5">Behavioral Reveal</span>
+                      <p className="text-[10.5px] leading-relaxed text-stone-200 font-semibold">{activeWave.meaning}</p>
+                    </div>
+                    
+                    <div className="p-3 bg-white/5 rounded-xl border border-white/5">
+                      <span className="text-[7.5px] font-black uppercase text-emerald-400 tracking-widest block mb-0.5">Business Adaptation</span>
+                      <p className="text-[10.5px] leading-relaxed text-stone-300 font-medium italic">{activeWave.adaptation}</p>
+                    </div>
+                  </div>
                 </div>
               ) : (
-                <div className="space-y-2">
-                  <h4 className="text-xs font-black text-emerald-500 uppercase">Neuroscience Calibrated Boost</h4>
-                  <p className="text-[11px] text-muted-foreground font-semibold leading-relaxed">
-                    * Prefrontal workload drops by 45%, keeping visual stress calm. Call-to-action motivation spikes (+60%), driving immediate conceptual memory encoding.
-                  </p>
+                <div className="text-center text-xs text-muted-foreground py-8">Select a signal pattern from the left.</div>
+              )}
+
+              <div className="text-[8px] text-stone-500 border-t border-white/5 pt-3.5 mt-4 flex items-center gap-1.5 relative z-10">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" />
+                <span>Simulated references for training and validation.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── SECTION 4: MAHINDRA FINANCE STRATEGIC USE CASES (fMRI specific scenarios) ─── */}
+      <div className="space-y-5">
+        <div className="space-y-1 select-none">
+          <span className="text-[9px] font-black uppercase text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+            {isFmri ? "Potential FMRI-Inspired Research Scenarios" : "Strategic Use Cases"}
+          </span>
+          <h2 className="font-display font-black text-xl md:text-2xl text-foreground uppercase tracking-wide mt-2">
+            {isFmri ? "Potential FMRI-Inspired Research Scenarios" : `Potential ${tool.name.split(" (")[0]} Deployment Scenarios`}
+          </h2>
+          <p className="text-xs text-muted-foreground max-w-xl font-semibold leading-relaxed">
+            {isFmri 
+              ? "Illustrative examples showing how emotional-response mapping could theoretically support financial communication design."
+              : "Illustrative neuroscience case models designed for agricultural and semi-urban lending customer journeys."}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          {neuroData.useCases.map((use, idx) => (
+            <div 
+              key={idx} 
+              className="rounded-2xl border border-border bg-card p-5 flex flex-col justify-between gap-4 shadow-sm hover:border-primary/20 transition-all duration-300 select-none"
+            >
+              <div className="space-y-3 flex-1 flex flex-col justify-between">
+                <div className="space-y-1">
+                  <div className="flex justify-between items-start">
+                    <span className="text-[7.5px] font-black uppercase text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">
+                      {use.type}
+                    </span>
+                  </div>
+                  <h3 className="font-display font-black text-[13.5px] text-foreground uppercase tracking-wide">
+                    {use.title}
+                  </h3>
+                </div>
+
+                {use.image && (
+                  <div className="relative rounded-xl overflow-hidden aspect-video border border-border/80 my-2 shrink-0">
+                    <img 
+                      src={use.image} 
+                      alt={use.title} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+
+                <div className="space-y-2.5 pt-2.5 border-t border-border/30 text-[10.5px] leading-relaxed flex-1 font-sans">
+                  {isFmri ? (
+                    <>
+                      <div>
+                        <span className="text-rose-500 tracking-wider text-[9px] font-black block mb-0.5">Business situation:</span>
+                        <p className="text-stone-700 dark:text-stone-300 font-semibold">{use.challenge}</p>
+                      </div>
+                      <div>
+                        <span className="text-primary tracking-wider text-[9px] font-black block mb-0.5">Potential insight:</span>
+                        <p className="text-stone-700 dark:text-stone-300 font-semibold">{use.reveal}</p>
+                      </div>
+                      <div>
+                        <span className="text-emerald-600 dark:text-emerald-500 tracking-wider text-[9px] font-black block mb-0.5">Potential adaptation:</span>
+                        <p className="text-stone-800 dark:text-stone-200 font-bold">{use.pathway}</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <span className="text-rose-500 uppercase tracking-widest text-[8px] font-black block mb-0.5">Marketing Challenge:</span>
+                        <p className="text-stone-700 dark:text-stone-300 font-semibold">{use.challenge}</p>
+                      </div>
+                      <div>
+                        <span className="text-primary uppercase tracking-widest text-[8px] font-black block mb-0.5">Potential Reveal:</span>
+                        <p className="text-stone-700 dark:text-stone-300 font-semibold">{use.reveal}</p>
+                      </div>
+                      <div>
+                        <span className="text-emerald-600 dark:text-emerald-500 uppercase tracking-widest text-[8px] font-black block mb-0.5">Optimization Pathway:</span>
+                        <p className="text-stone-800 dark:text-stone-200 font-bold">{use.pathway}</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {!isFmri && (
+                <div className="bg-emerald-500/5 border border-emerald-500/10 px-3 py-1.5 rounded-xl flex justify-between items-center text-[10px] font-bold mt-2 shrink-0">
+                  <span className="text-muted-foreground">Expected Implication:</span>
+                  <span className="text-emerald-600 dark:text-emerald-500 font-black">{use.impact}</span>
                 </div>
               )}
             </div>
-          </div>
-
-          {/* Full Split Image Visual Showcase */}
-          <div className="lg:col-span-7 relative rounded-2xl overflow-hidden shadow-xl border border-purple-500/15 group bg-white select-none">
-            <img 
-              src="/images/eeg_before_after_creatives.png" 
-              alt="Before vs After A/B split creative comparison showing rate tables vs optimized visual layouts" 
-              className="w-full h-auto object-contain block max-h-[500px]"
-            />
-            {activeTab === "before" ? (
-              <div className="absolute inset-0 bg-rose-950/20 backdrop-blur-[1px] flex items-center justify-center pointer-events-none">
-                <div className="bg-rose-600/95 text-white text-[10px] font-black px-4 py-2 rounded-xl shadow-lg border border-rose-500/20 animate-pulse uppercase tracking-wider">
-                  ❌ Text Overload Friction Active
-                </div>
-              </div>
-            ) : (
-              <div className="absolute inset-0 bg-emerald-950/5 backdrop-blur-[1px] flex items-center justify-center pointer-events-none">
-                <div className="bg-emerald-500/95 text-white text-[10px] font-black px-4 py-2 rounded-xl shadow-lg border border-emerald-400/20 animate-bounce uppercase tracking-wider">
-                  ✔ Calibrated Journey Active
-                </div>
-              </div>
-            )}
-          </div>
-
+          ))}
         </div>
       </div>
 
-      {/* ─── SECTION 4: REAL ACTION BLUEPRINT FOR MAHINDRA FINANCE ─── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch font-sans">
-        
-        {/* Action Blueprint Card */}
-        <div className="rounded-3xl border border-purple-500/10 bg-card/65 p-6 md:p-8 shadow-md flex flex-col justify-between gap-6">
-          <div className="space-y-4 select-none">
-            <div className="space-y-1">
-              <span className="text-[9px] font-black uppercase text-purple-400 tracking-wider">Action Blueprint</span>
-              <h3 className="font-display font-black text-sm text-foreground uppercase tracking-wide">
-                How Mahindra Finance Can Deploy This
-              </h3>
-            </div>
-            
-            <p className="text-xs leading-relaxed text-foreground bg-purple-500/5 p-4 rounded-2xl border border-purple-500/10 italic font-black">
-              "Deploy EEG headbands during regional TVC narration audits. Ensure that complex compliance terms, interest rate calculations, and EMI structures are structured in progressive vertical layers to protect rural consumer trust."
+      {/* ─── SECTION 5: BEFORE VS AFTER VISUAL OPTIMIZATION / DECISION SIMULATION ─── */}
+      {isFmri ? (
+        <div className="bg-card border border-border rounded-3xl p-5 md:p-8 shadow-sm space-y-6">
+          <div className="space-y-1 select-none">
+            <span className="text-[9px] font-black uppercase text-purple-600 bg-purple-500/10 px-2.5 py-1 rounded-full border border-purple-500/20">
+              Decision Simulation Experience
+            </span>
+            <h2 className="font-display font-black text-xl md:text-2xl text-foreground uppercase tracking-wide mt-2">
+              INTERACTIVE DECISION RESPONSE SIMULATION
+            </h2>
+            <p className="text-xs text-muted-foreground max-w-xl font-semibold leading-relaxed">
+              Explore how different financial communication styles may influence emotional comfort, cognitive load, and decision confidence.
             </p>
-
-            <div className="space-y-2.5 pt-2 text-xs">
-              <div className="flex gap-2">
-                <Check className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                <div className="font-semibold text-muted-foreground">
-                  <strong className="text-foreground">Optimal TVC Calibration:</strong> Audio dialects and visual frames are audited second-by-second to eliminate friction.
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Check className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                <div className="font-semibold text-muted-foreground">
-                  <strong className="text-foreground">KYC Milestone Stabilization:</strong> Complex forms are designed as progressive milestone stages.
-                </div>
-              </div>
-            </div>
           </div>
 
-          <div className="text-[10px] text-muted-foreground flex items-center gap-1.5 font-bold pt-2 border-t border-border/30 select-none">
-            <ShieldCheck className="h-4 w-4 text-emerald-500" /> Fully calibrated to fit RBI progressive KYC regulatory environments.
-          </div>
-        </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+            {/* LEFT PANEL: Controls & Interpretation */}
+            <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
+              
+              {/* Simulator Controls */}
+              <div className="space-y-5 bg-secondary/10 p-5 rounded-2xl border border-border/40">
+                
+                {/* Toggle 1: Communication Density */}
+                <div className="space-y-2">
+                  <label className="text-[9.5px] font-black uppercase text-muted-foreground tracking-wider block">
+                    Communication Density
+                  </label>
+                  <div className="grid grid-cols-3 gap-2 bg-background p-1 rounded-xl border border-border/60">
+                    {(["simplified", "moderate", "dense"] as const).map((opt) => (
+                      <button
+                        key={opt}
+                        onClick={() => setDensity(opt)}
+                        className={`py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition cursor-pointer ${
+                          density === opt
+                            ? "bg-purple-600 text-white shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-        {/* Premium Strategic Nudge Card (Completely replacing fake terminal) */}
-        <div className="rounded-3xl border border-purple-500/10 bg-card/65 p-6 md:p-8 shadow-md flex flex-col justify-between gap-6">
-          <div className="space-y-4">
-            <div className="space-y-1 select-none">
-              <span className="text-[9px] font-black uppercase text-purple-400 tracking-wider">Strategic Recommendation</span>
-              <h3 className="font-display font-black text-sm text-foreground uppercase tracking-wide">
-                Recommended Design Logic
-              </h3>
+                {/* Toggle 2: Emotional Tone */}
+                <div className="space-y-2">
+                  <label className="text-[9.5px] font-black uppercase text-muted-foreground tracking-wider block">
+                    Emotional Tone
+                  </label>
+                  <div className="grid grid-cols-3 gap-2 bg-background p-1 rounded-xl border border-border/60">
+                    {(["formal", "reassuring", "aspirational"] as const).map((opt) => (
+                      <button
+                        key={opt}
+                        onClick={() => setTone(opt)}
+                        className={`py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition cursor-pointer ${
+                          tone === opt
+                            ? "bg-purple-600 text-white shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Toggle 3: Layout Structure */}
+                <div className="space-y-2">
+                  <label className="text-[9.5px] font-black uppercase text-muted-foreground tracking-wider block">
+                    Layout Structure
+                  </label>
+                  <div className="grid grid-cols-3 gap-2 bg-background p-1 rounded-xl border border-border/60">
+                    {(["cluttered", "guided", "progressive"] as const).map((opt) => (
+                      <button
+                        key={opt}
+                        onClick={() => setLayout(opt)}
+                        className={`py-1.5 rounded-lg text-[9px] font-black uppercase tracking-wider transition cursor-pointer ${
+                          layout === opt
+                            ? "bg-purple-600 text-white shadow-sm"
+                            : "text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Dynamic Metrics Panel */}
+              <div className="space-y-3.5 bg-secondary/15 p-5 rounded-2xl border border-border/40 select-none">
+                <span className="text-[8px] font-black uppercase text-purple-600 tracking-wider block mb-1">
+                  Dynamic Response Metrics
+                </span>
+                
+                {/* Comfort metric */}
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center text-[10px] font-black uppercase text-foreground">
+                    <span>Estimated emotional comfort</span>
+                    <span className="text-purple-600 font-black">{metrics.comfort}%</span>
+                  </div>
+                  <div className="h-2 w-full bg-background rounded-full overflow-hidden border border-border/40">
+                    <div 
+                      className="h-full bg-purple-600 transition-all duration-500 rounded-full" 
+                      style={{ width: `${metrics.comfort}%` }} 
+                    />
+                  </div>
+                </div>
+
+                {/* Attention stability metric */}
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center text-[10px] font-black uppercase text-foreground">
+                    <span>Attention stability</span>
+                    <span className="text-purple-600 font-black">{metrics.attention}%</span>
+                  </div>
+                  <div className="h-2 w-full bg-background rounded-full overflow-hidden border border-border/40">
+                    <div 
+                      className="h-full bg-purple-600 transition-all duration-500 rounded-full" 
+                      style={{ width: `${metrics.attention}%` }} 
+                    />
+                  </div>
+                </div>
+
+                {/* Cognitive load metric */}
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center text-[10px] font-black uppercase text-foreground">
+                    <span>Cognitive load</span>
+                    <span className="text-purple-600 font-black">{metrics.cognitive}%</span>
+                  </div>
+                  <div className="h-2 w-full bg-background rounded-full overflow-hidden border border-border/40">
+                    <div 
+                      className="h-full bg-purple-600 transition-all duration-500 rounded-full" 
+                      style={{ width: `${metrics.cognitive}%` }} 
+                    />
+                  </div>
+                </div>
+
+                {/* Trust confidence metric */}
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center text-[10px] font-black uppercase text-foreground">
+                    <span>Trust confidence</span>
+                    <span className="text-purple-600 font-black">{metrics.trust}%</span>
+                  </div>
+                  <div className="h-2 w-full bg-background rounded-full overflow-hidden border border-border/40">
+                    <div 
+                      className="h-full bg-purple-600 transition-all duration-500 rounded-full" 
+                      style={{ width: `${metrics.trust}%` }} 
+                    />
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Interactive Insight Box */}
+              <div className="p-4 bg-purple-500/5 dark:bg-purple-950/10 border border-purple-500/10 rounded-2xl space-y-1">
+                <span className="text-[7.5px] font-black uppercase text-purple-600 tracking-widest block">
+                  INTERPRETATION
+                </span>
+                <p className="text-[11px] leading-relaxed text-stone-700 dark:text-stone-300 font-bold">
+                  {getDynamicInsight(density, tone, layout)}
+                </p>
+              </div>
+
             </div>
 
-            <div className="bg-purple-500/5 p-4 rounded-2xl border border-purple-500/10 space-y-3 select-none">
-              <span className="text-[8.5px] font-black uppercase text-purple-400 flex items-center gap-1">
-                <Sparkles className="h-4 w-4 text-amber-500 animate-spin [animation-duration:4s]" /> pre-deployment advisory
+            {/* RIGHT PANEL: Dynamic Preview Experience */}
+            <div className="lg:col-span-7 bg-stone-900 dark:bg-stone-950 text-white rounded-3xl border border-stone-850 p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-inner min-h-[460px]">
+              {/* Subtle grid pattern background */}
+              <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+              
+              {/* Header decoration representing high-end simulator view */}
+              <div className="absolute top-4 left-4 right-4 flex justify-between items-center border-b border-white/5 pb-2 pointer-events-none select-none">
+                <span className="text-[7px] font-mono uppercase text-stone-500 tracking-widest">
+                  SIMULATION ENGINE v1.2 // ADAPTIVE_INTERFACE_PREVIEW
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-purple-500 animate-ping" />
+                  <span className="text-[7px] font-mono uppercase text-purple-400">ACTIVE RESPONSE</span>
+                </div>
+              </div>
+
+              {/* Dynamic Mobile Device Mockup */}
+              <div className="w-[280px] bg-stone-950 rounded-[36px] p-3 border-4 border-stone-800 shadow-2xl relative z-10 my-4 transform hover:scale-[1.01] transition-transform duration-300 select-none">
+                {/* Speaker / Camera Notch */}
+                <div className="absolute top-3.5 left-1/2 transform -translate-x-1/2 w-20 h-4 bg-stone-800 rounded-full flex items-center justify-center z-20">
+                  <div className="w-8 h-1 bg-stone-900 rounded-full" />
+                </div>
+
+                {/* Screen Content */}
+                <div className="bg-background text-foreground rounded-[28px] overflow-hidden aspect-[9/18] flex flex-col justify-between p-4 pt-8 text-[11px] font-sans relative min-h-[380px]">
+                  
+                  {/* App Branding / Top Info */}
+                  <div className="flex justify-between items-center border-b border-border/40 pb-2 mb-2 select-none">
+                    <span className="font-display font-black text-[9px] uppercase tracking-wide text-primary">
+                      Mahindra Finance
+                    </span>
+                    <span className="text-[8px] text-muted-foreground font-mono bg-secondary/50 px-1.5 py-0.5 rounded">
+                      SECURE
+                    </span>
+                  </div>
+
+                  {/* Mobile Form Layout */}
+                  <div className="flex-1 flex flex-col justify-between py-1">
+                    
+                    {/* Headline Container */}
+                    <div className="space-y-1 text-center">
+                      <h4 className="font-display font-black text-[12px] uppercase text-foreground leading-tight tracking-tight">
+                        {getMobileTitle(tone)}
+                      </h4>
+                      <p className="text-[8px] text-muted-foreground font-medium">
+                        Approved & Trusted RBI Registered NBFC Partner
+                      </p>
+                    </div>
+
+                    {/* Dynamic Body Layout */}
+                    <div className="flex-1 my-3 flex flex-col justify-center">
+                      {layout === "cluttered" ? (
+                        /* CLUTTERED LAYOUT */
+                        <div className="space-y-1.5 p-2 bg-stone-100 dark:bg-stone-900 rounded-lg border border-red-200 text-[8px] leading-normal font-medium">
+                          <div className="grid grid-cols-2 gap-1 font-mono font-bold text-stone-600 dark:text-stone-400">
+                            <div className="border p-0.5 bg-white dark:bg-black">CODE: MF-TRAC-99</div>
+                            <div className="border p-0.5 bg-white dark:bg-black">RATE: amort. dynamic</div>
+                            <div className="border p-0.5 bg-white dark:bg-black">FEES: 2.75% proc. fee</div>
+                            <div className="border p-0.5 bg-white dark:bg-black">TENURE: 36m default</div>
+                          </div>
+                          <div className="text-[7px] text-muted-foreground bg-stone-200 dark:bg-stone-850 p-1 rounded font-semibold leading-tight max-h-[50px] overflow-y-auto">
+                            {getMobileDescription(density)}
+                          </div>
+                          <div className="text-center font-bold text-red-500 uppercase tracking-widest text-[6.5px]">
+                            *Penalty rates applicable for default events as per Annexure 4B
+                          </div>
+                        </div>
+                      ) : layout === "guided" ? (
+                        /* GUIDED LAYOUT */
+                        <div className="space-y-2.5 p-3 bg-purple-500/5 border border-purple-500/10 rounded-xl">
+                          <div className="text-center bg-background rounded-lg p-2 border border-border/80 shadow-sm space-y-0.5">
+                            <span className="text-[7.5px] uppercase font-black text-muted-foreground block">Your Monthly Installment</span>
+                            <span className="text-[15px] font-black text-purple-600 block">₹ 8,450 / month</span>
+                            <span className="text-[7px] text-emerald-600 font-bold block">No Hidden Charges. Fully Transparent.</span>
+                          </div>
+                          <p className="text-[8.5px] text-stone-700 dark:text-stone-300 font-medium leading-relaxed text-center">
+                            {getMobileDescription(density)}
+                          </p>
+                        </div>
+                      ) : (
+                        /* PROGRESSIVE LAYOUT */
+                        <div className="space-y-2">
+                          <div className="flex justify-between items-center px-1 text-[7.5px] font-mono text-muted-foreground">
+                            <span>STEP 2 OF 3: PREVIEW DETAILS</span>
+                            <span>66% COMPLETE</span>
+                          </div>
+                          <div className="h-1 w-full bg-secondary rounded-full overflow-hidden">
+                            <div className="h-full bg-purple-600 rounded-full w-2/3" />
+                          </div>
+                          <div className="p-2.5 bg-secondary/35 rounded-xl border border-border/40 space-y-2">
+                            <div className="flex justify-between items-center text-[9px] font-bold">
+                              <span className="text-muted-foreground font-semibold">Tractor Funding</span>
+                              <span className="text-foreground">₹ 4,50,000</span>
+                            </div>
+                            <div className="flex justify-between items-center text-[9px] font-bold border-t border-border/40 pt-1.5">
+                              <span className="text-muted-foreground font-semibold">Installment Option</span>
+                              <span className="text-purple-600 font-black">₹ 8,450 / mo</span>
+                            </div>
+                          </div>
+                          <p className="text-[8px] text-stone-600 dark:text-stone-400 font-medium leading-normal italic text-center">
+                            {getMobileDescription(density)}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Bottom Call to Action */}
+                    <div className="space-y-1.5 select-none">
+                      <button className="w-full py-2 px-3 bg-purple-600 hover:bg-purple-700 text-white font-black uppercase text-[8.5px] tracking-wider rounded-xl shadow-sm transition-all duration-300 cursor-pointer text-center">
+                        {getMobileCta(tone)}
+                      </button>
+                      <div className="flex items-center justify-center gap-1 text-[7px] text-muted-foreground font-medium">
+                        <Shield className="h-2 w-2 text-emerald-500" />
+                        <span>100% Secure RBI Authorized Lending Application</span>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+              </div>
+
+              {/* Footer simulation details */}
+              <span className="text-[7.5px] font-mono text-stone-500 mt-2 select-none">
+                Estimated BOLD signals modeled across subcortical prefrontal target profiles.
               </span>
-              <p className="text-xs text-foreground/90 font-bold leading-relaxed">
-                "Calibrate all rural lending flyers to display familial and community safety triggers first. Never start with rate percentages; instead, build trust milestones to buffer visual technophobia before compliance disclosures."
-              </p>
             </div>
-          </div>
 
-          {/* Premium compliance scorecard replacing cyberpunk terminal log */}
-          <div className="p-4 bg-[#0D0915] text-stone-200 rounded-2xl border border-purple-500/25 space-y-3 relative shadow-inner select-none">
-            <span className="absolute top-3 right-4 text-[7px] font-black text-purple-400 uppercase tracking-widest">Biometric Compliance Scorecard</span>
-            <div className="flex justify-between items-center text-[10px] font-bold border-b border-white/5 pb-2">
-              <span className="text-stone-400">Prefrontal Workload:</span>
-              <span className="text-emerald-400 font-mono">24% (Optimal)</span>
-            </div>
-            <div className="flex justify-between items-center text-[10px] font-bold border-b border-white/5 pb-2">
-              <span className="text-stone-400">Memory Encoding Strength:</span>
-              <span className="text-purple-400 font-mono">88% (High)</span>
-            </div>
-            <div className="flex justify-between items-center text-[10px] font-bold">
-              <span className="text-stone-400">Regulatory Trust Level:</span>
-              <span className="text-amber-400 font-mono">Approved</span>
-            </div>
           </div>
         </div>
+      ) : (
+        <div className="bg-card border border-border rounded-3xl p-5 md:p-6 shadow-sm">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <div className="lg:col-span-5 space-y-5 select-none">
+              <span className="text-[9px] font-black uppercase text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+                Creative Optimization
+              </span>
+              <div>
+                <h3 className="font-display font-black text-xl text-foreground uppercase tracking-wide leading-tight">
+                  Subconscious Visual Calibration
+                </h3>
+                <p className="text-xs text-stone-700 dark:text-stone-300 leading-relaxed mt-2 font-semibold">
+                  Text-heavy interest grids overwhelm working memory, causing decision hesitation. Transitioning layout architecture into clean progressive disclosures carries visual focus directly into core CTA pathways.
+                </p>
+              </div>
 
-      </div>
+              <div className="flex bg-secondary/40 p-0.5 rounded-lg border border-border/40 w-fit">
+                <button
+                  onClick={() => {
+                    setActiveFrictionTab("before");
+                    setActiveFrictionHotspot(null);
+                  }}
+                  className={`h-7 px-3 rounded-md text-[9px] font-black uppercase tracking-wider transition cursor-pointer ${
+                    activeFrictionTab === "before"
+                      ? "bg-rose-600 text-white shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  ❌ Complex Layout
+                </button>
+                <button
+                  onClick={() => {
+                    setActiveFrictionTab("after");
+                    setActiveFrictionHotspot(null);
+                  }}
+                  className={`h-7 px-3 rounded-md text-[9px] font-black uppercase tracking-wider transition cursor-pointer ${
+                    activeFrictionTab === "after"
+                      ? "bg-emerald-500 text-white shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  ✔ Guided Experience
+                </button>
+              </div>
 
-      {/* ─── SECTION 5: REAL RURAL METHODOLOGY BLUEPRINT ─── */}
-      <div className="bg-card/40 border border-purple-500/10 rounded-3xl p-6 md:p-8 shadow-sm space-y-6 select-none">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          <div className="lg:col-span-2 space-y-4">
-            <div className="space-y-1">
-              <span className="text-[9px] font-black uppercase text-purple-400 tracking-wider">Methodology Blueprint</span>
-              <h4 className="font-display font-black text-xs text-foreground uppercase tracking-wide">Consumer Testing Process Steps</h4>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                { step: "01", title: "Target Panel Calibration", desc: "Regional cohort groups are selected across tier-2/3 demographics and calibrated in-branch." },
-                { step: "02", title: "Dynamic Campaign Exposure", desc: "Participants view localized TVCs, digital onboarding portals, or WhatsApp lending messages." },
-                { step: "03", title: "Subconscious Mapping", desc: "Prefrontal cortex alpha bands map motivations and motivation fluctuations without interview bias." }
-              ].map((s, idx) => (
-                <div key={idx} className="bg-purple-500/5 p-4 rounded-2xl border border-purple-500/10 relative space-y-2">
-                  <span className="absolute top-2.5 right-3.5 font-display font-black text-2xl text-purple-500/10">{s.step}</span>
-                  <h5 className="font-display font-black text-[10.5px] text-foreground uppercase tracking-wide">{s.title}</h5>
-                  <p className="text-[10px] text-muted-foreground leading-normal font-semibold">{s.desc}</p>
+              {/* Custom Hotspot detail box */}
+              <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 space-y-2 min-h-[110px] flex flex-col justify-between">
+                <div>
+                  <span className="text-[7.5px] font-black uppercase text-primary tracking-widest block mb-0.5">
+                    Strategic Communication Insight
+                  </span>
+                  
+                  {activeFrictionHotspot !== null ? (
+                    <div className="space-y-0.5 font-sans">
+                      <span className="text-xs font-black text-foreground uppercase block">
+                        {neuroData.hotspots.find(h => h.id === activeFrictionHotspot)?.label}
+                      </span>
+                      <p className="text-[10.5px] leading-normal text-muted-foreground font-semibold">
+                        {activeFrictionTab === "before" 
+                          ? neuroData.hotspots.find(h => h.id === activeFrictionHotspot)?.beforeTip 
+                          : neuroData.hotspots.find(h => h.id === activeFrictionHotspot)?.afterTip
+                        }
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-[10.5px] text-muted-foreground leading-normal font-semibold">
+                      Click the glowing numeric hotspots on the layout visual to see how customer stress shifts.
+                    </p>
+                  )}
                 </div>
+
+                {activeFrictionHotspot !== null && (
+                  <button 
+                    onClick={() => setActiveFrictionHotspot(null)}
+                    className="text-[8px] font-black uppercase tracking-wider text-primary text-left hover:underline w-fit mt-1 cursor-pointer"
+                  >
+                    ← Reset
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Interactive Heatmap creative preview (Full color!) */}
+            <div className="lg:col-span-7 relative rounded-xl overflow-hidden shadow-sm border border-border aspect-[4/3] flex items-center justify-center bg-white">
+              <img 
+                src="/images/eeg_before_after_creatives.png" 
+                alt="Before vs After split dynamic financial creative mapping" 
+                className="w-full h-full object-cover block"
+              />
+              
+              {/* Split overlay effect based on tab */}
+              {activeFrictionTab === "before" ? (
+                <div className="absolute inset-0 bg-rose-950/5 flex flex-col justify-between p-4 pointer-events-none">
+                  <span className="self-end bg-rose-600/90 text-white text-[8px] font-black px-2 py-0.5 rounded shadow uppercase tracking-wider">
+                    ❌ Text Overload Friction Active
+                  </span>
+                </div>
+              ) : (
+                <div className="absolute inset-0 bg-emerald-950/5 flex flex-col justify-between p-4 pointer-events-none">
+                  <span className="self-end bg-emerald-500/90 text-white text-[8px] font-black px-2 py-0.5 rounded shadow uppercase tracking-wider">
+                    ✔ Calibrated Flow Active
+                  </span>
+                </div>
+              )}
+
+              {/* Glowing Hotspots */}
+              {neuroData.hotspots.map((spot) => (
+                <button
+                  key={spot.id}
+                  onClick={() => setActiveFrictionHotspot(spot.id)}
+                  style={{ top: spot.y, left: spot.x }}
+                  className={`absolute h-6.5 w-6.5 rounded-full flex items-center justify-center text-[9px] font-black text-white cursor-pointer shadow border transition-all duration-300 transform -translate-x-1/2 -translate-y-1/2 ${
+                    activeFrictionHotspot === spot.id 
+                      ? "bg-primary border-white scale-115 z-30 ring-4 ring-primary/30" 
+                      : "bg-primary/95 border-primary/30 hover:scale-110 hover:bg-primary z-20 animate-pulse"
+                  }`}
+                >
+                  {spot.id}
+                </button>
               ))}
             </div>
-          </div>
 
-          <div className="bg-purple-500/5 p-5 rounded-2xl border border-purple-500/10 flex flex-col justify-between gap-4">
-            <div className="space-y-1">
-              <span className="text-[8px] font-black uppercase text-purple-400 tracking-widest">Neuroscience Outlook</span>
-              <h5 className="font-display font-black text-xs text-foreground uppercase tracking-wide">Generative Saliency Model</h5>
-            </div>
-            <p className="text-[10px] text-muted-foreground leading-relaxed font-semibold">
-              Predicting subcortical brain activity, visual cognitive load, and attention peaks directly via neural generative models, bypassing manual clinic testing and enabling instant programmatic campaign pre-testing.
-            </p>
-            <div className="flex justify-between items-center text-[10px] font-bold border-t border-border/30 pt-3 mt-1">
-              <span className="text-muted-foreground">Calibration Predictive Accuracy:</span>
-              <span className="text-purple-400 font-mono font-black">92%</span>
-            </div>
           </div>
+        </div>
+      )}
+
+      {/* ─── SECTION 6: STRATEGIC CONSIDERATIONS (fMRI specific roadmaps) ─── */}
+      <div className="space-y-5 select-none">
+        <div className="space-y-1">
+          <span className="text-[9px] font-black uppercase text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+            {isFmri ? "Strategic Considerations" : "Enterprise Feasibility Roadmap"}
+          </span>
+          <h2 className="font-display font-black text-xl md:text-2xl text-foreground uppercase tracking-wide mt-2">
+            {isFmri ? "Strategic Considerations" : `${tool.name.split(" (")[0]} Deployment Feasibility for Mahindra Finance`}
+          </h2>
+          <p className="text-xs text-muted-foreground max-w-xl font-semibold leading-relaxed">
+            {isFmri 
+              ? "A corporate reference matrix detailing research settings, costs, scalability, and compliance boundaries."
+              : "Practical guidelines detailing rural feasibility, branching complexity, scaling costs, and operational limits."}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          
+          {isFmri ? (
+            <>
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Research environment</h4>
+                  </div>
+                  <p className="text-[11px] text-stone-700 dark:text-stone-300 leading-relaxed font-semibold">
+                    FMRI research typically requires highly controlled environments with limited movement, calibrated testing flows, and carefully structured participant sessions.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Practical value</h4>
+                  </div>
+                  <p className="text-[11px] text-stone-700 dark:text-stone-300 leading-relaxed font-semibold">
+                    Most useful for: emotional-response mapping, trust analysis, campaign sequencing studies, onboarding psychology research, long-form storytelling evaluation.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Best fit research questions</h4>
+                  </div>
+                  <p className="text-[11px] text-stone-700 dark:text-stone-300 leading-relaxed font-semibold font-sans">
+                    FMRI may help explore: which campaign moments emotionally resonate, where customers mentally disengage, how trust develops during financial journeys, which communication structures reduce emotional fatigue.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Operational limitations</h4>
+                  </div>
+                  <p className="text-[11px] text-stone-700 dark:text-stone-300 leading-relaxed font-semibold">
+                    FMRI studies are slower, infrastructure-heavy, and more selective than lightweight behavioral testing tools such as EEG or eye-tracking systems.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Cost & deployment reality</h4>
+                  </div>
+                  <p className="text-[11px] text-stone-700 dark:text-stone-300 leading-relaxed font-semibold font-sans">
+                    Due to specialized infrastructure requirements, FMRI is typically used for strategic research initiatives rather than continuous campaign monitoring.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Ethical & privacy requirements</h4>
+                  </div>
+                  <p className="text-[11px] text-stone-700 dark:text-stone-300 leading-relaxed font-semibold font-sans">
+                    All behavioral-response studies should maintain: informed participant consent, anonymized interpretation, secure data handling, responsible reporting practices.
+                  </p>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Best Environments</h4>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed font-semibold font-sans">
+                    Quiet in-branch private cabins or low-noise advisory sandbox rooms. Shielding walk-ins from busy branch foot traffic secures high-quality testing metrics.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Rural Feasibility</h4>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed font-semibold">
+                    Highly feasible using lightweight wireless headbands. Field operators can calibrate comfortable dry sensors in under two minutes, with no clinical gels or skin prep needed.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Scalability & Costs</h4>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed font-semibold">
+                    Excellent cost-efficiency when utilized as a strategic campaign pre-launch validator rather than an ongoing daily transaction monitor.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Customer Comfort</h4>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed font-semibold font-sans">
+                    Dry-sensor wireless bands feel comfortable and light, keeping the borrower interaction completely non-intrusive and simple.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Operational Limits</h4>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed font-semibold font-sans">
+                    Captures pre-attentive focus and visual stress moments accurately, but does not predict long-term creditworthiness or credit risks.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-5 rounded-2xl border border-border bg-card flex flex-col justify-between shadow-sm hover:border-primary/20 transition duration-300">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-primary">
+                    <Sliders className="h-4.5 w-4.5" />
+                    <h4 className="font-display font-black text-xs uppercase tracking-wide text-foreground">Ethical Integrity</h4>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed font-semibold font-sans">
+                    Requires written vernacular consent, transparent verbal briefings, absolute data encryption, and complete decoupling from borrower credit profiles.
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
 
         </div>
       </div>
     </div>
   );
 }
+
 
 function ToolsPage() {
   const [activeCategory, setActiveCategory] = useState<string>("cns");
@@ -2303,198 +3630,7 @@ function ToolsPage() {
         DYNAMIC ENVIRONMENT VIEWPORT (Single active technique)
         ═══════════════════════════════════════════ 
       */}
-      {tool.id === "eeg" ? (
-        <EegStorytellingView tool={tool} activeTheme={activeTheme} />
-      ) : (
-        <div className={`grid grid-cols-1 lg:grid-cols-12 gap-6 pb-16 relative rounded-3xl p-4 md:p-6 bg-gradient-to-b ${activeTheme.bg} border ${activeTheme.borderColor} transition-all duration-500`}>
-        
-        {/* Glow dots */}
-        <div className="absolute inset-0 bg-radial from-primary/2 via-transparent to-transparent pointer-events-none opacity-30 blur-3xl" />
-        
-        {/* BENTO 1: IMMERSIVE HERO VISUAL SIMULATOR (Span 8) */}
-        <div className="col-span-12 lg:col-span-8 rounded-3xl border border-border bg-card/95 p-6 shadow-sm relative overflow-hidden flex flex-col justify-between min-h-[350px]">
-          <div className="absolute top-0 right-0 h-40 w-40 bg-radial from-primary/5 to-transparent pointer-events-none" />
-          {getSimulator(tool.id, tool.group)}
-        </div>
-
-        {/* BENTO 2: STRATEGIC HEADNOTE SPEC SHIFT (Span 4) */}
-        <div className="col-span-12 lg:col-span-4 rounded-3xl border border-border bg-card/95 p-6 md:p-8 shadow-sm flex flex-col justify-between relative overflow-hidden select-none">
-          <div className="space-y-4">
-            <span className={`text-[7.5px] font-black uppercase tracking-widest px-2.5 py-1 rounded ${activeTheme.textColor} ${activeTheme.bgColor} border ${activeTheme.borderColor}`}>
-              {tool.category}
-            </span>
-            <div>
-              <h1 className="font-display font-black text-xl text-foreground uppercase tracking-wide leading-tight mt-1.5">
-                {tool.name}
-              </h1>
-              <p className="text-[11px] text-muted-foreground mt-2 font-semibold leading-relaxed">
-                Strategic decision support playbook calibrated to analyze subconscious customer parameters without survey rationalization biases.
-              </p>
-            </div>
-          </div>
-
-          <div className="pt-5 mt-5 border-t border-border/40 space-y-3 text-[10.5px] font-bold">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Neuromarketing Modality:</span>
-              <span className={`${activeTheme.textColor} uppercase tracking-wider capitalize`}>
-                {tool.group} telemetry
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Calibration response:</span>
-              <span className="text-foreground">Subconscious (Sub-250ms)</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Rural Feasibility Rate:</span>
-              <span className="text-foreground">
-                {tool.id.includes("ai") || tool.id === "ux-analytics" ? "High (Smartphone APIs)" : "Medium (Local Branches)"}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* BENTO 3: SIMPLE STRATEGIC CORE & WHAT MARKETERS LEARN (Span 6) */}
-        <div className="col-span-12 md:col-span-6 rounded-3xl border border-border bg-card/95 p-6 md:p-8 shadow-sm flex flex-col justify-between gap-4 select-none">
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <span className="text-[9px] font-black uppercase text-muted-foreground tracking-wider">
-                Strategic Translation
-              </span>
-              <h3 className="font-display font-black text-sm text-foreground uppercase tracking-wide">
-                What it does in simple terms
-              </h3>
-            </div>
-            
-            <p className="text-xs leading-relaxed text-foreground/95 font-black bg-secondary/20 p-3.5 rounded-2xl border border-border/80 italic">
-              "{tool.oneLinePurpose}"
-            </p>
-
-            <div className="space-y-2 pt-1 text-xs">
-              <div className="flex gap-2">
-                <Check className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                <div className="font-semibold text-muted-foreground">
-                  <strong className="text-foreground">What Marketers Learn:</strong> {tool.primaryCapability}
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <Check className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                <div className="font-semibold text-muted-foreground">
-                  <strong className="text-foreground">When to Deploy:</strong> {tool.bestUseCase}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="p-3 bg-secondary/15 rounded-xl border border-border/80 flex justify-between items-center text-[10.5px] font-bold">
-            <span className="text-muted-foreground">Working Cognitive Rule:</span>
-            <span className="text-foreground font-black">{tool.detail.principle}</span>
-          </div>
-        </div>
-
-        {/* BENTO 4: BEFORE VS AFTER CREATIVE SHOWCASE SLIDER (Span 6) */}
-        <div className="col-span-12 md:col-span-6 rounded-3xl border border-border bg-card/95 p-6 md:p-8 shadow-sm">
-          <CreativeBeforeAfter toolId={tool.id} toolGroup={tool.group} />
-        </div>
-
-        {/* BENTO 5: MAHINDRA FINANCE BLUEPRINT Solution (Span 6) */}
-        <div className="col-span-12 md:col-span-6 rounded-3xl border border-border bg-card/95 p-6 md:p-8 shadow-sm flex flex-col justify-between gap-5 select-none">
-          <div className="space-y-4">
-            <div className="space-y-1">
-              <span className={`text-[9px] font-black uppercase ${activeTheme.textColor} tracking-wider`}>
-                Action Blueprint
-              </span>
-              <h3 className="font-display font-black text-sm text-foreground uppercase tracking-wide">
-                How Mahindra Finance Can Deploy This
-              </h3>
-            </div>
-
-            <div className="p-4 rounded-2xl bg-secondary/20 border border-border/80 leading-relaxed font-black text-xs text-foreground italic">
-              "{tool.detail.mahindraApp}"
-            </div>
-          </div>
-
-          <div className="text-[10px] text-muted-foreground flex items-center gap-1.5 font-bold pt-1">
-            <ShieldCheck className="h-4 w-4 text-emerald-500" /> Fully integrated into RBI-regulated security guardrails.
-          </div>
-        </div>
-
-        {/* BENTO 6: STRATEGIC NUDGES & CONSOLE (Span 6) */}
-        <div className="col-span-12 md:col-span-6 rounded-3xl border border-border bg-card/95 p-6 md:p-8 shadow-sm flex flex-col justify-between gap-5 select-none">
-          <div className="space-y-3.5">
-            <div className="space-y-1">
-              <span className="text-[9px] font-black uppercase text-muted-foreground tracking-wider">
-                Strategic Nudge
-              </span>
-              <h3 className="font-display font-black text-sm text-foreground uppercase tracking-wide">
-                Recommended design logic action
-              </h3>
-            </div>
-
-            <div className="bg-primary/4 p-3.5 rounded-xl border border-primary/10 text-xs">
-              <span className="text-[8.5px] font-black uppercase text-primary flex items-center gap-1 mb-1.5">
-                <Sparkles className="h-3.5 w-3.5" /> Strategic Nudge Recommendation
-              </span>
-              <p className="text-foreground/95 font-bold leading-normal">
-                "{tool.detail.marketingUse}"
-              </p>
-            </div>
-          </div>
-
-          {/* Console logs */}
-          <div className="p-3 bg-navy text-foreground font-mono text-[9.5px] rounded-xl border border-border/80 space-y-1 relative shadow-inner">
-            <span className="absolute top-1.5 right-3 text-[7px] font-bold text-muted-foreground uppercase">Telemetry Output</span>
-            <div className="text-primary/70 flex items-center gap-1">&gt; sys.calibration() ... DONE</div>
-            <div className="text-muted-foreground font-semibold leading-normal mt-1 text-[9.2px]">
-              &gt; {tool.detail.realInsight}
-            </div>
-          </div>
-        </div>
-
-        {/* BENTO 7: METHODOLOGY PROCESS STEPS & AI ROADMAP (Span 12) */}
-        <div className="col-span-12 rounded-3xl border border-border bg-card/95 p-6 md:p-8 shadow-sm space-y-6 select-none">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            
-            {/* Steps Column */}
-            <div className="lg:col-span-2 space-y-4">
-              <div className="space-y-1">
-                <span className="text-[9px] font-black uppercase text-muted-foreground tracking-wider">Methodology Blueprint</span>
-                <h4 className="font-display font-black text-xs text-foreground uppercase tracking-wide">Deployable Process Steps</h4>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {[
-                  { step: "01", title: "Target Panel Setup", desc: "Remote mobile device webcams or physical lab kits calibrate inside target rural demographic zones." },
-                  { step: "02", title: "Stimulus Exposure", desc: "Cohort views dynamic financing print creatives, KYC calculators, or WhatsApp interactive messages." },
-                  { step: "03", title: "Signal Sifting", desc: "AI models process foveal fixation vectors, prefrontal alpha bands, or electrodermal conductance." }
-                ].map((s, idx) => (
-                  <div key={idx} className="bg-secondary/15 p-4 rounded-xl border border-border/80 relative space-y-1.5">
-                    <span className="absolute top-2.5 right-3.5 font-display font-black text-lg text-primary/10">{s.step}</span>
-                    <h5 className="font-display font-black text-[10px] text-foreground uppercase tracking-wide">{s.title}</h5>
-                    <p className="text-[9.5px] text-muted-foreground leading-normal font-semibold">{s.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* AI Roadmap Column */}
-            <div className="bg-secondary/10 p-4 rounded-2xl border border-border/80 flex flex-col justify-between gap-3">
-              <div className="space-y-1">
-                <span className={`text-[8px] font-black uppercase ${activeTheme.textColor} tracking-widest`}>AI 2026+ Outlook</span>
-                <h5 className="font-display font-black text-xs text-foreground uppercase tracking-wide">Generative Saliency</h5>
-              </div>
-              <p className="text-[10px] text-muted-foreground leading-relaxed font-semibold">
-                Simulating physical human gaze and biometric peaks directly via deep generative models, siphoning physical setup costs and enabling real-time programmatic visual creative scoring pre-deployment.
-              </p>
-              <div className="flex justify-between items-center text-[9.5px] font-bold border-t border-border/30 pt-2 mt-1 select-none">
-                <span className="text-muted-foreground">Predictive accuracy:</span>
-                <span className="text-primary font-black">92%</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-      </div>
-      )}
+      <EegStorytellingView tool={tool} activeTheme={activeTheme} />
     </AppLayout>
   );
 }
