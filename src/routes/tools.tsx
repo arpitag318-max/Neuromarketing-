@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
 import { AppLayout } from "@/components/neuro/AppLayout";
 import { Card } from "@/components/neuro/Primitives";
 import { 
@@ -9,14 +9,17 @@ import {
   Database, Gauge, Terminal, ArrowLeft, ShieldCheck, CheckCircle2
 } from "lucide-react";
 
-export const Route = createFileRoute("/tools")({ component: ToolsRedirectPage });
+export const Route = createFileRoute("/tools")({
+  beforeLoad: ({ location }) => {
+    if (location.pathname === "/tools") {
+      throw redirect({ to: "/tools/$toolId", params: { toolId: "eeg" }, replace: true });
+    }
+  },
+  component: ToolsLayoutRoute,
+});
 
-function ToolsRedirectPage() {
-  const navigate = useNavigate();
-  useEffect(() => {
-    navigate({ to: "/tools/$toolId", params: { toolId: "eeg" }, replace: true });
-  }, [navigate]);
-  return null;
+function ToolsLayoutRoute() {
+  return <Outlet />;
 }
 
 // ═══════════════════════════════════════════

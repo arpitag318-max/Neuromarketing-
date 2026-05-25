@@ -1,8 +1,7 @@
 import { Outlet, Link, useLocation } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Brain, Sprout, Microscope, Workflow, ClipboardCheck,
-  Eye, FlaskConical, BookMarked, FileText, Sparkles, Search, Bell,
-  Settings, HelpCircle, Menu, X
+  LayoutDashboard, Brain, Microscope, Workflow, ClipboardCheck,
+  Eye, BookMarked, FileText, Menu, X
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { NeuroCopilot } from "./NeuroCopilot";
@@ -12,12 +11,10 @@ type NavItem = { to: string; icon: typeof LayoutDashboard; label: string; highli
 const nav: NavItem[] = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
   { to: "/psychology", icon: Brain, label: "Consumer Psychology" },
-  { to: "/rural", icon: Sprout, label: "Rural Insights" },
   { to: "/tools", icon: Microscope, label: "Neuromarketing Tools" },
   { to: "/funnel", icon: Workflow, label: "Communication Funnel" },
   { to: "/audit", icon: ClipboardCheck, label: "AI Creative Audit", highlight: true },
   { to: "/eye-tracking", icon: Eye, label: "Live Eye Tracking" },
-  { to: "/ux-lab", icon: FlaskConical, label: "UX Friction Lab" },
   { to: "/case-studies", icon: BookMarked, label: "Case Study Vault" },
   { to: "/reports", icon: FileText, label: "Reports & Exports" },
 ];
@@ -47,17 +44,6 @@ export function AppLayout({ children }: { children?: ReactNode }) {
 
         {/* Brand accent divider */}
         <div className="brand-divider" />
-
-        {/* Search */}
-        <div className="px-3 pt-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-            <input
-              placeholder="Search modules…"
-              className="w-full h-9 pl-9 pr-3 rounded-lg bg-secondary border border-transparent text-xs placeholder:text-muted-foreground/70 focus:outline-none focus:border-primary/30 focus:bg-card transition"
-            />
-          </div>
-        </div>
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto scrollbar-thin px-2 py-4">
@@ -89,25 +75,7 @@ export function AppLayout({ children }: { children?: ReactNode }) {
         </nav>
 
         {/* Sidebar Footer */}
-        <div className="border-t border-sidebar-border p-3 space-y-1">
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-foreground/70 hover:text-foreground hover:bg-secondary transition">
-            <Settings className="h-4 w-4" /> Settings
-          </a>
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-foreground/70 hover:text-foreground hover:bg-secondary transition">
-            <HelpCircle className="h-4 w-4" /> Help & Docs
-          </a>
-          {/* User Card with brand styling */}
-          <div className="mt-3 soft-card rounded-xl p-3">
-            <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary font-bold text-xs flex items-center justify-center shadow-sm select-none shrink-0 border border-primary/5">
-                MT
-              </div>
-              <div className="leading-tight">
-                <div className="text-xs font-medium">Marketing Team</div>
-                <div className="text-[10px] text-muted-foreground">Internal · Tier 1</div>
-              </div>
-            </div>
-          </div>
+        <div className="border-t border-sidebar-border p-3">
         </div>
       </aside>
 
@@ -129,23 +97,9 @@ export function AppLayout({ children }: { children?: ReactNode }) {
             {/* Desktop: Workspace indicator */}
             <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground ml-1">
               <span className="text-foreground font-semibold tracking-wide uppercase text-[11px]">Neuromarketing Capsule</span>
-              <span className="ml-1.5 chip-teal chip">
-                <span className="h-1.5 w-1.5 rounded-full bg-accent pulse-glow" /> Live
-              </span>
             </div>
 
-            <div className="ml-auto flex items-center gap-2">
-              <Link to="/audit" className="hidden sm:inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-primary text-primary-foreground hover:bg-mahindra-red-light text-xs font-medium transition shadow-sm shadow-primary/20">
-                <Sparkles className="h-3.5 w-3.5" /> Run Creative Audit
-              </Link>
-              <button className="relative h-9 w-9 grid place-items-center rounded-lg border border-border bg-card hover:bg-secondary transition">
-                <Bell className="h-4 w-4" />
-                <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-primary" />
-              </button>
-              <div className="h-9 w-9 rounded-lg bg-primary text-primary-foreground font-semibold text-xs flex items-center justify-center shadow-sm select-none border border-primary/10 shrink-0">
-                MT
-              </div>
-            </div>
+            <div className="ml-auto flex items-center gap-2" />
           </div>
         </header>
 
