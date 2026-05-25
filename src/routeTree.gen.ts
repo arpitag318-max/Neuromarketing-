@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ToolsRouteImport } from './routes/tools'
-import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as PsychologyRouteImport } from './routes/psychology'
 import { Route as FunnelRouteImport } from './routes/funnel'
 import { Route as EyeTrackingRouteImport } from './routes/eye-tracking'
@@ -22,11 +21,6 @@ import { Route as ToolsToolIdRouteImport } from './routes/tools.$toolId'
 const ToolsRoute = ToolsRouteImport.update({
   id: '/tools',
   path: '/tools',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ReportsRoute = ReportsRouteImport.update({
-  id: '/reports',
-  path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PsychologyRoute = PsychologyRouteImport.update({
@@ -72,7 +66,6 @@ export interface FileRoutesByFullPath {
   '/eye-tracking': typeof EyeTrackingRoute
   '/funnel': typeof FunnelRoute
   '/psychology': typeof PsychologyRoute
-  '/reports': typeof ReportsRoute
   '/tools': typeof ToolsRouteWithChildren
   '/tools/$toolId': typeof ToolsToolIdRoute
 }
@@ -83,7 +76,6 @@ export interface FileRoutesByTo {
   '/eye-tracking': typeof EyeTrackingRoute
   '/funnel': typeof FunnelRoute
   '/psychology': typeof PsychologyRoute
-  '/reports': typeof ReportsRoute
   '/tools': typeof ToolsRouteWithChildren
   '/tools/$toolId': typeof ToolsToolIdRoute
 }
@@ -95,7 +87,6 @@ export interface FileRoutesById {
   '/eye-tracking': typeof EyeTrackingRoute
   '/funnel': typeof FunnelRoute
   '/psychology': typeof PsychologyRoute
-  '/reports': typeof ReportsRoute
   '/tools': typeof ToolsRouteWithChildren
   '/tools/$toolId': typeof ToolsToolIdRoute
 }
@@ -108,7 +99,6 @@ export interface FileRouteTypes {
     | '/eye-tracking'
     | '/funnel'
     | '/psychology'
-    | '/reports'
     | '/tools'
     | '/tools/$toolId'
   fileRoutesByTo: FileRoutesByTo
@@ -119,7 +109,6 @@ export interface FileRouteTypes {
     | '/eye-tracking'
     | '/funnel'
     | '/psychology'
-    | '/reports'
     | '/tools'
     | '/tools/$toolId'
   id:
@@ -130,7 +119,6 @@ export interface FileRouteTypes {
     | '/eye-tracking'
     | '/funnel'
     | '/psychology'
-    | '/reports'
     | '/tools'
     | '/tools/$toolId'
   fileRoutesById: FileRoutesById
@@ -142,7 +130,6 @@ export interface RootRouteChildren {
   EyeTrackingRoute: typeof EyeTrackingRoute
   FunnelRoute: typeof FunnelRoute
   PsychologyRoute: typeof PsychologyRoute
-  ReportsRoute: typeof ReportsRoute
   ToolsRoute: typeof ToolsRouteWithChildren
 }
 
@@ -153,13 +140,6 @@ declare module '@tanstack/react-router' {
       path: '/tools'
       fullPath: '/tools'
       preLoaderRoute: typeof ToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reports': {
-      id: '/reports'
-      path: '/reports'
-      fullPath: '/reports'
-      preLoaderRoute: typeof ReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/psychology': {
@@ -231,7 +211,6 @@ const rootRouteChildren: RootRouteChildren = {
   EyeTrackingRoute: EyeTrackingRoute,
   FunnelRoute: FunnelRoute,
   PsychologyRoute: PsychologyRoute,
-  ReportsRoute: ReportsRoute,
   ToolsRoute: ToolsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

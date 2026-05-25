@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from "@tanstack/react-router";
 import {
   LayoutDashboard, Brain, Microscope, Workflow, ClipboardCheck,
-  Eye, BookMarked, FileText, Menu, X
+  Eye, BookMarked, Menu, X
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { NeuroCopilot } from "./NeuroCopilot";
@@ -16,7 +16,6 @@ const nav: NavItem[] = [
   { to: "/audit", icon: ClipboardCheck, label: "AI Creative Audit", highlight: true },
   { to: "/eye-tracking", icon: Eye, label: "Live Eye Tracking" },
   { to: "/case-studies", icon: BookMarked, label: "Case Study Vault" },
-  { to: "/reports", icon: FileText, label: "Reports & Exports" },
 ];
 
 export function AppLayout({ children }: { children?: ReactNode }) {

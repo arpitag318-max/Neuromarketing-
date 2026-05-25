@@ -173,7 +173,7 @@ function Dashboard() {
         <Card className="p-5">
           <div className="flex items-baseline justify-between mb-4">
             <h3 className="font-display text-base font-semibold">Recent Audits</h3>
-            <Link to="/reports" className="text-xs text-primary hover:underline">All →</Link>
+            <Link to="/audit" className="text-xs text-primary hover:underline">All →</Link>
           </div>
           <ul className="space-y-3">
             {recentAudits.map((a) => (

@@ -69,22 +69,7 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <div className="border-t border-white/5 p-3 space-y-1">
-        <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-muted-foreground hover:text-foreground hover:bg-white/[0.03] transition">
-          <Settings className="h-4 w-4" /> Settings
-        </a>
-        <a href="#" className="flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-muted-foreground hover:text-foreground hover:bg-white/[0.03] transition">
-          <HelpCircle className="h-4 w-4" /> Help & Docs
-        </a>
-        <div className="mt-3 glass rounded-xl p-3">
-          <div className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-purple to-teal grid place-items-center text-[11px] font-semibold text-background">MF</div>
-            <div className="leading-tight">
-              <div className="text-xs font-medium">Marketing Team</div>
-              <div className="text-[10px] text-muted-foreground">Internal · Tier 1</div>
-            </div>
-          </div>
-        </div>
+      <div className="border-t border-white/5 p-3">
       </div>
     </aside>
   );
