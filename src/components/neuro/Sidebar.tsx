@@ -1,17 +1,15 @@
 import {
-  LayoutDashboard, Brain, Sprout, Microscope, Workflow, ClipboardCheck,
-  FlaskConical, BookMarked, Network, Radio, Eye, Settings, HelpCircle, Search
+  LayoutDashboard, Brain, Microscope, Workflow, ClipboardCheck,
+  BookMarked, Network, Radio, Eye, Settings, HelpCircle, Search
 } from "lucide-react";
 import { useState } from "react";
 
 const items = [
   { icon: LayoutDashboard, label: "Overview", href: "#overview" },
   { icon: Brain, label: "Consumer Psychology", href: "#psychology" },
-  { icon: Sprout, label: "Rural Insights", href: "#psychology" },
   { icon: Microscope, label: "Neuromarketing Tools", href: "#tools" },
   { icon: Workflow, label: "Communication Funnel", href: "#modules" },
   { icon: ClipboardCheck, label: "Campaign Audit", href: "#audit" },
-  { icon: FlaskConical, label: "UX Friction Lab", href: "#modules" },
   { icon: BookMarked, label: "Case Study Vault", href: "#modules" },
   { icon: Network, label: "Neuro-Phygital", href: "#phygital" },
   { icon: Radio, label: "SST Intelligence", href: "#tools" },

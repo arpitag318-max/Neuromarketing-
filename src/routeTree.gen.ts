@@ -9,9 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UxLabRouteImport } from './routes/ux-lab'
 import { Route as ToolsRouteImport } from './routes/tools'
-import { Route as RuralRouteImport } from './routes/rural'
 import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as PsychologyRouteImport } from './routes/psychology'
 import { Route as FunnelRouteImport } from './routes/funnel'
@@ -21,19 +19,9 @@ import { Route as AuditRouteImport } from './routes/audit'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsToolIdRouteImport } from './routes/tools.$toolId'
 
-const UxLabRoute = UxLabRouteImport.update({
-  id: '/ux-lab',
-  path: '/ux-lab',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ToolsRoute = ToolsRouteImport.update({
   id: '/tools',
   path: '/tools',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RuralRoute = RuralRouteImport.update({
-  id: '/rural',
-  path: '/rural',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ReportsRoute = ReportsRouteImport.update({
@@ -85,9 +73,7 @@ export interface FileRoutesByFullPath {
   '/funnel': typeof FunnelRoute
   '/psychology': typeof PsychologyRoute
   '/reports': typeof ReportsRoute
-  '/rural': typeof RuralRoute
   '/tools': typeof ToolsRouteWithChildren
-  '/ux-lab': typeof UxLabRoute
   '/tools/$toolId': typeof ToolsToolIdRoute
 }
 export interface FileRoutesByTo {
@@ -98,9 +84,7 @@ export interface FileRoutesByTo {
   '/funnel': typeof FunnelRoute
   '/psychology': typeof PsychologyRoute
   '/reports': typeof ReportsRoute
-  '/rural': typeof RuralRoute
   '/tools': typeof ToolsRouteWithChildren
-  '/ux-lab': typeof UxLabRoute
   '/tools/$toolId': typeof ToolsToolIdRoute
 }
 export interface FileRoutesById {
@@ -112,9 +96,7 @@ export interface FileRoutesById {
   '/funnel': typeof FunnelRoute
   '/psychology': typeof PsychologyRoute
   '/reports': typeof ReportsRoute
-  '/rural': typeof RuralRoute
   '/tools': typeof ToolsRouteWithChildren
-  '/ux-lab': typeof UxLabRoute
   '/tools/$toolId': typeof ToolsToolIdRoute
 }
 export interface FileRouteTypes {
@@ -127,9 +109,7 @@ export interface FileRouteTypes {
     | '/funnel'
     | '/psychology'
     | '/reports'
-    | '/rural'
     | '/tools'
-    | '/ux-lab'
     | '/tools/$toolId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -140,9 +120,7 @@ export interface FileRouteTypes {
     | '/funnel'
     | '/psychology'
     | '/reports'
-    | '/rural'
     | '/tools'
-    | '/ux-lab'
     | '/tools/$toolId'
   id:
     | '__root__'
@@ -153,9 +131,7 @@ export interface FileRouteTypes {
     | '/funnel'
     | '/psychology'
     | '/reports'
-    | '/rural'
     | '/tools'
-    | '/ux-lab'
     | '/tools/$toolId'
   fileRoutesById: FileRoutesById
 }
@@ -167,32 +143,16 @@ export interface RootRouteChildren {
   FunnelRoute: typeof FunnelRoute
   PsychologyRoute: typeof PsychologyRoute
   ReportsRoute: typeof ReportsRoute
-  RuralRoute: typeof RuralRoute
   ToolsRoute: typeof ToolsRouteWithChildren
-  UxLabRoute: typeof UxLabRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/ux-lab': {
-      id: '/ux-lab'
-      path: '/ux-lab'
-      fullPath: '/ux-lab'
-      preLoaderRoute: typeof UxLabRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/tools': {
       id: '/tools'
       path: '/tools'
       fullPath: '/tools'
       preLoaderRoute: typeof ToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/rural': {
-      id: '/rural'
-      path: '/rural'
-      fullPath: '/rural'
-      preLoaderRoute: typeof RuralRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reports': {
@@ -272,9 +232,7 @@ const rootRouteChildren: RootRouteChildren = {
   FunnelRoute: FunnelRoute,
   PsychologyRoute: PsychologyRoute,
   ReportsRoute: ReportsRoute,
-  RuralRoute: RuralRoute,
   ToolsRoute: ToolsRouteWithChildren,
-  UxLabRoute: UxLabRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

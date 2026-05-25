@@ -3,7 +3,7 @@ import { AppLayout } from "@/components/neuro/AppLayout";
 import { PageHeader, Card, SectionTitle } from "@/components/neuro/Primitives";
 import {
   Eye, ShieldCheck, HeartPulse, BrainCircuit, Activity, Sparkles, Gauge,
-  Sprout, ArrowRight, TrendingUp, ClipboardCheck, Workflow, FlaskConical,
+  Sprout, ArrowRight, TrendingUp, ClipboardCheck, Workflow,
   BookMarked, Microscope, Brain, FileText
 } from "lucide-react";
 import {
@@ -43,10 +43,8 @@ const quickLinks = [
   { to: "/audit", icon: ClipboardCheck, title: "Run AI Creative Audit", desc: "Upload a campaign visual for neuroscience-backed scoring", tag: "AI" },
   { to: "/eye-tracking", icon: Eye, title: "Live Gaze Lab", desc: "Browser-based eye tracking with WebGazer", tag: "Live" },
   { to: "/psychology", icon: Brain, title: "Consumer Psychology", desc: "Cognitive load, trust heuristics, loss aversion", tag: "Learn" },
-  { to: "/rural", icon: Sprout, title: "Rural Insights", desc: "Trust behavior, digital hesitation, assisted onboarding", tag: "Data" },
   { to: "/tools", icon: Microscope, title: "Neuromarketing Tools Hub", desc: "EEG, SST, GSR, IAT, eye tracking, facial coding", tag: "Methods" },
   { to: "/funnel", icon: Workflow, title: "Communication Funnel", desc: "Attention → Interest → Desire → Action mapped to neuro signals", tag: "Strategy" },
-  { to: "/ux-lab", icon: FlaskConical, title: "UX Friction Lab", desc: "Detect cognitive bottlenecks in onboarding", tag: "UX" },
   { to: "/case-studies", icon: BookMarked, title: "Case Study Vault", desc: "BFSI, Fintech, FMCG, Retail behavioral wins", tag: "Library" },
 ] as const;
 
