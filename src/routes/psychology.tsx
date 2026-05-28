@@ -429,7 +429,7 @@ const creativeEmphases = [
 ];
 
 function PsychologyPage() {
-  const [activeTab, setActiveTab] = useState("attention-intelligence");
+  const [activeTab, setActiveTab] = useState("north-india-deep-layer");
   const [showTheory, setShowTheory] = useState(false);
 
   // Form Simulator Slider State
