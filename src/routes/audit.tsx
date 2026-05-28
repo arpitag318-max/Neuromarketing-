@@ -130,11 +130,11 @@ function AuditPage() {
 
   return (
     <AppLayout>
-      {/* Immersive Dark Capsule Container */}
-      <div className="bg-[#090809]/98 text-stone-100 p-6 lg:p-8 rounded-3xl border border-stone-800/80 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+      {/* Immersive Light Capsule Container */}
+      <div className="bg-background text-foreground p-6 lg:p-8 rounded-3xl border border-border shadow-2xl relative overflow-hidden backdrop-blur-xl">
         
         {/* Cyber Ambient Backdrop Grids */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:30px_30px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.015)_1px,transparent_1px)] bg-[size:30px_30px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
         <div className="absolute top-0 right-1/4 w-[350px] h-[350px] bg-gradient-to-b from-[#8B1E1E]/10 to-transparent rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute -bottom-48 -left-48 w-[400px] h-[400px] bg-gradient-to-t from-teal-500/5 to-transparent rounded-full blur-[120px] pointer-events-none" />
 
@@ -149,7 +149,7 @@ function AuditPage() {
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8 mt-4">
             
             {/* Visual File Upload Container */}
-            <div className="lg:col-span-3 bg-stone-950/60 rounded-2xl border border-stone-800/90 p-5 backdrop-blur flex flex-col justify-between relative overflow-hidden">
+            <div className="lg:col-span-3 bg-card rounded-2xl border border-border p-5 backdrop-blur flex flex-col justify-between relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#8B1E1E]/40 to-transparent" />
               
               {!imageUrl ? (
@@ -159,7 +159,7 @@ function AuditPage() {
                   onClick={() => fileRef.current?.click()}
                   className="border-2 border-dashed border-stone-800/80 rounded-xl py-20 px-8 text-center cursor-pointer hover:border-[#8B1E1E]/50 hover:bg-stone-900/30 transition duration-300 flex flex-col items-center justify-center min-h-[380px] group"
                 >
-                  <div className="h-16 w-16 rounded-2xl bg-stone-900/80 border border-stone-800 text-[#8B1E1E] group-hover:text-rose-400 group-hover:border-[#8B1E1E]/40 group-hover:scale-105 transition-all duration-300 grid place-items-center mb-5 shadow-inner">
+                  <div className="h-16 w-16 rounded-2xl bg-secondary border border-border text-[#8B1E1E] group-hover:text-rose-400 group-hover:border-[#8B1E1E]/40 group-hover:scale-105 transition-all duration-300 grid place-items-center mb-5 shadow-inner">
                     <Upload className="h-7 w-7 text-stone-400 group-hover:text-[#8B1E1E] transition" />
                   </div>
                   <div className="font-display text-lg font-bold text-stone-200 mb-2 group-hover:text-white transition">Deploy Campaign Asset</div>
@@ -174,7 +174,7 @@ function AuditPage() {
                 <div className="relative flex flex-col justify-between h-full min-h-[380px]">
                   
                   {/* Uploaded Creative Display Shield */}
-                  <div className="relative rounded-xl overflow-hidden bg-stone-900/50 border border-stone-800/60 flex justify-center items-center h-[420px]">
+                  <div className="relative rounded-xl overflow-hidden bg-secondary border border-border flex justify-center items-center h-[420px]">
                     <div className="relative h-full w-fit flex items-center justify-center">
                       <img ref={imgRef} src={imageUrl} alt="Campaign Creative" className="h-full w-auto object-contain" />
                       
@@ -246,40 +246,40 @@ function AuditPage() {
                       )}
 
                       {/* Image Action Reset Button */}
-                      <button onClick={reset} className="absolute top-3 right-3 h-9 w-9 grid place-items-center rounded-lg bg-stone-950/80 border border-stone-800 text-stone-400 hover:text-white hover:bg-stone-900 transition duration-200 shadow-xl backdrop-blur-md">
+                      <button onClick={reset} className="absolute top-3 right-3 h-9 w-9 grid place-items-center rounded-lg bg-card border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition duration-200 shadow-xl backdrop-blur-md">
                         <X className="h-5 w-5" />
                       </button>
                     </div>
                   </div>
 
                   {/* Mode Toggles Horizontal Drawer */}
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 bg-stone-900/30 p-2.5 rounded-xl border border-stone-800/40">
-                    <div className="flex items-center gap-2 text-stone-400 text-xs font-mono">
-                      <Layers className="h-3.5 w-3.5 text-stone-400" />
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 bg-secondary/60 p-2.5 rounded-xl border border-border">
+                    <div className="flex items-center gap-2 text-muted-foreground text-xs font-mono">
+                      <Layers className="h-3.5 w-3.5 text-muted-foreground" />
                       <span>TELEMETRY OVERLAYS:</span>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       <button 
                         onClick={() => setOverlay("heatmap")} 
-                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "heatmap" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-stone-950/60 border-stone-800 text-stone-400 hover:text-stone-200 hover:bg-stone-900"}`}
+                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "heatmap" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
                       >
                         <Activity className="h-3.5 w-3.5" /> Salience Heatmap
                       </button>
                       <button 
                         onClick={() => setOverlay("gaze")} 
-                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "gaze" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-stone-950/60 border-stone-800 text-stone-400 hover:text-stone-200 hover:bg-stone-900"}`}
+                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "gaze" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
                       >
                         <Eye className="h-3.5 w-3.5" /> Gaze Scanpath
                       </button>
                       <button 
                         onClick={() => setOverlay("ignored")} 
-                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "ignored" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-stone-950/60 border-stone-800 text-stone-400 hover:text-stone-200 hover:bg-stone-900"}`}
+                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "ignored" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
                       >
                         <Compass className="h-3.5 w-3.5" /> Blindness Risks
                       </button>
                       <button 
                         onClick={() => setOverlay("none")} 
-                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "none" ? "bg-stone-800 text-white border-stone-700" : "bg-stone-950/60 border-stone-800 text-stone-400 hover:text-stone-200 hover:bg-stone-900"}`}
+                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "none" ? "bg-secondary text-foreground border-border" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
                       >
                         Original
                       </button>
@@ -291,19 +291,19 @@ function AuditPage() {
             </div>
 
             {/* Campaign Context & AI Operations Card */}
-            <div className="lg:col-span-2 bg-stone-950/60 rounded-2xl border border-stone-800/90 p-5 backdrop-blur flex flex-col justify-between relative overflow-hidden">
+            <div className="lg:col-span-2 bg-card rounded-2xl border border-border p-5 backdrop-blur flex flex-col justify-between relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-teal-500/40 to-transparent" />
               
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <div className="h-2 w-2 rounded-full bg-[#8B1E1E] pulse-glow" />
-                  <h3 className="font-display text-base font-bold tracking-wide text-stone-200 uppercase">Input Context Matrix</h3>
+                  <h3 className="font-display text-base font-bold tracking-wide text-foreground uppercase">Input Context Matrix</h3>
                 </div>
-                <p className="text-xs text-stone-400 leading-relaxed mb-4">Ground the visual neural networks with audience constraints and media properties to isolate specific regional cognitive biases.</p>
+                <p className="text-xs text-muted-foreground leading-relaxed mb-4">Ground the visual neural networks with audience constraints and media properties to isolate specific regional cognitive biases.</p>
                 
                 {/* Command Line Input Wrapper */}
-                <div className="relative bg-stone-900/60 rounded-xl border border-stone-800 p-3 mb-6 focus-within:border-[#8B1E1E]/50 focus-within:ring-1 focus-within:ring-[#8B1E1E]/30 transition-all">
-                  <div className="absolute top-2.5 left-3 text-[10px] font-mono text-stone-500 flex items-center gap-1">
+                <div className="relative bg-secondary rounded-xl border border-border p-3 mb-6 focus-within:border-[#8B1E1E]/50 focus-within:ring-1 focus-within:ring-[#8B1E1E]/30 transition-all">
+                  <div className="absolute top-2.5 left-3 text-[10px] font-mono text-muted-foreground/70 flex items-center gap-1">
                     <Zap className="h-2.5 w-2.5" /> <span>SECURE_INPUT_SHELL //</span>
                   </div>
                   <textarea
@@ -311,9 +311,9 @@ function AuditPage() {
                     onChange={(e) => setContext(e.target.value)}
                     placeholder="E.g., Rural farming tractor loan poster, targeted towards farmers in Central Maharashtra. Emotional theme: post-harvest prosperity. Primary channels: physical flyers & regional WhatsApp."
                     rows={6}
-                    className="w-full mt-4 bg-transparent text-stone-200 placeholder:text-stone-600 text-xs leading-relaxed resize-none focus:outline-none scrollbar-thin"
+                    className="w-full mt-4 bg-transparent text-foreground placeholder:text-muted-foreground text-xs leading-relaxed resize-none focus:outline-none scrollbar-thin"
                   />
-                  <div className="flex justify-between items-center text-[9px] font-mono text-stone-600 border-t border-stone-800/80 pt-2 mt-2">
+                  <div className="flex justify-between items-center text-[9px] font-mono text-muted-foreground/70 border-t border-border pt-2 mt-2">
                     <span>MODE: REGIONAL_TARGETING</span>
                     <span>MAX_CHARS: 500</span>
                   </div>
@@ -347,11 +347,11 @@ function AuditPage() {
                   </div>
                 )}
 
-                <div className="mt-6 pt-5 border-t border-stone-800/80 flex items-center justify-between text-[10px] text-stone-500 font-mono">
+                <div className="mt-6 pt-5 border-t border-border flex items-center justify-between text-[10px] text-muted-foreground/70 font-mono">
                   <span>FRAMEWORKS ACTIVATED:</span>
                   <span>17 CORE SCHEMAS</span>
                 </div>
-                <div className="mt-2 text-[9px] text-stone-600 leading-relaxed font-mono">
+                <div className="mt-2 text-[9px] text-muted-foreground/70 leading-relaxed font-mono">
                   SST EEG Consolidation · Sweller Elements · Panksepp Affective Path · Gestalt Common Region · Mayer Heuristics · Fitts Target Sizing · von Restorff Isolation.
                 </div>
               </div>
@@ -365,22 +365,22 @@ function AuditPage() {
             <div className="space-y-8 fade-up mt-8">
               
               {/* Executive Summary & Overall Grade Card */}
-              <div className="bg-stone-950/60 rounded-2xl border border-stone-800/90 p-6 backdrop-blur relative overflow-hidden">
+              <div className="bg-card rounded-2xl border border-border p-6 backdrop-blur relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-emerald-500/40 via-[#8B1E1E]/40 to-teal-500/40" />
                 
                 <div className="flex flex-col lg:flex-row gap-8 items-stretch justify-between">
                   
                   {/* Radial Performance Score Telemetry */}
-                  <div className="flex items-center gap-6 shrink-0 bg-stone-900/40 border border-stone-800/50 p-4 rounded-xl">
+                  <div className="flex items-center gap-6 shrink-0 bg-card/50 border border-border p-4 rounded-xl">
                     <div className={`h-24 w-24 rounded-2xl border-2 flex flex-col items-center justify-center font-display shadow-2xl relative overflow-hidden shrink-0 ${scoreColor(result.overall_score)}`}>
                       <div className="absolute inset-0 bg-white/[0.01] pointer-events-none" />
-                      <span className="text-[10px] uppercase font-mono tracking-wider text-stone-500 -mt-1 font-bold">Grade</span>
+                      <span className="text-[10px] uppercase font-mono tracking-wider text-muted-foreground/70 -mt-1 font-bold">Grade</span>
                       <span className="text-3xl font-extrabold leading-none mt-1">{result.overall_score}</span>
                     </div>
                     <div>
-                      <div className="text-[10px] tracking-widest font-mono text-stone-500 uppercase">COGNITIVE COMPLIANCE</div>
-                      <div className="font-display text-2xl font-bold text-white mt-1">{result.verdict}</div>
-                      <div className="text-xs text-stone-400 mt-2 max-w-xs leading-relaxed">
+                      <div className="text-[10px] tracking-widest font-mono text-muted-foreground/70 uppercase">COGNITIVE COMPLIANCE</div>
+                      <div className="font-display text-2xl font-bold text-foreground mt-1">{result.verdict}</div>
+                      <div className="text-xs text-muted-foreground mt-2 max-w-xs leading-relaxed">
                         <span className="text-teal-400 font-semibold font-mono">RURAL NOTE:</span> {result.rural_relevance_note}
                       </div>
                     </div>
@@ -392,19 +392,19 @@ function AuditPage() {
                       <h3 className="font-display text-sm font-bold tracking-wider uppercase text-[#8B1E1E] flex items-center gap-2 mb-2.5">
                         <Brain className="h-4 w-4" /> Boardroom Neuroscience Audit
                       </h3>
-                      <p className="text-sm text-stone-200 leading-relaxed font-sans max-w-3xl">{result.summary}</p>
+                      <p className="text-sm text-foreground leading-relaxed font-sans max-w-3xl">{result.summary}</p>
                     </div>
                     
                     {result.top_recommendations?.length > 0 && (
-                      <div className="mt-5 pt-4 border-t border-stone-800/80">
-                        <h4 className="text-[10px] font-mono tracking-wider text-stone-500 uppercase mb-3 flex items-center gap-1.5">
+                      <div className="mt-5 pt-4 border-t border-border">
+                        <h4 className="text-[10px] font-mono tracking-wider text-muted-foreground/70 uppercase mb-3 flex items-center gap-1.5">
                           <Target className="h-3.5 w-3.5 text-[#8B1E1E]" /> Primary Visual Tuning Instructions
                         </h4>
                         <div className="grid md:grid-cols-2 gap-3">
                           {result.top_recommendations.map((r, i) => (
-                            <div key={i} className="flex gap-2.5 text-xs p-3 rounded-lg bg-stone-900/60 border border-stone-800/85">
+                            <div key={i} className="flex gap-2.5 text-xs p-3 rounded-lg bg-secondary border border-border">
                               <Lightbulb className="h-4 w-4 text-amber-400 shrink-0" /> 
-                              <span className="text-stone-300 font-sans leading-relaxed">{r}</span>
+                              <span className="text-muted-foreground font-sans leading-relaxed">{r}</span>
                             </div>
                           ))}
                         </div>
@@ -417,17 +417,17 @@ function AuditPage() {
 
               {/* Explainable Metrics Directory */}
               <div>
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5 border-b border-stone-800/60 pb-4">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-5 border-b border-border pb-4">
                   <div>
-                    <h2 className="font-display text-xl font-bold text-white flex items-center gap-2">
+                    <h2 className="font-display text-xl font-bold text-foreground flex items-center gap-2">
                       <Activity className="h-5 w-5 text-[#8B1E1E]" /> Advanced Cognitive Breakdown
                     </h2>
-                    <p className="text-xs text-stone-400 mt-1 leading-relaxed">Rigorous, data-grounded metrics displaying how specific cortical sectors process this layout matrix.</p>
+                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">Rigorous, data-grounded metrics displaying how specific cortical sectors process this layout matrix.</p>
                   </div>
                   
                   <button 
                     onClick={() => window.print()} 
-                    className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-wider uppercase px-4 h-9 rounded-lg border border-stone-800 bg-stone-950/40 text-stone-400 hover:text-white hover:bg-stone-900 transition duration-200"
+                    className="inline-flex items-center gap-2 text-xs font-mono font-bold tracking-wider uppercase px-4 h-9 rounded-lg border border-border bg-card/50 text-muted-foreground hover:text-foreground hover:bg-secondary transition duration-200"
                   >
                     <Download className="h-4 w-4" /> Export Report
                   </button>
@@ -440,7 +440,7 @@ function AuditPage() {
                     return (
                       <div 
                         key={m.id} 
-                        className={`rounded-2xl border transition-all duration-300 ${isOpen ? "bg-stone-950/80 border-[#8B1E1E]/40 shadow-lg shadow-rose-950/5" : "bg-stone-950/40 border-stone-800/80 hover:bg-stone-900/20 hover:border-stone-700/60"}`}
+                        className={`rounded-2xl border transition-all duration-300 ${isOpen ? "bg-card border-[#8B1E1E]/40 shadow-lg shadow-rose-950/5" : "bg-card/50 border-border hover:bg-card hover:border-border"}`}
                       >
                         {/* Header Drawer Bar */}
                         <div 
@@ -453,18 +453,18 @@ function AuditPage() {
                               {m.score}
                             </div>
                             <div className="min-w-0">
-                              <h3 className="text-sm font-bold text-stone-100 font-display tracking-wide">{m.label}</h3>
-                              <p className="text-[10px] text-stone-500 font-mono mt-0.5 truncate uppercase">
-                                theory matrix: <span className="text-stone-400">{m.theory}</span>
+                              <h3 className="text-sm font-bold text-foreground font-display tracking-wide">{m.label}</h3>
+                              <p className="text-[10px] text-muted-foreground/70 font-mono mt-0.5 truncate uppercase">
+                                theory matrix: <span className="text-muted-foreground">{m.theory}</span>
                               </p>
                             </div>
                           </div>
                           
                           <div className="flex items-center gap-3">
-                            <span className="hidden md:inline text-[10px] font-mono text-stone-500">
+                            <span className="hidden md:inline text-[10px] font-mono text-muted-foreground/70">
                               {isOpen ? "COLLAPSE PANEL" : "EXPAND ANALYTICAL BREAKDOWN"}
                             </span>
-                            <div className={`h-8 w-8 rounded-lg bg-stone-900/60 border border-stone-850 grid place-items-center transition duration-300 ${isOpen ? "rotate-180 border-[#8B1E1E]/30 text-[#8B1E1E]" : "text-stone-400"}`}>
+                            <div className={`h-8 w-8 rounded-lg bg-secondary border border-border grid place-items-center transition duration-300 ${isOpen ? "rotate-180 border-[#8B1E1E]/30 text-[#8B1E1E]" : "text-muted-foreground"}`}>
                               <ChevronDown className="h-4 w-4" />
                             </div>
                           </div>
@@ -472,15 +472,15 @@ function AuditPage() {
 
                         {/* Expandable Analytical Content Drawer */}
                         {isOpen && (
-                          <div className="px-5 pb-6 pt-1 border-t border-stone-900/80">
+                          <div className="px-5 pb-6 pt-1 border-t border-border">
                             
                             {/* Horizontal visual indicator meter */}
-                            <div className="mb-6 bg-stone-900/50 p-3 rounded-xl border border-stone-850">
-                              <div className="flex justify-between items-center text-[9px] font-mono text-stone-500 mb-1.5">
+                            <div className="mb-6 bg-secondary/60 p-3 rounded-xl border border-border">
+                              <div className="flex justify-between items-center text-[9px] font-mono text-muted-foreground/70 mb-1.5">
                                 <span>COGNITIVE THRESHOLD CALIBRATION</span>
-                                <span className="font-bold text-stone-300">{m.score}/100</span>
+                                <span className="font-bold text-muted-foreground">{m.score}/100</span>
                               </div>
-                              <div className="w-full h-1.5 rounded-full bg-stone-950 overflow-hidden relative">
+                              <div className="w-full h-1.5 rounded-full bg-card overflow-hidden relative">
                                 <div 
                                   className={`h-full rounded-full transition-all duration-700 ease-out ${scoreProgressBar(m.score, m.lower_is_better)}`}
                                   style={{ width: `${m.score}%` }}
@@ -496,10 +496,10 @@ function AuditPage() {
                                 
                                 {/* Sector 1: Visual Observation */}
                                 <div className="space-y-1">
-                                  <div className="text-[9px] font-mono tracking-wider text-stone-500 uppercase flex items-center gap-1.5">
+                                  <div className="text-[9px] font-mono tracking-wider text-muted-foreground/70 uppercase flex items-center gap-1.5">
                                     <Eye className="h-3 w-3 text-[#8B1E1E]" /> Visual Detection Signal
                                   </div>
-                                  <p className="text-xs text-stone-300 leading-relaxed font-sans pl-4 border-l border-stone-800">
+                                  <p className="text-xs text-muted-foreground leading-relaxed font-sans pl-4 border-l border-border">
                                     {m.why}
                                   </p>
                                 </div>
@@ -507,11 +507,11 @@ function AuditPage() {
                                 {/* Sector 2: Strengths & Gaps Grid */}
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                   {/* Strengths */}
-                                  <div className="bg-stone-900/20 border border-stone-850 p-3.5 rounded-xl">
+                                  <div className="bg-secondary/40 border border-border p-3.5 rounded-xl">
                                     <div className="text-[9px] font-mono tracking-wider text-emerald-400 uppercase flex items-center gap-1.5 mb-2">
                                       <CheckCircle2 className="h-3.5 w-3.5" /> High Foveal Lock (Strengths)
                                     </div>
-                                    <ul className="space-y-1.5 text-stone-300">
+                                    <ul className="space-y-1.5 text-muted-foreground">
                                       {m.working?.map((w, i) => (
                                         <li key={i} className="text-xs leading-relaxed font-sans flex items-start gap-1.5">
                                           <span className="text-emerald-400 shrink-0 mt-0.5">•</span>
@@ -522,11 +522,11 @@ function AuditPage() {
                                   </div>
 
                                   {/* Gaps */}
-                                  <div className="bg-stone-900/20 border border-stone-850 p-3.5 rounded-xl">
+                                  <div className="bg-secondary/40 border border-border p-3.5 rounded-xl">
                                     <div className="text-[9px] font-mono tracking-wider text-rose-400 uppercase flex items-center gap-1.5 mb-2">
                                       <AlertCircle className="h-3.5 w-3.5" /> Sensory Leakage (Weaknesses)
                                     </div>
-                                    <ul className="space-y-1.5 text-stone-300">
+                                    <ul className="space-y-1.5 text-muted-foreground">
                                       {m.not_working?.map((w, i) => (
                                         <li key={i} className="text-xs leading-relaxed font-sans flex items-start gap-1.5">
                                           <span className="text-rose-400 shrink-0 mt-0.5">•</span>
@@ -538,11 +538,11 @@ function AuditPage() {
                                 </div>
 
                                 {/* Sector 3: Neuroscience Explanation */}
-                                <div className="bg-stone-900/30 border border-stone-850 p-3.5 rounded-xl">
+                                <div className="bg-secondary/60 border border-border p-3.5 rounded-xl">
                                   <div className="text-[9px] font-mono tracking-wider text-[#8B1E1E] uppercase flex items-center gap-1.5 mb-1.5">
                                     <Brain className="h-3.5 w-3.5" /> Cortical Framework Activation
                                   </div>
-                                  <p className="text-xs text-stone-300 leading-relaxed font-sans">
+                                  <p className="text-xs text-muted-foreground leading-relaxed font-sans">
                                     {m.neuroscience_explanation}
                                   </p>
                                 </div>
@@ -550,14 +550,14 @@ function AuditPage() {
                               </div>
 
                               {/* Right Column: Blueprints */}
-                              <div className="lg:col-span-5 space-y-5 bg-stone-900/10 border border-stone-850 p-4 rounded-xl flex flex-col justify-between">
+                              <div className="lg:col-span-5 space-y-5 bg-secondary/30 border border-border p-4 rounded-xl flex flex-col justify-between">
                                 
                                 {/* Sector 4: Optimization Recommendation */}
                                 <div className="space-y-1.5">
                                   <div className="text-[9px] font-mono tracking-wider text-amber-400 uppercase flex items-center gap-1.5">
                                     <Lightbulb className="h-3.5 w-3.5" /> Neuro-Aligned Instruction
                                   </div>
-                                  <div className="p-3.5 rounded-xl bg-stone-900/40 border border-stone-800">
+                                  <div className="p-3.5 rounded-xl bg-secondary border border-border">
                                     <p className="text-xs font-semibold text-amber-300 leading-relaxed font-sans">
                                       {m.recommendation}
                                     </p>
@@ -565,11 +565,11 @@ function AuditPage() {
                                 </div>
 
                                 {/* Sector 5: Expected Behavioral Impact */}
-                                <div className="space-y-1 pt-4 border-t border-stone-800/80">
+                                <div className="space-y-1 pt-4 border-t border-border">
                                   <div className="text-[9px] font-mono tracking-wider text-teal-400 uppercase flex items-center gap-1.5">
                                     <Zap className="h-3 w-3" /> Predicted Impact Matrix
                                   </div>
-                                  <p className="text-xs text-stone-300 italic leading-relaxed font-sans">
+                                  <p className="text-xs text-muted-foreground italic leading-relaxed font-sans">
                                     {m.behavioral_impact}
                                   </p>
                                 </div>
