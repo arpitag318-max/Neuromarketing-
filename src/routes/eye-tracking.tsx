@@ -9,8 +9,9 @@ import {
   Upload, CheckCircle2, ChevronRight, PlayCircle, PauseCircle,
   BarChart3, HelpCircle, Sparkles,
   UserCheck, ShieldCheck, Activity, Compass,
-  Flame, Target
+  Flame, Target, Lightbulb, Loader2, AlertTriangle, Zap
 } from "lucide-react";
+import { getEyeTrackingSuggestions } from "@/lib/ai.functions";
 
 export const Route = createFileRoute("/eye-tracking")({ component: EyeTrackingPage });
 
@@ -263,6 +264,12 @@ function EyeTrackingPage() {
   const [playbackIndex, setPlaybackIndex] = useState<number>(0);
   const [isPlaybackPaused, setIsPlaybackPaused] = useState<boolean>(true);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
+
+  // AI Suggestions State
+  type AISuggestion = { title: string; description: string; priority: string; principle: string };
+  const [aiSuggestions, setAiSuggestions] = useState<AISuggestion[] | null>(null);
+  const [aiSuggestionsLoading, setAiSuggestionsLoading] = useState(false);
+  const [aiSuggestionsError, setAiSuggestionsError] = useState<string | null>(null);
 
   // UI settings
   const [showHeatmap, setShowHeatmap] = useState(true);
@@ -1026,6 +1033,55 @@ function EyeTrackingPage() {
 
     return "✅ LAYOUT EQUILIBRIUM: Attention sweeps show a fluid, chronological Z-pattern trajectory. Time to First Fixation (TTFF) is rapid across key zones, with healthy dwell shares on conversion anchors.";
   };
+
+  async function handleGetAISuggestions() {
+    if (aiSuggestionsLoading) return;
+    setAiSuggestionsLoading(true);
+    setAiSuggestionsError(null);
+    setAiSuggestions(null);
+
+    try {
+      // Build aoisMetrics as a string-keyed record for the API
+      const aoisMetricsForApi: Record<string, {
+        ttff: string; dwellSec: string; ratio: number; revisits: number;
+        firstFixationDuration: string; avgFixationDuration: string; fixationsCount: number;
+      }> = {};
+      for (const [id, metrics] of Object.entries(metricResults.aoisMetrics)) {
+        aoisMetricsForApi[String(id)] = metrics;
+      }
+
+      const result = await getEyeTrackingSuggestions({
+        data: {
+          imageDataUrl: uploadedImage ?? undefined,
+          metrics: {
+            totalGazePoints: metricResults.totalGazePointsCount,
+            totalFixations: metricResults.totalFixationsCount,
+            avgFixationDuration: metricResults.globalAvgFixationDuration,
+            medianFixationDuration: metricResults.medianFixationDuration,
+            longestFixationDuration: metricResults.longestFixationDuration,
+            fixationVariance: metricResults.fixationVariance,
+            firstFixationDuration: metricResults.globalFirstFixationDuration,
+            saccadeCount: currentSaccades.length,
+            fixationSequence: metricResults.sequence,
+            aoisMetrics: aoisMetricsForApi,
+            transitions: metricResults.transitions,
+            fixationDistribution: metricResults.fixationDistribution,
+            advisory: getCorporateAdvisory(),
+          },
+        },
+      });
+
+      if (result.ok) {
+        setAiSuggestions(result.suggestions);
+      } else {
+        setAiSuggestionsError(result.error);
+      }
+    } catch (err) {
+      setAiSuggestionsError(err instanceof Error ? err.message : "Failed to get AI suggestions");
+    } finally {
+      setAiSuggestionsLoading(false);
+    }
+  }
 
   // ----------------------------------------------------
   // CINEMATIC CANVAS COMPOSITING & ANIMATION
@@ -2147,6 +2203,110 @@ function EyeTrackingPage() {
                     </tbody>
                   </table>
                 </div>
+              </Card>
+
+              {/* AI-Powered Creative Improvement Suggestions */}
+              <Card className="p-6 border-t-4 border-t-amber-500">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+                  <div>
+                    <h3 className="font-display text-base font-bold flex items-center gap-2">
+                      <Lightbulb className="h-5 w-5 text-amber-500" /> AI Creative Improvement Suggestions
+                    </h3>
+                    <p className="text-[11.5px] text-muted-foreground mt-0.5">
+                      Gemini analyzes your eye-tracking metrics to generate actionable recommendations for improving this creative.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleGetAISuggestions}
+                    disabled={aiSuggestionsLoading}
+                    className="inline-flex items-center gap-2 h-10 px-5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-bold hover:from-amber-600 hover:to-amber-700 transition-all shadow-md shadow-amber-500/20 uppercase tracking-wider disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
+                  >
+                    {aiSuggestionsLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4" />
+                        {aiSuggestions ? "Regenerate Suggestions" : "Get AI Suggestions"}
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {aiSuggestionsError && (
+                  <div className="p-3.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2 mb-4">
+                    <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+                    <span>{aiSuggestionsError}</span>
+                  </div>
+                )}
+
+                {aiSuggestionsLoading && !aiSuggestions && (
+                  <div className="flex flex-col items-center justify-center py-12 gap-4">
+                    <div className="relative">
+                      <div className="h-14 w-14 rounded-2xl bg-amber-500/10 flex items-center justify-center">
+                        <Sparkles className="h-7 w-7 text-amber-500 animate-pulse" />
+                      </div>
+                      <div className="absolute -inset-2 rounded-2xl border-2 border-amber-500/20 animate-ping" />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-bold text-foreground">Analyzing eye-tracking data...</p>
+                      <p className="text-[11px] text-muted-foreground mt-1">NeuroCopilot is processing fixation patterns, saccade trajectories, and AOI dwell metrics</p>
+                    </div>
+                  </div>
+                )}
+
+                {aiSuggestions && aiSuggestions.length > 0 && (
+                  <div className="space-y-3">
+                    {aiSuggestions.map((suggestion, idx) => {
+                      const priorityConfig = {
+                        critical: { bg: "bg-red-50", border: "border-red-200", badge: "bg-red-100 text-red-700 border-red-200", icon: <AlertTriangle className="h-3.5 w-3.5" /> },
+                        high: { bg: "bg-amber-50", border: "border-amber-200", badge: "bg-amber-100 text-amber-700 border-amber-200", icon: <Zap className="h-3.5 w-3.5" /> },
+                        medium: { bg: "bg-blue-50", border: "border-blue-200", badge: "bg-blue-100 text-blue-700 border-blue-200", icon: <Lightbulb className="h-3.5 w-3.5" /> },
+                      }[suggestion.priority] ?? { bg: "bg-stone-50", border: "border-stone-200", badge: "bg-stone-100 text-stone-700 border-stone-200", icon: <Lightbulb className="h-3.5 w-3.5" /> };
+
+                      return (
+                        <div
+                          key={idx}
+                          className={`p-4 rounded-xl border ${priorityConfig.border} ${priorityConfig.bg} transition-all hover:shadow-sm`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="flex items-center justify-center h-7 w-7 rounded-full bg-white border border-current/10 text-amber-600 shrink-0 mt-0.5 font-display font-black text-xs shadow-sm">
+                              {idx + 1}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                                <h5 className="text-sm font-bold text-foreground">{suggestion.title}</h5>
+                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider border ${priorityConfig.badge}`}>
+                                  {priorityConfig.icon}
+                                  {suggestion.priority}
+                                </span>
+                              </div>
+                              <p className="text-[11.5px] text-foreground/80 leading-relaxed">
+                                {suggestion.description}
+                              </p>
+                              <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/80 border border-current/5 text-[10px] font-bold text-muted-foreground">
+                                <span className="text-amber-600">⚡</span> {suggestion.principle}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {!aiSuggestionsLoading && !aiSuggestions && !aiSuggestionsError && (
+                  <div className="flex flex-col items-center justify-center py-10 gap-3 text-center">
+                    <div className="h-12 w-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                      <Lightbulb className="h-6 w-6" />
+                    </div>
+                    <p className="text-xs text-muted-foreground max-w-sm">
+                      Click <strong>"Get AI Suggestions"</strong> to analyze your eye-tracking metrics and receive 6 expert recommendations for improving this creative's visual effectiveness.
+                    </p>
+                  </div>
+                )}
               </Card>
 
               {/* Measurement Definitions */}
