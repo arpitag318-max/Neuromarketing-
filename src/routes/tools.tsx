@@ -8,6 +8,8 @@ import {
   EyeOff, Sliders, Fingerprint, Play, Pause, RefreshCw, Cpu, Layers, TrendingUp,
   Database, Gauge, Terminal, ArrowLeft, ShieldCheck, CheckCircle2, AlertTriangle, Workflow
 } from "lucide-react";
+import { FmriStorytellingView } from "./fmri-view";
+import { GsrStorytellingView } from "./gsr-view";
 
 export const Route = createFileRoute("/tools")({
   beforeLoad: ({ location }) => {
@@ -3253,7 +3255,13 @@ function ToolsPage() {
         DYNAMIC ENVIRONMENT VIEWPORT (Single active technique)
         ═══════════════════════════════════════════ 
       */}
-      <EegStorytellingView tool={tool} activeTheme={activeTheme} />
+      {tool.id === 'fmri' ? (
+        <FmriStorytellingView tool={tool} activeTheme={activeTheme} />
+      ) : tool.id === 'gsr' ? (
+        <GsrStorytellingView tool={tool} activeTheme={activeTheme} />
+      ) : (
+        <EegStorytellingView tool={tool} activeTheme={activeTheme} />
+      )}
     </AppLayout>
   );
 }

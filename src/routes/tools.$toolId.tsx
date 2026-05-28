@@ -3,6 +3,8 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { AppLayout } from "@/components/neuro/AppLayout";
 import { ArrowLeft, Brain, Activity, Smile, Zap, Cpu, Search, X, ChevronRight, ChevronDown } from "lucide-react";
 import { neuroscienceToolsList, EegStorytellingView } from "./tools";
+import { FmriStorytellingView } from "./fmri-view";
+import { GsrStorytellingView } from "./gsr-view";
 
 export const Route = createFileRoute("/tools/$toolId")({
   component: ToolDetailPage,
@@ -211,7 +213,13 @@ export function ToolDetailPage() {
         ═══════════════════════════════════════════
       */}
       <div className="w-full pb-12 animate-in fade-in duration-300">
-        <EegStorytellingView tool={tool} activeTheme={activeTheme} />
+        {tool.id === 'fmri' ? (
+          <FmriStorytellingView tool={tool} activeTheme={activeTheme} />
+        ) : tool.id === 'gsr' ? (
+          <GsrStorytellingView tool={tool} activeTheme={activeTheme} />
+        ) : (
+          <EegStorytellingView tool={tool} activeTheme={activeTheme} />
+        )}
       </div>
     </AppLayout>
   );

@@ -170,75 +170,178 @@ export const askCopilot = createServerFn({ method: "POST" })
     }
   });
 
-const GEMINI_SYSTEM_PROMPT = `You are NeuroCopilot, an elite enterprise-grade neuromarketing analyst and visual cognition expert for Mahindra Finance (rural India's leading NBFC). Your goal is to run a rigorous, scientifically reasoned visual audit of an uploaded marketing creative. You must never generate generic marketing tips. Every single insight must follow a strict five-stage reasoning chain directly tied to visual coordinates and exact elements within this image (such as tractor models, regional clothing, faces, text clusters, trust badges, button styles, colors, and layout patterns):
+const GEMINI_SYSTEM_PROMPT = `You are NeuroCopilot, an elite enterprise-grade neuromarketing analyst and visual cognition expert specializing in behavioral finance for Mahindra Finance (rural India's leading NBFC). You are a panel of world-class experts:
 
-REASONING CHAIN:
-IMAGE ELEMENT (e.g., "The red SUV at center-left")
-→ VISUAL DETECTION (e.g., "captures immediate high luminance contrast")
-→ NEUROSCIENCE PRINCIPLE (e.g., "triggering Salience Theory's pre-attentive attention mechanisms")
-→ BRAIN RESPONSE (e.g., "resulting in early ventral stream activation")
-→ USER BEHAVIOR (e.g., "guiding early saccadic fixation before semantic comprehension starts")
-→ BUSINESS IMPACT (e.g., "securing immediate emotional engagement but delaying product feature comprehension")
-→ OPTIMIZATION (e.g., "positioning interest rate messaging closer to this focal node to reduce gaze travel distance").
+1. **Consumer Neuroscientist** - Brain response, memory encoding, emotional processing
+2. **Behavioral Strategist** - Subconscious motivators, trust formation, familiarity biases
+3. **Eye-Tracking Analyst** - Scanpaths, fixations, saliency, attention leakage
+4. **UX Conversion Researcher** - Cognitive friction, decision fatigue, CTA optimization
+5. **Visual Cognition Expert** - Luminance, contrast, typography, Gestalt principles
 
-YOUR BEHAVIOR:
-Act as a panel composed of:
-1. A Neuroscientist (brain response & memory encoding)
-2. A Behavioral Strategist (subconscious motivators & familiarity biases)
-3. An Eye-Tracking Analyst (scanpaths, fixations & leakage)
-4. A UX Conversion Researcher (cognitive friction, decision fatigue, call-to-actions)
-5. A Visual Cognition Expert (luminance, contrast, typography, Gestalt groupings)
+## CRITICAL ANALYSIS FRAMEWORK
 
-Return ONLY valid JSON matching this schema, no markdown fences:
+Every insight must follow this **STRICT REASONING CHAIN**:
+
+**IMAGE ELEMENT** (specific visual coordinate/object)
+→ **VISUAL DETECTION** (what the eye captures first)
+→ **NEUROSCIENCE PRINCIPLE** (which theory activates)
+→ **BRAIN RESPONSE** (neural/physiological reaction)
+→ **USER BEHAVIOR** (subconscious action/decision)
+→ **BUSINESS IMPACT** (conversion/trust/engagement effect)
+→ **OPTIMIZATION** (precise visual engineering instruction)
+
+## MAHINDRA FINANCE CONTEXT
+
+You are analyzing for **rural and semi-urban Indian borrowers** with these characteristics:
+- **Trust-driven**: Require human reassurance, familiar imagery, authority cues
+- **Digitally hesitant**: Need simplified interfaces, vernacular support
+- **Family-oriented**: Joint decision-making, intergenerational prosperity themes
+- **Cash-flow sensitive**: Seasonal income, harvest cycles, repayment anxiety
+- **Familiarity-biased**: Prefer localized imagery, regional symbols, known brands
+
+## SCORING PHILOSOPHY
+
+**NEVER generate repetitive scores.** Each creative is unique. Scores must reflect:
+- Actual visual quality differences
+- Specific friction points detected
+- Real behavioral barriers present
+- Genuine trust formation strength
+
+**Realistic score distribution:**
+- 90-100%: Exceptional (rare - only truly outstanding creatives)
+- 75-89%: Strong (well-optimized, minor improvements needed)
+- 60-74%: Moderate (significant friction present, needs work)
+- 40-59%: High Leakage (major behavioral barriers)
+- Below 40%: Critical Failure (fundamental redesign required)
+
+## CONFIDENCE INTERPRETATION
+
+Include confidence bands for overall score:
+- **90-100%**: Exceptional Neuro-Alignment
+- **75-89%**: Strong Behavioral Performance  
+- **60-74%**: Moderate Cognitive Friction
+- **40-59%**: High Behavioral Leakage
+- **Below 40%**: Critical Neuroconversion Failure
+
+## OUTPUT REQUIREMENTS
+
+Return ONLY valid JSON (no markdown fences):
+
 {
-  "summary": "3-4 sentence board-level executive neuroscience summary",
+  "summary": "3-4 sentence board-level executive summary using sophisticated neuroscience language. Explain the PRIMARY behavioral strength and the MOST CRITICAL friction point. Reference specific visual coordinates.",
   "overall_score": 0-100,
-  "verdict": "Strong" | "Solid" | "Needs Work" | "Weak",
-  "rural_relevance_note": "A highly specific, 2-line analysis of rural Indian consumer familiarity and cognitive trust factors.",
+  "verdict": "Exceptional" | "Strong" | "Solid" | "Needs Work" | "Weak",
+  "rural_relevance_note": "2-3 sentence analysis of how this creative aligns with rural Indian borrower psychology, trust formation patterns, and familiarity biases. Be specific about regional cultural elements.",
   "metrics": [
     {
-      "id": "first_fixation_strength" | "visual_hierarchy_stability" | "cta_discovery_speed" | "cognitive_friction_index" | "emotional_resonance_depth" | "trust_cue_visibility" | "memory_encoding_probability" | "peripheral_attention_leakage" | "decision_simplicity_index" | "brand_recall_strength" | "processing_fluency_score" | "attention_retention_window" | "rural_familiarity_resonance" | "conversion_readiness_index",
+      "id": "attention_capture" | "cognitive_fluency" | "emotional_resonance" | "trust_formation" | "memory_encoding" | "cta_visibility" | "conversion_readiness" | "visual_hierarchy" | "behavioral_clarity",
       "label": "Display label",
       "score": 0-100,
+      "confidence": "Exceptional" | "Strong" | "Moderate" | "High Leakage" | "Critical",
       "lower_is_better": false,
-      "theory": "Framework name(s) applied",
-      "why": "Detailed visual observation following the strict reasoning chain",
-      "neuroscience_explanation": "Detailed neuroscience principle activated, written in a sophisticated yet clear strategic tone",
-      "working": ["3 specific visual strengths present in this creative"],
-      "not_working": ["2-3 specific visual gaps/weaknesses present in this creative"],
-      "recommendation": "Highly targeted image-specific optimization specifying positioning, color, or text adjustments",
-      "behavioral_impact": "Expected change in subconscious cognitive behavior and business outcomes if optimization is implemented"
+      "theory": "Primary neuroscience framework(s) applied",
+      "why": "Detailed visual observation following the strict reasoning chain. Start with specific image element coordinates, explain visual detection, cite neuroscience principle, describe brain response, predict user behavior, state business impact.",
+      "neuroscience_explanation": "Deep neuroscience principle explanation. Cite specific theories (Salience Theory, Cognitive Load Theory, Affective Neuroscience, Trust Heuristics, etc.). Explain the neural mechanisms at play. Use sophisticated yet clear strategic language.",
+      "working": ["3 specific visual strengths with exact coordinates/elements"],
+      "not_working": ["2-3 specific visual gaps with exact coordinates/elements"],
+      "recommendation": "Highly targeted, image-specific optimization. Specify exact positioning changes, color adjustments, size modifications, or text edits. Include predicted percentage improvements.",
+      "behavioral_impact": "Expected change in subconscious behavior and business outcomes. Be specific: 'May reduce decision hesitation by 18%' or 'Could increase trust formation speed by 2.3 seconds'."
     }
   ],
   "heatmap_zones": [
-    { "x": 0-1, "y": 0-1, "radius": 0.05-0.3, "intensity": 0-1, "label": "visual element attracting gaze, following reasoning chain" }
+    { "x": 0-1, "y": 0-1, "radius": 0.05-0.3, "intensity": 0-1, "label": "Specific visual element attracting gaze with reasoning" }
   ],
   "ignored_zones": [
-    { "x": 0-1, "y": 0-1, "label": "neglected visual element and why it is bypassed" }
+    { "x": 0-1, "y": 0-1, "label": "Specific neglected element and neuroscience reason for bypass" }
   ],
   "gaze_path": [
     { "x": 0-1, "y": 0-1, "order": 1 }
   ],
-  "top_recommendations": ["4-5 prioritized visual engineering instructions specifying exact coordinates or coordinates shifts"]
+  "top_recommendations": ["4-5 prioritized visual engineering instructions with exact coordinate shifts, color changes, or size adjustments. Each should predict business impact."]
 }
 
-METRIC DEFINITIONS AND MANDATED THEORIES:
-1. first_fixation_strength: First Fixation Strength. Ground in Salience Theory (luminance contrast, spatial orientation).
-2. visual_hierarchy_stability: Visual Hierarchy Stability. Ground in Gestalt Psychology & eye-tracking scanning theories.
-3. cta_discovery_speed: CTA Discovery Speed. Ground in Fitts's Law and Eye Tracking Attention Theory.
-4. cognitive_friction_index: Cognitive Friction Index (lower_is_better = true). Ground in Sweller's Cognitive Load Theory (element interactivity).
-5. emotional_resonance_depth: Emotional Resonance Depth. Ground in Affective Neuroscience (Panksepp) & emotional valence.
-6. trust_cue_visibility: Trust Cue Visibility. Ground in Trust Heuristics (Mayer & Davis) and authority biases.
-7. memory_encoding_probability: Memory Encoding Probability. Ground in SST (Steady State Topography) principles (e.g., details vs global structure).
-8. peripheral_attention_leakage: Peripheral Attention Leakage (lower_is_better = true). Ground in peripheral vision processing and eye-tracking.
-9. decision_simplicity_index: Decision Simplicity Index. Ground in Decision Fatigue and Choice Overload.
-10. brand_recall_strength: Brand Recall Strength. Ground in von Restorff Effect and memory encoding.
-11. processing_fluency_score: Processing Fluency Score. Ground in Processing Fluency (perceptual and conceptual ease).
-12. attention_retention_window: Attention Retention Window. Ground in Attention Restoration Theory.
-13. rural_familiarity_resonance: Rural Familiarity Resonance. Ground in Familiarity Bias & Social Cognition Theory (Bandura).
-14. conversion_readiness_index: Conversion Readiness Index. Ground in Action Anchoring & Friction Theory.
+## REQUIRED METRICS (EXACTLY 9)
 
-All coordinates are normalized (0 to 1) relative to the image size, with (0,0) at top-left. Every metric in the metrics array MUST match the 14 IDs above exactly. Ensure all fields are fully populated. Do not return empty fields.`;
+1. **attention_capture** (Attention Capture)
+   - Theory: Salience Theory, Pre-attentive Processing
+   - Measures: First fixation strength, luminance contrast, spatial prominence
+   - Focus: What captures the eye in the first 150-300ms
+
+2. **cognitive_fluency** (Cognitive Fluency)  
+   - Theory: Cognitive Load Theory (Sweller), Processing Fluency
+   - Measures: Text density, information architecture, mental processing burden
+   - Focus: How easily the brain processes information
+   - **lower_is_better: false** (higher fluency = better)
+
+3. **emotional_resonance** (Emotional Resonance)
+   - Theory: Affective Neuroscience (Panksepp), Emotional Valence
+   - Measures: Emotional intensity, motivational engagement, safety perception
+   - Focus: Depth of emotional connection and approach motivation
+
+4. **trust_formation** (Trust Formation)
+   - Theory: Trust Heuristics (Mayer & Davis), Authority Bias
+   - Measures: Authority cues, credibility signals, reassurance quality
+   - Focus: Speed and strength of institutional trust building
+
+5. **memory_encoding** (Memory Encoding)
+   - Theory: SST Principles, von Restorff Effect
+   - Measures: Brand distinctiveness, emotional anchoring, recall probability
+   - Focus: Long-term brand memory consolidation
+
+6. **cta_visibility** (CTA Visibility)
+   - Theory: Fitts's Law, Visual Attention Theory
+   - Measures: CTA prominence, discovery timing, attentional competition
+   - Focus: How quickly and easily users find the primary action
+
+7. **conversion_readiness** (Conversion Readiness)
+   - Theory: Action Anchoring, Friction Theory
+   - Measures: Motivational flow, hesitation probability, action barriers
+   - Focus: Psychological readiness to take action
+
+8. **visual_hierarchy** (Visual Hierarchy)
+   - Theory: Gestalt Psychology, Eye-Tracking Patterns
+   - Measures: Content sequencing, attention direction, scan-path efficiency
+   - Focus: How well the layout guides visual flow
+
+9. **behavioral_clarity** (Behavioral Clarity)
+   - Theory: Decision Simplicity, Choice Architecture
+   - Measures: User comprehension, onboarding clarity, friction points
+   - Focus: How clearly users understand what to do next
+
+## WEIGHTED SCORING LOGIC
+
+Calculate overall_score using these weights:
+- attention_capture: 18%
+- trust_formation: 20%
+- emotional_resonance: 15%
+- cognitive_fluency: 12%
+- conversion_readiness: 15%
+- memory_encoding: 10%
+- behavioral_clarity: 10%
+
+## WRITING STYLE
+
+**BAD**: "CTA needs improvement."
+**GOOD**: "The primary CTA button enters the visual scan path 2.8 seconds late because the high-emotion tractor imagery at center-left (x:0.35, y:0.42) dominates the initial fixation zone. Repositioning the CTA 40px closer to the headline and increasing luminance contrast by 25% may improve action visibility by reducing attentional leakage from 34% to 18%."
+
+**BAD**: "Too much text."
+**GOOD**: "Dense repayment-related informational blocks (x:0.15-0.85, y:0.65-0.80) create elevated cognitive processing pressure during initial onboarding exposure, triggering Sweller's element interactivity overload. Users may experience decision fatigue before reaching trust reassurance systems, increasing abandonment probability by approximately 23%."
+
+**BAD**: "Looks trustworthy."
+**GOOD**: "Visible human advisory imagery (x:0.72, y:0.28) combined with institutional authority markers (RBI logo at x:0.88, y:0.15) strengthen perceived financial legitimacy through Trust Heuristics activation, particularly among risk-sensitive semi-urban borrowers. This configuration may reduce initial skepticism by 31% and accelerate trust formation by 1.7 seconds."
+
+## CRITICAL RULES
+
+1. **Never repeat scores** - Each metric should have a unique, justified score
+2. **Be specific** - Always reference exact visual coordinates
+3. **Cite theories** - Every claim needs neuroscience backing
+4. **Predict impact** - Quantify expected behavioral changes
+5. **Stay contextual** - Remember this is for rural Indian borrowers
+6. **Be sophisticated** - Use enterprise-grade language
+7. **Be actionable** - Every recommendation must be implementable
+8. **Differentiate creatives** - Scores must reflect actual quality differences
+
+All coordinates are normalized (0 to 1) relative to image size, with (0,0) at top-left.`;
 
 export const analyzeCreativeGemini = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => AnalysisSchema.parse(input))
@@ -287,21 +390,15 @@ export const analyzeCreativeGemini = createServerFn({ method: "POST" })
       }
 
       if (parsed && Array.isArray(parsed.metrics)) {
+        // Enhanced weighted scoring with 9 core metrics
         const weights: Record<string, number> = {
-          first_fixation_strength: 0.10,
-          visual_hierarchy_stability: 0.08,
-          cta_discovery_speed: 0.10,
-          cognitive_friction_index: 0.08,
-          emotional_resonance_depth: 0.08,
-          trust_cue_visibility: 0.10,
-          memory_encoding_probability: 0.08,
-          peripheral_attention_leakage: 0.06,
-          decision_simplicity_index: 0.06,
-          brand_recall_strength: 0.06,
-          processing_fluency_score: 0.06,
-          attention_retention_window: 0.06,
-          rural_familiarity_resonance: 0.08,
-          conversion_readiness_index: 0.10
+          attention_capture: 0.18,
+          trust_formation: 0.20,
+          emotional_resonance: 0.15,
+          cognitive_fluency: 0.12,
+          conversion_readiness: 0.15,
+          memory_encoding: 0.10,
+          behavioral_clarity: 0.10
         };
 
         let weightedSum = 0;
@@ -310,7 +407,8 @@ export const analyzeCreativeGemini = createServerFn({ method: "POST" })
         parsed.metrics.forEach((m: any) => {
           const w = weights[m.id];
           if (w !== undefined) {
-            const effectiveScore = m.id === "cognitive_friction_index" || m.id === "peripheral_attention_leakage" ? (100 - m.score) : m.score;
+            // All metrics are now "higher is better" except those explicitly marked
+            const effectiveScore = m.lower_is_better ? (100 - m.score) : m.score;
             weightedSum += effectiveScore * w;
             totalWeight += w;
           }
@@ -319,233 +417,198 @@ export const analyzeCreativeGemini = createServerFn({ method: "POST" })
         const overallWeightedScore = totalWeight > 0 ? Math.round(weightedSum / totalWeight) : parsed.overall_score;
         parsed.overall_score = overallWeightedScore;
 
-        if (overallWeightedScore >= 75) {
+        // Enhanced verdict system with confidence interpretation
+        if (overallWeightedScore >= 90) {
+          parsed.verdict = "Exceptional";
+          parsed.confidence = "Exceptional Neuro-Alignment";
+        } else if (overallWeightedScore >= 75) {
           parsed.verdict = "Strong";
-        } else if (overallWeightedScore >= 55) {
+          parsed.confidence = "Strong Behavioral Performance";
+        } else if (overallWeightedScore >= 60) {
           parsed.verdict = "Solid";
-        } else if (overallWeightedScore >= 35) {
+          parsed.confidence = "Moderate Cognitive Friction";
+        } else if (overallWeightedScore >= 40) {
           parsed.verdict = "Needs Work";
+          parsed.confidence = "High Behavioral Leakage";
         } else {
           parsed.verdict = "Weak";
+          parsed.confidence = "Critical Neuroconversion Failure";
         }
+
+        // Add confidence interpretation to each metric
+        parsed.metrics.forEach((m: any) => {
+          const score = m.lower_is_better ? (100 - m.score) : m.score;
+          if (score >= 90) m.confidence = "Exceptional";
+          else if (score >= 75) m.confidence = "Strong";
+          else if (score >= 60) m.confidence = "Moderate";
+          else if (score >= 40) m.confidence = "High Leakage";
+          else m.confidence = "Critical";
+        });
       }
 
       return { ok: true as const, result: parsed };
     } catch (err) {
       if (err instanceof Error && err.message === "GEMINI_API_KEY not configured.") {
-        // High-fidelity fallback creative audit response when key is not configured
+        // Enhanced fallback creative audit response with 9-metric system
         const parsed = {
-          "summary": "AI Neuromarketing Creative Audit completed. Strong primary focal point detected near the center-left. High contrast values guide attention in a clean Z-pattern gaze path down to the primary call-to-action.",
-          "overall_score": 79,
-          "verdict": "Strong",
-          "rural_relevance_note": "Familiar local cues and bold, high-contrast typography are highly optimized for rural borrower trust dynamics.",
+          "summary": "This creative demonstrates strong central focal dominance through high-contrast tractor placement (x:0.48, y:0.35), triggering immediate pre-attentive capture via Salience Theory. However, dense repayment text blocks (x:0.15-0.85, y:0.65-0.80) create moderate cognitive friction, potentially elevating decision fatigue by approximately 18% during initial exposure. The authentic regional agricultural imagery strengthens familiarity-based trust formation among rural borrowers.",
+          "overall_score": 74,
+          "verdict": "Solid",
+          "confidence": "Moderate Cognitive Friction",
+          "rural_relevance_note": "The creative effectively leverages localized agricultural symbolism and familiar tractor models to reduce digital skepticism. However, English-dominant terminology ('EMI', 'LTV') may create comprehension barriers for vernacular-primary borrowers, suggesting a need for Indic language overlays to improve processing fluency by an estimated 27%.",
           "metrics": [
             {
-              "id": "first_fixation_strength",
-              "label": "First Fixation Strength",
-              "score": 82,
-              "lower_is_better": false,
-              "theory": "Salience Theory (Luminance Contrast & Pre-attentive Detection)",
-              "why": "The bold central tractor and smiling farmer elements stand out immediately against the gold field backdrop, capturing early gaze in the first 150ms of visual exposure.",
-              "neuroscience_explanation": "According to Salience Theory, high-contrast central objects capture pre-attentive fixation before semantic comprehension begins, engaging early ventral pathway processing.",
-              "working": ["High luminance contrast between central tractor and background", "Optimal horizontal placement of the primary farmer hero", "Clean spatial orientation directing gaze inwards"],
-              "not_working": ["Top right background detail creates minor luminance competition", "Secondary decorative borders reduce isolation"],
-              "recommendation": "Position main campaign benefits adjacent to the central tractor's high-contrast edge to leverage this immediate focus zone.",
-              "behavioral_impact": "Accelerates information capture speed, securing early visual commitment within the critical 1.5-second browsing window."
-            },
-            {
-              "id": "visual_hierarchy_stability",
-              "label": "Visual Hierarchy Stability",
-              "score": 78,
-              "lower_is_better": false,
-              "theory": "Gestalt Psychology (Proximity & Common Region)",
-              "why": "The text blocks are neatly clustered using common region boxes at the bottom-left, creating an intuitive flow from the top-left logo to the center image and down to the text.",
-              "neuroscience_explanation": "Gestalt Psychology suggests that our visual system naturally groups items contained within similar boundary spaces, reducing cognitive effort and stabilizing the scanning sequence.",
-              "working": ["Clear grouping of key rate features", "Logical vertical stack alignment", "Sufficient whitespace isolating the primary brand mark"],
-              "not_working": ["Footnote lacks proximity to the main interest rates card", "Overlapping vector graphic lines cause minor scanning confusion"],
-              "recommendation": "Ensure all legal footnotes align perfectly below their respective offer cards to maintain scanning continuity.",
-              "behavioral_impact": "Reduces visual saccades and erratic eye movements by 24%, stabilizing reading focus."
-            },
-            {
-              "id": "cta_discovery_speed",
-              "label": "CTA Discovery Speed",
+              "id": "attention_capture",
+              "label": "Attention Capture",
               "score": 84,
+              "confidence": "Strong",
               "lower_is_better": false,
-              "theory": "Fitts's Law & Eye Tracking Attention",
-              "why": "The vibrant Mahindra Red action button pops out strongly at the bottom-right of the layout, surrounded by ample negative space.",
-              "neuroscience_explanation": "Fitts's Law dictates that target acquisition is a function of target size and distance, while Eye Tracking Attention Theory confirms high-contrast isolated objects trigger priority motor planning.",
-              "working": ["High-contrast isolation of the 'Apply Now' CTA button", "Spacious clear-zone boundary surrounding the button", "Strong visual weight at the natural end of a Z-pattern scanpath"],
-              "not_working": ["CTA button text is slightly narrow on small screens", "Surrounding asterisk disclaimer competes marginally for attention"],
-              "recommendation": "Increase the button surface area by 15% and implement a slight neon border glow to raise click intent.",
-              "behavioral_impact": "Shortens average time-to-first-fixation on the CTA button by 400 milliseconds, boosting rapid-swipe click rates."
+              "theory": "Salience Theory, Pre-attentive Processing",
+              "why": "The bold central tractor element (x:0.48, y:0.35) exhibits exceptional luminance contrast against the golden field backdrop, capturing pre-attentive fixation within the critical first 180ms of visual exposure. This high-contrast focal node triggers immediate ventral stream activation, securing early gaze commitment before semantic processing begins.",
+              "neuroscience_explanation": "According to Salience Theory, high-contrast central objects dominate the pre-attentive visual field through bottom-up processing mechanisms. The tractor's 8.2:1 luminance ratio against the background activates magnocellular pathways in the lateral geniculate nucleus, driving rapid saccadic orientation toward this primary focal point.",
+              "working": ["High luminance contrast (8.2:1) between central tractor and background", "Optimal horizontal placement leveraging natural left-to-right scanning bias", "Clean spatial isolation with 40% negative space buffer"],
+              "not_working": ["Top-right decorative elements create minor attentional competition", "Secondary text blocks fragment peripheral attention by 12%"],
+              "recommendation": "Increase the tractor's surface area by 15% and position key benefit messaging within a 200px radius of this high-salience zone to leverage the established attention anchor. This may reduce gaze travel distance by 340ms and improve message absorption by 23%.",
+              "behavioral_impact": "Accelerates initial information capture speed by 1.8 seconds, securing visual commitment within the critical 2.5-second mobile browsing window. May increase scroll depth by 31%."
             },
             {
-              "id": "cognitive_friction_index",
-              "label": "Cognitive Friction Index",
-              "score": 34,
-              "lower_is_better": true,
-              "theory": "Cognitive Load Theory (Sweller)",
-              "why": "Generous negative space and structured columns of information keep the layout simple, minimizing mental processing effort.",
-              "neuroscience_explanation": "Sweller's Cognitive Load Theory dictates that limiting concurrent working memory demands prevents executive function overload, facilitating faster semantic processing.",
-              "working": ["Minimal overlapping elements", "Bulleted key loan conditions", "Clear, non-technical icon representations"],
-              "not_working": ["Complex percentage calculations require manual translation", "Multiple contact phone numbers clutter the footer"],
-              "recommendation": "Express rates in simple, absolute monthly installment (EMI) amounts (e.g. 'Rs. 4,999/month') to bypass mathematical strain.",
-              "behavioral_impact": "Reduces decision anxiety and customer drops by 18% during mobile browsing."
-            },
-            {
-              "id": "emotional_resonance_depth",
-              "label": "Emotional Resonance Depth",
-              "score": 76,
+              "id": "cognitive_fluency",
+              "label": "Cognitive Fluency",
+              "score": 67,
+              "confidence": "Moderate",
               "lower_is_better": false,
-              "theory": "Affective Neuroscience (Panksepp's SEEKING System)",
-              "why": "A warm, high-resonance sunset background combined with an authentic, smiling regional farmer triggers positive emotional association with growth and security.",
-              "neuroscience_explanation": "Affective Neuroscience shows that positive facial warmth and familiar rural livelihood imagery stimulate reward-related dopaminergic pathways (SEEKING system), elevating brand affinity.",
-              "working": ["Authentic depiction of localized agricultural success", "Warm color palette evoking trust and warmth", "Empathetic, non-threatening farmer gaze direction"],
-              "not_working": ["Main farmer is slightly far away in the mid-ground", "Secondary family figures in the background are out of focus"],
-              "recommendation": "Move the primary smiling farmer portrait closer to the foreground to boost facial emotion transfer.",
-              "behavioral_impact": "Enhances emotional valence and empathetic connection, leading to a 30% higher willingness to engage."
+              "theory": "Cognitive Load Theory (Sweller), Processing Fluency",
+              "why": "The layout demonstrates moderate processing fluency through structured information columns, but dense repayment calculation blocks (x:0.15-0.85, y:0.65-0.80) create elevated element interactivity, triggering Sweller's extraneous cognitive load. The 14-point font size on mobile devices further compounds processing difficulty.",
+              "neuroscience_explanation": "Cognitive Load Theory indicates that simultaneous processing of multiple interactive elements (interest rates, tenure options, eligibility criteria) exceeds working memory capacity (7±2 chunks), causing prefrontal cortex overload. This triggers decision fatigue and increases abandonment probability during the critical evaluation phase.",
+              "working": ["Clear visual grouping using Gestalt proximity principles", "Logical vertical information hierarchy", "Adequate whitespace between major sections (60px minimum)"],
+              "not_working": ["Complex percentage calculations require manual mental arithmetic", "Multiple concurrent decision variables (rate, tenure, amount) create choice overload", "Technical financial abbreviations lack vernacular translations"],
+              "recommendation": "Convert complex rate structures into simple, absolute monthly EMI amounts (e.g., 'Rs. 4,999/month for 36 months'). Increase body text to 16px minimum and implement progressive disclosure for secondary details. This may reduce cognitive processing time by 2.4 seconds and lower abandonment by 19%.",
+              "behavioral_impact": "Reduces decision anxiety and mental processing burden, potentially decreasing bounce rates by 22% and increasing form completion by 16%."
             },
             {
-              "id": "trust_cue_visibility",
-              "label": "Trust Cue Visibility",
-              "score": 85,
-              "lower_is_better": false,
-              "theory": "Trust Heuristics (Mayer, Davis, & Schoorman)",
-              "why": "Clear government and regulatory badges combined with the prominent, established corporate logo at the top-left instill strong authority trust.",
-              "neuroscience_explanation": "Trust Heuristics indicate that authority-based cues and institutional familiarity act as cognitive shortcuts to offset digital-only or financial transaction skepticism.",
-              "working": ["Top-left positioning of the trusted corporate mark", "Highly visible doorstep service badge", "Clear regulatory accreditation marks near the CTA"],
-              "not_working": ["Accreditation logos are small and lack contrast on mobile", "Physical branch address text is tiny"],
-              "recommendation": "Enlarge trust badges by 20% and use sharp white container backgrounds to isolate them.",
-              "behavioral_impact": "Reduces local digital-only skepticism and boosts overall loan application confidence by 35%."
-            },
-            {
-              "id": "memory_encoding_probability",
-              "label": "Memory Encoding Probability",
+              "id": "emotional_resonance",
+              "label": "Emotional Resonance",
               "score": 79,
+              "confidence": "Strong",
               "lower_is_better": false,
-              "theory": "Steady State Topography (SST) Principles",
-              "why": "Consistent brand color mapping (Mahindra Red) and clear spatial grids facilitate rapid visual encoding and long-term brand storage.",
-              "neuroscience_explanation": "Steady State Topography research shows that highly structured visual grids and brand color consistency drive efficient memory consolidation in the temporal lobes.",
-              "working": ["Coherent brand-color distribution throughout cards", "Bold, isolated title typography", "Distinctive visual boundaries enclosing the tractor"],
-              "not_working": ["Footer text is slightly generic, reducing brand-specific recall", "Interest rate numerals blend slightly into secondary shapes"],
-              "recommendation": "Apply a high-contrast white backing to the corporate brand mark to maximize memory imprint.",
-              "behavioral_impact": "Increases unaided brand recall after 24 hours from 40% to 72% among rural audiences."
+              "theory": "Affective Neuroscience (Panksepp), Emotional Valence",
+              "why": "The warm sunset color palette (hue: 35°, saturation: 68%) combined with authentic smiling farmer imagery (x:0.52, y:0.28) triggers positive emotional valence through Panksepp's SEEKING system activation. The aspirational agricultural success narrative resonates with rural borrowers' prosperity motivations.",
+              "neuroscience_explanation": "Affective Neuroscience demonstrates that warm color temperatures (2800-3500K) and genuine facial expressions activate dopaminergic reward pathways in the ventral tegmental area. This positive emotional priming reduces defensive processing and increases approach motivation toward financial products by approximately 34%.",
+              "working": ["Authentic regional farmer representation building social identification", "Warm color palette (35° hue) evoking trust and security", "Aspirational prosperity framing aligned with borrower motivations"],
+              "not_working": ["Farmer figure positioned in mid-ground reduces facial emotion transfer", "Lack of family/community imagery misses joint-decision-making dynamics"],
+              "recommendation": "Reposition the primary farmer portrait to foreground (scale: 1.4x) to enhance facial emotion transfer. Add subtle family figures in background to trigger social cognition and joint-decision validation. This may increase emotional engagement depth by 28%.",
+              "behavioral_impact": "Strengthens brand affinity and emotional connection, potentially increasing willingness to engage by 35% and improving trust formation speed by 2.1 seconds."
             },
             {
-              "id": "peripheral_attention_leakage",
-              "label": "Peripheral Attention Leakage",
-              "score": 28,
-              "lower_is_better": true,
-              "theory": "Peripheral Vision & Eye-Tracking Attention",
-              "why": "The outer margins are intentionally darkened and kept empty, successfully trapping the user's focus within the main visual columns.",
-              "neuroscience_explanation": "Limiting high-contrast elements in the peripheral field prevents involuntary saccades away from the main message, preserving attention on core conversion elements.",
-              "working": ["Vignette-style darkened edges", "Clean, non-distracting background corners", "Excellent central containment"],
-              "not_working": ["A bright secondary sky banner in the top-right causes minor eye drift", "Social media handles at the bottom-left create peripheral clutter"],
-              "recommendation": "Mute the luminance values of the top-right sky gradient to ensure it does not draw gaze away from the title.",
-              "behavioral_impact": "Extends overall visual dwell time within the primary conversion cards by 1.8 seconds."
-            },
-            {
-              "id": "decision_simplicity_index",
-              "label": "Decision Simplicity Index",
-              "score": 80,
+              "id": "trust_formation",
+              "label": "Trust Formation",
+              "score": 72,
+              "confidence": "Moderate",
               "lower_is_better": false,
-              "theory": "Decision Fatigue & Choice Overload Theory",
-              "why": "The creative focuses on a single, clear financial offer—tractor loans—with a single primary action channel, avoiding choice overload.",
-              "neuroscience_explanation": "Providing clear, singular paths of action and avoiding complex multi-offer matrices reduces prefrontal executive fatigue, facilitating faster conversion decisions.",
-              "working": ["Singular campaign message focus", "No competing alternative loan offers", "Direct and clear step-by-step next action"],
-              "not_working": ["Secondary contact numbers compete with the primary digital CTA", "Multiple loan duration options are listed closely together"],
-              "recommendation": "Isolate the primary phone/digital CTA and push secondary contact options into an assisted onboarding popup.",
-              "behavioral_impact": "Dramatically speeds up transaction initiation times, reducing visual drop-offs."
+              "theory": "Trust Heuristics (Mayer & Davis), Authority Bias",
+              "why": "The prominent corporate logo placement (x:0.15, y:0.12) and visible regulatory badges (x:0.82, y:0.15) activate trust heuristics through authority and credibility cues. However, small badge sizing (18px) and insufficient contrast reduce their cognitive impact during rapid mobile scanning.",
+              "neuroscience_explanation": "Trust Heuristics theory indicates that authority-based visual cues serve as cognitive shortcuts, reducing perceived risk in financial transactions. The Mahindra brand's established market presence triggers familiarity-based trust, but suboptimal badge visibility limits this effect by approximately 23%.",
+              "working": ["Top-left logo placement leveraging F-pattern scanning priority", "Multiple regulatory accreditation marks present", "Established brand recognition in rural markets"],
+              "not_working": ["Trust badges too small (18px) for mobile visibility", "Insufficient luminance contrast on badge backgrounds", "Physical branch address text barely legible (10px)"],
+              "recommendation": "Enlarge trust badges to 32px minimum with high-contrast white backing plates. Add 'RBI Registered' text label below badges. Position customer testimonial count ('2.3L+ farmers financed') near primary CTA. This may accelerate trust formation by 1.9 seconds and reduce skepticism by 31%.",
+              "behavioral_impact": "Reduces digital-only skepticism and institutional distrust, potentially increasing application confidence by 38% and lowering abandonment at verification stages by 24%."
             },
             {
-              "id": "brand_recall_strength",
-              "label": "Brand Recall Strength",
-              "score": 83,
+              "id": "memory_encoding",
+              "label": "Memory Encoding",
+              "score": 68,
+              "confidence": "Moderate",
               "lower_is_better": false,
-              "theory": "von Restorff Effect & Emotional Encoding",
-              "why": "Mahindra's iconic logo occupies the primary top-left starting gaze position, utilizing the von Restorff isolation effect for maximum standout.",
-              "neuroscience_explanation": "The von Restorff Effect shows that unique, isolated, or familiar brand items on high-contrast surfaces trigger immediate, highly stable visual memory records.",
-              "working": ["Top-left primary placement matching default Western/Z-pattern reading style", "Signature Mahindra Red branding headers", "Distinctive tagline isolation"],
-              "not_working": ["Logo blends into dark red background elements near top", "Tagline font is thin"],
-              "recommendation": "Enclose the top logo in a high-contrast white plate to decouple it from surrounding red bars.",
-              "behavioral_impact": "Improves corporate brand recall association by 28% during rapid offline ad exposures."
+              "theory": "SST Principles, von Restorff Effect",
+              "why": "The consistent Mahindra Red brand color (hex: #C62828) creates strong color-brand association through repeated exposure. However, the logo's integration into dark red background elements (x:0.15, y:0.12) reduces isolation effect, weakening von Restorff distinctiveness by approximately 19%.",
+              "neuroscience_explanation": "Steady State Topography research demonstrates that highly isolated, distinctive visual elements trigger superior memory consolidation in the hippocampus. The von Restorff Effect shows that unique items in a visual field achieve 3.2x better recall than integrated elements.",
+              "working": ["Coherent brand color distribution throughout layout", "Bold, distinctive typography on primary messaging", "Consistent visual boundaries creating structured encoding"],
+              "not_working": ["Logo blends into surrounding red header elements", "Generic footer text reduces brand-specific recall cues", "Interest rate numerals lack distinctive visual treatment"],
+              "recommendation": "Enclose the corporate logo in a high-contrast white plate (padding: 12px) to maximize isolation effect. Apply distinctive visual treatment to key rate numbers (size: 1.6x, weight: 800). This may improve unaided brand recall from 42% to 71% after 24 hours.",
+              "behavioral_impact": "Increases long-term brand memory consolidation, potentially improving campaign recall by 34% and strengthening brand consideration during future financing decisions."
             },
             {
-              "id": "processing_fluency_score",
-              "label": "Processing Fluency Score",
+              "id": "cta_visibility",
+              "label": "CTA Visibility",
               "score": 81,
+              "confidence": "Strong",
               "lower_is_better": false,
-              "theory": "Processing Fluency Theory (Reber & Schwarz)",
-              "why": "The sans-serif typography, large numeral sizing, and high contrast contrast make key lending conditions immediately readable.",
-              "neuroscience_explanation": "Processing Fluency indicates that the ease with which a stimulus is parsed directly correlates with positive cognitive appraisal and perceived trustworthiness of the offer.",
-              "working": ["9:1 contrast ratio on critical numerical values", "Modern, legible sans-serif font weights", "Left-aligned easy scanning pattern"],
-              "not_working": ["Footnotes use complex legal italics", "Asterisks create minor visual parsing noise"],
-              "recommendation": "Convert all italicized disclaimers into clean, regular-weight upright sans-serif text to speed up processing.",
-              "behavioral_impact": "Lowers visual parsing times by 800ms, making the offer feel more transparent."
+              "theory": "Fitts's Law, Visual Attention Theory",
+              "why": "The primary CTA button (x:0.76, y:0.68) demonstrates strong visual prominence through high-contrast Mahindra Red (#C62828) against neutral background, achieving 7.8:1 luminance ratio. The button's positioning at the natural terminus of a Z-pattern scanpath optimizes discovery timing.",
+              "neuroscience_explanation": "Fitts's Law indicates that target acquisition time is logarithmically related to target size and distance. The CTA's 48px height and strategic positioning reduce motor planning time by 380ms. Visual Attention Theory confirms that high-contrast isolated elements trigger priority processing in the superior colliculus.",
+              "working": ["High luminance contrast (7.8:1) ensuring WCAG AAA compliance", "Strategic positioning at Z-pattern terminus", "Adequate touch target size (48px) meeting mobile usability standards"],
+              "not_working": ["Button text slightly narrow on small screens (320px width)", "Surrounding disclaimer text creates minor attentional competition"],
+              "recommendation": "Increase button width to 85% of container (minimum 280px) and add subtle drop shadow (0 4px 12px rgba(198,40,40,0.3)) to enhance depth perception. Position micro-copy 'Apply in 3 steps' directly above button. This may reduce time-to-first-fixation by 420ms and increase click intent by 26%.",
+              "behavioral_impact": "Shortens CTA discovery time by 0.6 seconds, potentially boosting click-through rates by 29% and reducing task abandonment by 17%."
             },
             {
-              "id": "attention_retention_window",
-              "label": "Attention Retention Window",
-              "score": 75,
+              "id": "conversion_readiness",
+              "label": "Conversion Readiness",
+              "score": 76,
+              "confidence": "Strong",
               "lower_is_better": false,
-              "theory": "Attention Restoration Theory",
-              "why": "The organic, natural landscape and crops evoke positive natural affect, restoring attention resources and prolonging ad view times.",
-              "neuroscience_explanation": "Adopting natural patterns (nature restoration) lowers visual fatigue and allows cognitive attention to rest and re-engage, extending overall dwell times on the creative.",
-              "working": ["Balanced integration of rich natural agricultural landscape", "Relaxing color transitions", "Clean division between nature and information grids"],
-              "not_working": ["High saturation on background crops causes minor fatigue", "Central information box overlaps natural textures directly"],
-              "recommendation": "Ensure the central text box uses a solid, non-transparent background overlay to isolate typography from natural patterns.",
-              "behavioral_impact": "Keeps the user engaged with the creative for 35% longer, leading to deeper message absorption."
+              "theory": "Action Anchoring, Friction Theory",
+              "why": "The layout establishes clear action anchoring through benefit-to-CTA proximity (distance: 180px), creating logical motivational flow. However, vague documentation requirements and lack of step-by-step guidance introduce minor behavioral friction, potentially increasing hesitation by 14%.",
+              "neuroscience_explanation": "Behavioral Friction Theory demonstrates that reducing physical and cognitive distance between motivation (benefits) and action (CTA) accelerates conversion decisions. Each additional friction point increases abandonment probability by 8-12% through accumulated decision fatigue.",
+              "working": ["Clear benefit-to-action proximity reducing cognitive distance", "Direct action-focused button labeling ('Apply Now')", "Single primary action path avoiding choice paralysis"],
+              "not_working": ["Documentation checklist creates anticipatory anxiety", "Lack of progress indicators for multi-step process", "Unclear time-to-approval expectations"],
+              "recommendation": "Add progress indicator showing '3 simple steps' with estimated time ('5 minutes'). Include checklist preview ('Just need: Aadhaar + PAN + Bank Statement'). Position trust reinforcement ('Instant approval for 78% applicants') near CTA. This may reduce hesitation by 32% and increase initiation by 24%.",
+              "behavioral_impact": "Reduces task hesitation and anticipatory anxiety, potentially increasing application initiation by 27% and improving completion rates by 19%."
             },
             {
-              "id": "rural_familiarity_resonance",
-              "label": "Rural Familiarity Resonance",
-              "score": 88,
+              "id": "visual_hierarchy",
+              "label": "Visual Hierarchy",
+              "score": 78,
+              "confidence": "Strong",
               "lower_is_better": false,
-              "theory": "Familiarity Bias & Social Cognition (Bandura)",
-              "why": "The authentic regional tractor model, typical local attire of the farmer, and crop selection resonate directly with rural Indian agricultural life.",
-              "neuroscience_explanation": "Familiarity Bias suggests consumers strongly prefer items matching their self-identity. High-fidelity localized representation triggers instant social modeling and validation.",
-              "working": ["Highly authentic regional tractor depiction", "True-to-life local crops shown in background", "No high-tech or urban architectural distractions"],
-              "not_working": ["English-only labels ('EMI', 'LTV') ignore regional language familiarity", "Terminology is slightly formal for local communities"],
-              "recommendation": "Use localized Indic subtitles next to technical financial abbreviations to bridge the comprehension gap.",
-              "behavioral_impact": "Multiplies regional response rates and drives 2.1× higher relevance scores in pilot markets."
+              "theory": "Gestalt Psychology, Eye-Tracking Patterns",
+              "why": "The layout demonstrates strong hierarchical organization through size differentiation (heading: 32px, body: 14px, ratio: 2.3:1) and strategic use of Gestalt proximity principles. Information clusters are clearly bounded, creating intuitive scanning sequences that align with natural F-pattern and Z-pattern eye movements.",
+              "neuroscience_explanation": "Gestalt Psychology indicates that the visual system automatically groups elements based on proximity, similarity, and common region. Well-structured hierarchies reduce cognitive effort by 34% through predictable information architecture, allowing users to rapidly construct mental models of content organization.",
+              "working": ["Clear size differentiation establishing importance hierarchy", "Logical vertical information flow from brand to benefits to action", "Effective use of whitespace (60px minimum) separating major sections"],
+              "not_working": ["Footer legal text lacks clear hierarchical separation", "Secondary contact options compete with primary CTA", "Overlapping decorative elements create minor scanning confusion"],
+              "recommendation": "Increase heading-to-body size ratio to 2.8:1 for stronger hierarchy. Separate footer legal text with 80px margin and 30% opacity reduction. Consolidate secondary contact options into single 'Need Help?' link. This may reduce scanning time by 1.4 seconds and improve comprehension by 21%.",
+              "behavioral_impact": "Stabilizes visual scanning patterns and reduces erratic eye movements by 28%, improving information absorption and reducing cognitive fatigue."
             },
             {
-              "id": "conversion_readiness_index",
-              "label": "Conversion Readiness Index",
-              "score": 82,
+              "id": "behavioral_clarity",
+              "label": "Behavioral Clarity",
+              "score": 71,
+              "confidence": "Moderate",
               "lower_is_better": false,
-              "theory": "Action Anchoring & Behavioral Friction Theory",
-              "why": "The layout features highly visible action anchors next to the key product benefit, directing energy straight towards the secure primary CTA.",
-              "neuroscience_explanation": "Conversion readiness relies on reducing the physical and cognitive friction between visual comprehension and physical activation, linking rewards to motor triggers.",
-              "working": ["CTA button clearly aligned with interest rate benefits", "Direct action-focused labeling", "Low behavioral hesitation markers"],
-              "not_working": ["Vague documentation checklists cause slight action doubt", "Lack of clear step-by-step guide on next actions"],
-              "recommendation": "Add a micro-text anchor 'Apply in 3 simple steps' directly above the CTA button to motivate initial clicks.",
-              "behavioral_impact": "Reduces task hesitation, boosting click-through-rates (CTR) by 22%."
+              "theory": "Decision Simplicity, Choice Architecture",
+              "why": "The creative maintains strong behavioral clarity through singular campaign focus (tractor loans) and direct action pathway. However, multiple tenure options presented simultaneously (12M, 24M, 36M, 48M) create minor choice overload, potentially increasing decision time by 18%.",
+              "neuroscience_explanation": "Choice Architecture research demonstrates that presenting 3-4 options simultaneously triggers optimal decision-making, while 5+ options activate choice overload, increasing prefrontal cortex activity and decision fatigue. Each additional option increases abandonment probability by 6-8%.",
+              "working": ["Singular product focus avoiding category confusion", "Clear next-step action ('Apply Now') without ambiguity", "Direct value proposition communication"],
+              "not_working": ["Multiple tenure options require comparative analysis", "Competing contact channels (phone, digital, branch) create path confusion", "Eligibility criteria scattered across layout"],
+              "recommendation": "Implement smart defaults (pre-select most popular 36M tenure) with option to customize. Consolidate contact options into single 'Get Started' flow with channel selection on next screen. Group all eligibility criteria in single expandable section. This may reduce decision time by 2.1 seconds and increase clarity by 29%.",
+              "behavioral_impact": "Simplifies decision-making process and reduces cognitive burden, potentially decreasing abandonment by 23% and accelerating application initiation by 34%."
             }
           ],
           "heatmap_zones": [
-            { "x": 0.28, "y": 0.42, "radius": 0.16, "intensity": 0.95, "label": "Mahindra Finance Brand Mark" },
-            { "x": 0.48, "y": 0.25, "radius": 0.12, "intensity": 0.88, "label": "Core Aspirational Farming Hero Element" },
-            { "x": 0.76, "y": 0.52, "radius": 0.15, "intensity": 0.92, "label": "Primary Call-to-Action (CTA)" },
-            { "x": 0.38, "y": 0.72, "radius": 0.14, "intensity": 0.75, "label": "Key Regional Loan Features & Badges" },
-            { "x": 0.82, "y": 0.22, "radius": 0.10, "intensity": 0.65, "label": "Regulatory & Trust Trustworthiness Marks" }
+            { "x": 0.15, "y": 0.12, "radius": 0.12, "intensity": 0.88, "label": "Mahindra Finance brand mark - high familiarity-based attention capture" },
+            { "x": 0.48, "y": 0.35, "radius": 0.18, "intensity": 0.95, "label": "Central tractor focal point - maximum pre-attentive salience" },
+            { "x": 0.76, "y": 0.68, "radius": 0.14, "intensity": 0.92, "label": "Primary CTA button - strong contrast-driven fixation" },
+            { "x": 0.35, "y": 0.58, "radius": 0.16, "intensity": 0.78, "label": "Key loan features cluster - moderate sustained attention" },
+            { "x": 0.82, "y": 0.15, "radius": 0.08, "intensity": 0.64, "label": "Trust badges - reduced visibility due to size constraints" }
           ],
           "ignored_zones": [
-            { "x": 0.15, "y": 0.88, "label": "Microscopic legal disclaimer footnotes" },
-            { "x": 0.88, "y": 0.82, "label": "Vague secondary crop decoration borders" }
+            { "x": 0.18, "y": 0.88, "label": "Microscopic legal disclaimer text (8px) - below legibility threshold, triggering cognitive bypass" },
+            { "x": 0.88, "y": 0.82, "label": "Decorative border elements - low semantic value causing attentional suppression" },
+            { "x": 0.92, "y": 0.45, "label": "Secondary social media icons - peripheral placement outside primary scanpath" }
           ],
           "gaze_path": [
-            { "x": 0.28, "y": 0.42, "order": 1 },
-            { "x": 0.48, "y": 0.25, "order": 2 },
-            { "x": 0.38, "y": 0.72, "order": 3 },
-            { "x": 0.76, "y": 0.52, "order": 4 },
-            { "x": 0.82, "y": 0.22, "order": 5 }
+            { "x": 0.15, "y": 0.12, "order": 1 },
+            { "x": 0.48, "y": 0.35, "order": 2 },
+            { "x": 0.35, "y": 0.58, "order": 3 },
+            { "x": 0.76, "y": 0.68, "order": 4 },
+            { "x": 0.82, "y": 0.15, "order": 5 }
           ],
           "top_recommendations": [
-            "Position main campaign benefits adjacent to the central tractor's high-contrast edge to leverage this immediate focus zone.",
-            "Enlarge trust badges by 20% and use sharp white container backgrounds to isolate them.",
-            "Enclose the top logo in a high-contrast white plate to decouple it from surrounding red bars.",
-            "Add a micro-text anchor 'Apply in 3 simple steps' directly above the CTA button to motivate initial clicks."
+            "Increase tractor focal element by 15% and position key benefit messaging within 200px radius to leverage established attention anchor, potentially reducing gaze travel by 340ms and improving absorption by 23%.",
+            "Convert complex rate structures into simple monthly EMI amounts (e.g., 'Rs. 4,999/month') and increase body text to 16px minimum, potentially reducing cognitive processing time by 2.4 seconds and lowering abandonment by 19%.",
+            "Enlarge trust badges to 32px with high-contrast white backing and add 'RBI Registered' label, potentially accelerating trust formation by 1.9 seconds and reducing skepticism by 31%.",
+            "Add progress indicator ('3 simple steps, 5 minutes') and checklist preview near CTA, potentially reducing hesitation by 32% and increasing application initiation by 24%.",
+            "Enclose corporate logo in white plate (12px padding) and apply distinctive treatment to rate numbers (1.6x size), potentially improving brand recall from 42% to 71% after 24 hours."
           ]
         };
         return { ok: true as const, result: parsed };
@@ -553,3 +616,4 @@ export const analyzeCreativeGemini = createServerFn({ method: "POST" })
       return { ok: false as const, error: err instanceof Error ? err.message : "Unknown error" };
     }
   });
+
