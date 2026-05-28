@@ -81,7 +81,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head><HeadContent /></head>
+      <head>
+        <HeadContent />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.__errors = [];
+              window.addEventListener('error', function(e) {
+                window.__errors.push(e.message + ' (' + e.filename + ':' + e.lineno + ')');
+              });
+              window.addEventListener('unhandledrejection', function(e) {
+                window.__errors.push('Promise: ' + String(e.reason));
+              });
+            `,
+          }}
+        />
+      </head>
       <body>
         {children}
         <Scripts />

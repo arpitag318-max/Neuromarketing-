@@ -1,6 +1,6 @@
 import {
-  LayoutDashboard, Brain, Microscope, Workflow, ClipboardCheck,
-  BookMarked, Network, Radio, Eye, Settings, HelpCircle, Search
+  LayoutDashboard, Brain, Sprout, Microscope, Workflow, ClipboardCheck,
+  FlaskConical, BookMarked, Network, Radio, Eye, Search
 } from "lucide-react";
 import { useState } from "react";
 
@@ -69,7 +69,16 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <div className="border-t border-white/5 p-3">
+      <div className="border-t border-white/5 p-3 space-y-1">
+        <div className="mt-3 glass rounded-xl p-3">
+          <div className="flex items-center gap-2.5">
+            <div className="h-8 w-8 rounded-full bg-gradient-to-br from-purple to-teal grid place-items-center text-[11px] font-semibold text-background">MF</div>
+            <div className="leading-tight">
+              <div className="text-xs font-medium">Marketing Team</div>
+              <div className="text-[10px] text-muted-foreground">Internal · Tier 1</div>
+            </div>
+          </div>
+        </div>
       </div>
     </aside>
   );

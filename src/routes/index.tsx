@@ -3,7 +3,7 @@ import { AppLayout } from "@/components/neuro/AppLayout";
 import { PageHeader, Card, SectionTitle } from "@/components/neuro/Primitives";
 import {
   Eye, ShieldCheck, HeartPulse, BrainCircuit, Activity, Sparkles, Gauge,
-  Sprout, ArrowRight, TrendingUp, ClipboardCheck, Workflow,
+  Sprout, ArrowRight, TrendingUp, ClipboardCheck, Workflow, FlaskConical,
   BookMarked, Microscope, Brain, FileText
 } from "lucide-react";
 import {
@@ -173,7 +173,6 @@ function Dashboard() {
         <Card className="p-5">
           <div className="flex items-baseline justify-between mb-4">
             <h3 className="font-display text-base font-semibold">Recent Audits</h3>
-            <Link to="/audit" className="text-xs text-primary hover:underline">All →</Link>
           </div>
           <ul className="space-y-3">
             {recentAudits.map((a) => (
