@@ -1,7 +1,7 @@
 "use client";
 
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AppLayout } from "@/components/neuro/AppLayout";
 import { PageHeader, Card } from "@/components/neuro/Primitives";
 import {
@@ -9,8 +9,9 @@ import {
   Upload, CheckCircle2, ChevronRight, PlayCircle, PauseCircle,
   BarChart3, HelpCircle, Sparkles,
   UserCheck, ShieldCheck, Activity, Compass,
-  Flame, Target
+  Flame, Target, Lightbulb, Loader2, AlertTriangle, Zap
 } from "lucide-react";
+import { getEyeTrackingSuggestions } from "@/lib/ai.functions";
 
 export const Route = createFileRoute("/eye-tracking")({ component: EyeTrackingPage });
 
@@ -26,13 +27,50 @@ type HeatPoint = {
   scrollY?: number;
 };
 
+type AOI = {
+  id: number;
+  name: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  color?: string;
+};
+
+type HeatCell = {
+  x: number;
+  y: number;
+  intensity: number;
+};
+
 type Fixation = {
   id: number;
   x: number;
   y: number;
   start: number;
+  end: number;
   duration: number;
+  points: HeatPoint[];
   aoiId: number;
+  aoiName?: string;
+  sequenceIndex: number;
+  revisitIndex: number;
+  isFirstFixationInAOI: boolean;
+};
+
+type Saccade = {
+  fromX: number;
+  fromY: number;
+  toX: number;
+  toY: number;
+  velocity: number;
+  distance: number;
+};
+
+type SequenceTransition = {
+  from: number;
+  to: number;
+  count: number;
 };
 
 type Ripple = {
@@ -61,14 +99,21 @@ type WebGazerApi = {
   params?: Record<string, unknown>;
 };
 
+const AOI_DESCRIPTIONS: Record<number, string> = {
+  1: "Typically brand identity, hero imagery, and primary visual anchors.",
+  2: "Value proposition, pricing details, and key information blocks.",
+  3: "Trust badges, compliance text, and supporting details.",
+  4: "Call-to-action elements, conversion buttons, and contact info."
+};
 
-
-const AOI_DEFINITIONS = [
-  { id: 1, name: "AOI 1: Top-Left Quadrant", desc: "Typically brand identity, hero imagery, and primary visual anchors." },
-  { id: 2, name: "AOI 2: Top-Right Quadrant", desc: "Value proposition, pricing details, and key information blocks." },
-  { id: 3, name: "AOI 3: Bottom-Left Quadrant", desc: "Trust badges, compliance text, and supporting details." },
-  { id: 4, name: "AOI 4: Bottom-Right Quadrant", desc: "Call-to-action elements, conversion buttons, and contact info." }
+const DEFAULT_AOIS: AOI[] = [
+  { id: 1, name: "AOI 1: Top-Left Quadrant", x: 0, y: 0, width: 0.5, height: 0.5, color: "#8B1E1E" },
+  { id: 2, name: "AOI 2: Top-Right Quadrant", x: 0.5, y: 0, width: 0.5, height: 0.5, color: "#B45309" },
+  { id: 3, name: "AOI 3: Bottom-Left Quadrant", x: 0, y: 0.5, width: 0.5, height: 0.5, color: "#0F766E" },
+  { id: 4, name: "AOI 4: Bottom-Right Quadrant", x: 0.5, y: 0.5, width: 0.5, height: 0.5, color: "#EAB308" }
 ];
+
+const MIN_REVISIT_GAP_MS = 500;
 
 const TRACKING_CONFIG = {
   // --- Calibration Settings ---
@@ -102,6 +147,9 @@ const TRACKING_CONFIG = {
   RIPPLE_FIXATION_RADIUS: 4,
   // Maximum expansion radius of the fixation ripple.
   RIPPLE_FIXATION_MAX_RADIUS: 55,
+  HEATMAP_GRID_SIZE: 36,
+  HEATMAP_HOTSPOT_RADIUS_PX: 58,
+  HEATMAP_BASE_OPACITY: 0.13,
 
   // --- Analytics Thresholds ---
   // The minimum number of raw gaze points required before the AI advisory will attempt to generate insights.
@@ -134,6 +182,53 @@ function equallySpaced(i: number, j: number, n: number): number[] {
   return Array.from({ length: n }, (_, index) => i + index * step);
 }
 
+function calculateDwell(points: HeatPoint[]): number {
+  if (points.length < 2) return 0;
+  let dwellMs = 0;
+  for (let index = 1; index < points.length; index += 1) {
+    const delta = points[index].t - points[index - 1].t;
+    if (delta > 0) dwellMs += delta;
+  }
+  return dwellMs;
+}
+
+function buildTransitions(fixations: Fixation[]): SequenceTransition[] {
+  const sorted = [...fixations]
+    .filter((f) => f.aoiId !== 0)
+    .sort((a, b) => a.start - b.start);
+  const counts = new Map<string, SequenceTransition>();
+  for (let index = 1; index < sorted.length; index += 1) {
+    const prev = sorted[index - 1];
+    const current = sorted[index];
+    if (prev.aoiId === current.aoiId) continue;
+    const key = `${prev.aoiId}->${current.aoiId}`;
+    const existing = counts.get(key);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      counts.set(key, { from: prev.aoiId, to: current.aoiId, count: 1 });
+    }
+  }
+  return Array.from(counts.values()).sort((a, b) => b.count - a.count);
+}
+
+function median(values: number[]): number {
+  if (values.length === 0) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 === 0) {
+    return (sorted[mid - 1] + sorted[mid]) / 2;
+  }
+  return sorted[mid];
+}
+
+function variance(values: number[]): number {
+  if (values.length === 0) return 0;
+  const avg = values.reduce((sum, value) => sum + value, 0) / values.length;
+  const squared = values.reduce((sum, value) => sum + (value - avg) ** 2, 0);
+  return squared / values.length;
+}
+
 function EyeTrackingPage() {
   // Onboarding Wizard steps: 1 = Prep & Camera permission, 2 = Click-Calibration Grid, 3 = Biometric success report, 4 = Main active Gaze Lab
   const [wizardStep, setWizardStep] = useState<1 | 2 | 3 | 4>(1);
@@ -154,8 +249,10 @@ function EyeTrackingPage() {
   const [relativeGaze, setRelativeGaze] = useState<{ x: number; y: number } | null>(null);
   
   // Dynamic telemetry lists
+  const [aois, setAois] = useState<AOI[]>([]);
   const [points, setPoints] = useState<HeatPoint[]>([]);
   const [fixations, setFixations] = useState<Fixation[]>([]);
+  const [saccades, setSaccades] = useState<Saccade[]>([]);
   
   // Live Insights Commentary State
   const [liveInsight, setLiveInsight] = useState<string>("Aligning gaze coordinates... Sweep your eyes across the uploaded creative.");
@@ -163,13 +260,23 @@ function EyeTrackingPage() {
   // Replay timeline state
   const [recordedPoints, setRecordedPoints] = useState<HeatPoint[]>([]);
   const [recordedFixations, setRecordedFixations] = useState<Fixation[]>([]);
+  const [recordedSaccades, setRecordedSaccades] = useState<Saccade[]>([]);
   const [playbackIndex, setPlaybackIndex] = useState<number>(0);
   const [isPlaybackPaused, setIsPlaybackPaused] = useState<boolean>(true);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
 
+  // AI Suggestions State
+  type AISuggestion = { title: string; description: string; priority: string; principle: string };
+  const [aiSuggestions, setAiSuggestions] = useState<AISuggestion[] | null>(null);
+  const [aiSuggestionsLoading, setAiSuggestionsLoading] = useState(false);
+  const [aiSuggestionsError, setAiSuggestionsError] = useState<string | null>(null);
+
   // UI settings
   const [showHeatmap, setShowHeatmap] = useState(true);
+  const [showGazePoints, setShowGazePoints] = useState(true);
   const [showGazePath, setShowGazePath] = useState(true);
+  const [showAOIOverlay, setShowAOIOverlay] = useState(true);
+  const [showSaccades, setShowSaccades] = useState(true);
 
   // Refs for tracking and rendering loops
   const webgazerRef = useRef<WebGazerApi | null>(null);
@@ -182,6 +289,17 @@ function EyeTrackingPage() {
   const sessionStartRef = useRef<number>(0);
   const dwellRef = useRef<{ x: number; y: number; start: number } | null>(null);
   const activeClusterRef = useRef<HeatPoint[]>([]);
+  const pointsRef = useRef<HeatPoint[]>([]);
+  const fixationsRef = useRef<Fixation[]>([]);
+  const saccadesRef = useRef<Saccade[]>([]);
+  const aoiLastExitRef = useRef<Map<number, number>>(new Map());
+  const revisitCountRef = useRef<Map<number, number>>(new Map());
+  const sequenceRef = useRef<number>(0);
+  const fixationIdRef = useRef<number>(1);
+  const saccadeWindowRef = useRef<Fixation[]>([]);
+  const firstFixationSeenRef = useRef<Set<number>>(new Set());
+  const pointsRenderThrottleRef = useRef<number>(0);
+  const gazeRenderThrottleRef = useRef<number>(0);
   const playbackTimerRef = useRef<any>(null);
   const animationFrameRef = useRef<number | null>(null);
   const ripplesRef = useRef<Ripple[]>([]);
@@ -189,6 +307,47 @@ function EyeTrackingPage() {
 
   // Total clicks logged
   const totalCalClicks = Object.values(calibrationClicks).reduce((a, b) => a + b, 0);
+
+  useEffect(() => {
+    if (aois.length === 0) {
+      setAois(DEFAULT_AOIS);
+    }
+  }, [aois.length]);
+
+  function getAOIForPoint(x: number, y: number): AOI | null {
+    if (x < 0 || x > 1 || y < 0 || y > 1) return null;
+    for (let index = 0; index < aois.length; index += 1) {
+      const aoi = aois[index];
+      const withinX = x >= aoi.x && x <= aoi.x + aoi.width;
+      const withinY = y >= aoi.y && y <= aoi.y + aoi.height;
+      if (withinX && withinY) return aoi;
+    }
+    return null;
+  }
+
+  function buildHeatCells(sourcePoints: HeatPoint[], gridSize: number): HeatCell[] {
+    if (sourcePoints.length === 0) return [];
+    const cellW = 1 / gridSize;
+    const cellH = 1 / gridSize;
+    const cells = new Map<string, HeatCell>();
+
+    sourcePoints.forEach((point) => {
+      if (point.x < 0 || point.x > 1 || point.y < 0 || point.y > 1) return;
+      const gx = Math.min(gridSize - 1, Math.max(0, Math.floor(point.x * gridSize)));
+      const gy = Math.min(gridSize - 1, Math.max(0, Math.floor(point.y * gridSize)));
+      const key = `${gx}_${gy}`;
+      const existing = cells.get(key);
+      const cellX = gx * cellW + cellW / 2;
+      const cellY = gy * cellH + cellH / 2;
+      if (existing) {
+        existing.intensity += 1;
+      } else {
+        cells.set(key, { x: cellX, y: cellY, intensity: 1 });
+      }
+    });
+
+    return Array.from(cells.values());
+  }
 
   // ----------------------------------------------------
   // WEBGASER ONBOARDING LIFECYCLE
@@ -493,12 +652,29 @@ function EyeTrackingPage() {
     }
 
     setStatus("active");
+    pointsRef.current = [];
+    fixationsRef.current = [];
+    saccadesRef.current = [];
     setPoints([]);
     setFixations([]);
+    setSaccades([]);
+    setRecordedPoints([]);
+    setRecordedFixations([]);
+    setRecordedSaccades([]);
+    setPlaybackIndex(0);
+    setIsPlaybackPaused(true);
     setRelativeGaze(null);
     ripplesRef.current = [];
     sessionStartRef.current = performance.now();
+    dwellRef.current = null;
     activeClusterRef.current = [];
+    aoiLastExitRef.current = new Map();
+    revisitCountRef.current = new Map();
+    sequenceRef.current = 0;
+    fixationIdRef.current = 1;
+    saccadeWindowRef.current = [];
+    firstFixationSeenRef.current = new Set();
+    pointsRenderThrottleRef.current = 0;
     
     if (typeof webgazerRef.current.resume === "function") {
       void webgazerRef.current.resume();
@@ -507,7 +683,11 @@ function EyeTrackingPage() {
     // Core coordinate capture callback
     webgazerRef.current.setGazeListener((data: any) => {
       if (!data) return;
-      setGaze({ x: data.x, y: data.y });
+      const now = performance.now();
+      if (now - gazeRenderThrottleRef.current > 16) {
+        gazeRenderThrottleRef.current = now;
+        setGaze({ x: data.x, y: data.y });
+      }
 
       if (creativeContainerRef.current) {
         const rect = creativeContainerRef.current.getBoundingClientRect();
@@ -524,8 +704,6 @@ function EyeTrackingPage() {
         } else {
           setRelativeGaze(null);
         }
-
-        const now = performance.now();
         const newPt: HeatPoint = { 
           x: rx, 
           y: ry, 
@@ -537,45 +715,98 @@ function EyeTrackingPage() {
           scrollX: window.scrollX,
           scrollY: window.scrollY
         };
-        setPoints((p) => [...p, newPt]);
+        if (inside) {
+          pointsRef.current.push(newPt);
+          if (now - pointsRenderThrottleRef.current > 32) {
+            pointsRenderThrottleRef.current = now;
+            setPoints([...pointsRef.current]);
+          }
+        }
 
         // Clustered Fixation algorithms: group points within 80px distance for >=250ms
         const d = dwellRef.current;
         if (!d) {
           dwellRef.current = { x: data.x, y: data.y, start: now };
-          activeClusterRef.current = [newPt];
+          activeClusterRef.current = inside ? [newPt] : [];
         } else {
           const dist = Math.hypot(data.x - d.x, data.y - d.y);
           if (dist <= TRACKING_CONFIG.FIXATION_DISTANCE_THRESHOLD_PX) {
-            activeClusterRef.current.push(newPt);
+            if (inside) {
+              activeClusterRef.current.push(newPt);
+            }
             
             // If duration within cluster matches threshold, record a fixation node
             const elapsed = now - d.start;
-            if (elapsed >= TRACKING_CONFIG.FIXATION_DURATION_THRESHOLD_MS && activeClusterRef.current.length % TRACKING_CONFIG.FIXATION_CLUSTER_MODULO === 0) {
+            if (
+              inside &&
+              elapsed >= TRACKING_CONFIG.FIXATION_DURATION_THRESHOLD_MS &&
+              activeClusterRef.current.length >= TRACKING_CONFIG.FIXATION_CLUSTER_MODULO &&
+              activeClusterRef.current.length % TRACKING_CONFIG.FIXATION_CLUSTER_MODULO === 0
+            ) {
               // Calculate centroid coordinates of the fixation cluster
               const avgX = activeClusterRef.current.reduce((a, b) => a + b.x, 0) / activeClusterRef.current.length;
               const avgY = activeClusterRef.current.reduce((a, b) => a + b.y, 0) / activeClusterRef.current.length;
-              
-              // Identify target AOI (0 = outside)
-              let aoiId = 0;
-              if (avgX >= 0 && avgX <= 0.5 && avgY >= 0 && avgY <= 0.5) aoiId = 1;
-              else if (avgX > 0.5 && avgX <= 1 && avgY >= 0 && avgY <= 0.5) aoiId = 2;
-              else if (avgX >= 0 && avgX <= 0.5 && avgY > 0.5 && avgY <= 1) aoiId = 3;
-              else if (avgX > 0.5 && avgX <= 1 && avgY > 0.5 && avgY <= 1) aoiId = 4;
+              const sourcePoints = [...activeClusterRef.current];
+              const aoi = getAOIForPoint(avgX, avgY);
+              const aoiId = aoi?.id ?? 0;
+
+              let revisitIndex = revisitCountRef.current.get(aoiId) ?? 0;
+              if (aoiId !== 0) {
+                const lastExitAt = aoiLastExitRef.current.get(aoiId);
+                if (typeof lastExitAt === "number" && now - lastExitAt >= MIN_REVISIT_GAP_MS) {
+                  revisitIndex += 1;
+                }
+                revisitCountRef.current.set(aoiId, revisitIndex);
+              }
+
+              const isFirstFixationInAOI = aoiId !== 0 && !firstFixationSeenRef.current.has(aoiId);
+              if (aoiId !== 0) {
+                firstFixationSeenRef.current.add(aoiId);
+              }
 
               const newFixation: Fixation = {
-                id: Date.now(),
+                id: fixationIdRef.current++,
                 x: avgX,
                 y: avgY,
                 start: d.start,
+                end: now,
                 duration: Math.round(elapsed),
-                aoiId
+                points: sourcePoints,
+                aoiId,
+                aoiName: aoi?.name,
+                sequenceIndex: sequenceRef.current++,
+                revisitIndex,
+                isFirstFixationInAOI
               };
 
-              setFixations((prev) => {
-                const filtered = prev.filter((f) => Math.abs(f.start - d.start) > TRACKING_CONFIG.FIXATION_MERGE_TIME_MS);
-                return [...filtered, newFixation];
-              });
+              const filtered = fixationsRef.current.filter(
+                (fixation) => Math.abs(fixation.start - d.start) > TRACKING_CONFIG.FIXATION_MERGE_TIME_MS
+              );
+              fixationsRef.current = [...filtered, newFixation];
+              setFixations([...fixationsRef.current]);
+
+              const previousFixation = saccadeWindowRef.current[saccadeWindowRef.current.length - 1];
+              if (previousFixation) {
+                const distance = Math.hypot(newFixation.x - previousFixation.x, newFixation.y - previousFixation.y);
+                const deltaT = Math.max(1, newFixation.start - previousFixation.end);
+                const velocity = distance / deltaT;
+                if (distance > 0.03) {
+                  const saccade: Saccade = {
+                    fromX: previousFixation.x,
+                    fromY: previousFixation.y,
+                    toX: newFixation.x,
+                    toY: newFixation.y,
+                    velocity,
+                    distance
+                  };
+                  saccadesRef.current = [...saccadesRef.current, saccade];
+                  setSaccades([...saccadesRef.current]);
+                }
+              }
+              saccadeWindowRef.current.push(newFixation);
+              if (saccadeWindowRef.current.length > 64) {
+                saccadeWindowRef.current.shift();
+              }
 
               if (aoiId !== 0) {
                 // Spawn fixation Concentric Ripple Animation
@@ -590,15 +821,22 @@ function EyeTrackingPage() {
               }
             }
           } else {
+            const clusterAoi = activeClusterRef.current.length > 0
+              ? getAOIForPoint(
+                  activeClusterRef.current.reduce((sum, point) => sum + point.x, 0) / activeClusterRef.current.length,
+                  activeClusterRef.current.reduce((sum, point) => sum + point.y, 0) / activeClusterRef.current.length
+                )
+              : null;
+            if (clusterAoi) {
+              aoiLastExitRef.current.set(clusterAoi.id, now);
+            }
             dwellRef.current = { x: data.x, y: data.y, start: now };
-            activeClusterRef.current = [newPt];
+            activeClusterRef.current = inside ? [newPt] : [];
           }
         }
       }
     });
 
-    // Start canvas rendering animation loop
-    startRenderingLoop();
   }
 
   function stopTrackingSession() {
@@ -615,8 +853,12 @@ function EyeTrackingPage() {
     setRelativeGaze(null);
     
     // Save current values into recorded states for playback analysis
-    setRecordedPoints([...points]);
-    setRecordedFixations([...fixations]);
+    setPoints([...pointsRef.current]);
+    setFixations([...fixationsRef.current]);
+    setSaccades([...saccadesRef.current]);
+    setRecordedPoints([...pointsRef.current]);
+    setRecordedFixations([...fixationsRef.current]);
+    setRecordedSaccades([...saccadesRef.current]);
     
     if (animationFrameRef.current) {
       cancelAnimationFrame(animationFrameRef.current);
@@ -626,10 +868,21 @@ function EyeTrackingPage() {
   function clearSessionData() {
     setPoints([]);
     setFixations([]);
+    setSaccades([]);
     setRecordedPoints([]);
     setRecordedFixations([]);
+    setRecordedSaccades([]);
     setPlaybackIndex(0);
     setIsPlaybackPaused(true);
+    pointsRef.current = [];
+    fixationsRef.current = [];
+    saccadesRef.current = [];
+    saccadeWindowRef.current = [];
+    aoiLastExitRef.current = new Map();
+    revisitCountRef.current = new Map();
+    firstFixationSeenRef.current = new Set();
+    sequenceRef.current = 0;
+    fixationIdRef.current = 1;
     ripplesRef.current = [];
     if (playbackTimerRef.current) clearInterval(playbackTimerRef.current);
     
@@ -650,120 +903,24 @@ function EyeTrackingPage() {
   // ----------------------------------------------------
 
   function updateLiveInsights(rx: number, ry: number) {
-    if (rx <= 0.5 && ry <= 0.5) {
+    const activeAoi = getAOIForPoint(rx, ry);
+    if (!activeAoi) return;
+    if (activeAoi.id === 1) {
       setLiveInsight("🎯 AOI 1 — TOP-LEFT: Gaze centered on brand/hero zone. Validating familiarity cues and visual anchoring.");
-    } else if (rx > 0.5 && ry <= 0.5) {
+    } else if (activeAoi.id === 2) {
       setLiveInsight("📊 AOI 2 — TOP-RIGHT: Reading value proposition area. Analyzing information density and scan patterns.");
-    } else if (rx <= 0.5 && ry > 0.5) {
+    } else if (activeAoi.id === 3) {
       setLiveInsight("🛡️ AOI 3 — BOTTOM-LEFT: Focused on trust/compliance zone. Evaluating badge visibility and vernacular clarity.");
-    } else {
+    } else if (activeAoi.id === 4) {
       setLiveInsight("⚡ AOI 4 — BOTTOM-RIGHT: Sweep identified on conversion/CTA zone. Dwell duration correlates to engagement intent.");
+    } else {
+      setLiveInsight(`🧭 ${activeAoi.name}: Tracking attention behavior across configured AOI boundary.`);
     }
   }
 
   // ----------------------------------------------------
   // THE 10 SCIENTIFIC EYE TRACKING METRICS CORE
   // ----------------------------------------------------
-
-  const getScientificMetrics = (sourcePoints: HeatPoint[], sourceFixations: Fixation[]) => {
-    const sessionStart = sessionStartRef.current || 0;
-    
-    const calculateAoiMetrics = (aoiId: number) => {
-      const aoiFixations = sourceFixations.filter((f) => f.aoiId === aoiId);
-      const aoiPoints = sourcePoints.filter((p) => {
-        if (aoiId === 1) return p.x <= 0.5 && p.y <= 0.5;
-        if (aoiId === 2) return p.x > 0.5 && p.y <= 0.5;
-        if (aoiId === 3) return p.x <= 0.5 && p.y > 0.5;
-        return p.x > 0.5 && p.y > 0.5;
-      });
-
-      // Metric 4: Time to First Fixation (TTFF)
-      const firstFixation = aoiFixations.sort((a, b) => a.start - b.start)[0];
-      const ttff = firstFixation ? ((firstFixation.start - sessionStart) / 1000).toFixed(2) + "s" : "—";
-
-      // Metric 5: Time Spent / Dwell Time
-      // Estimated at 40ms sample frequency for raw points
-      const dwellSec = (aoiPoints.length * 0.04).toFixed(2) + "s";
-
-      // Metric 6: Ratio
-      const ratio = sourcePoints.length > 0 ? Math.round((aoiPoints.length / sourcePoints.length) * 100) : 0;
-
-      // Metric 8: Revisits
-      // Count changes in contiguous gaze sections targeting this specific AOI
-      let revisits = 0;
-      let inAoi = false;
-      sourcePoints.forEach((p) => {
-        const isCurrentInside = (
-          (aoiId === 1 && p.x <= 0.5 && p.y <= 0.5) ||
-          (aoiId === 2 && p.x > 0.5 && p.y <= 0.5) ||
-          (aoiId === 3 && p.x <= 0.5 && p.y > 0.5) ||
-          (aoiId === 4 && p.x > 0.5 && p.y > 0.5)
-        );
-
-        if (isCurrentInside && !inAoi) {
-          revisits++;
-          inAoi = true;
-        } else if (!isCurrentInside) {
-          inAoi = false;
-        }
-      });
-      const adjustedRevisits = Math.max(0, revisits - 1); // Subtract initial entry
-
-      // Metric 9: First Fixation Duration
-      const firstFixationDuration = firstFixation ? `${firstFixation.duration}ms` : "—";
-
-      // Metric 10: Average Fixation Duration
-      const totalFixDuration = aoiFixations.reduce((a, b) => a + b.duration, 0);
-      const avgFixationDuration = aoiFixations.length > 0 ? `${Math.round(totalFixDuration / aoiFixations.length)}ms` : "—";
-
-      return {
-        ttff,
-        dwellSec,
-        ratio,
-        revisits: adjustedRevisits,
-        firstFixationDuration,
-        avgFixationDuration,
-        fixationsCount: aoiFixations.length
-      };
-    };
-
-    // Metric 7: Fixation sequences (Chronological chain of AOIs visited by fixations)
-    const sortedFixations = [...sourceFixations].sort((a, b) => a.start - b.start);
-    const sequence: number[] = [];
-    sortedFixations.forEach((f) => {
-      if (sequence.length === 0 || sequence[sequence.length - 1] !== f.aoiId) {
-        sequence.push(f.aoiId);
-      }
-    });
-
-    const aoisMetrics = {
-      1: calculateAoiMetrics(1),
-      2: calculateAoiMetrics(2),
-      3: calculateAoiMetrics(3),
-      4: calculateAoiMetrics(4)
-    };
-
-    // Global summary metrics
-    const totalGazePointsCount = sourcePoints.length; // Metric 1 (Gaze points)
-    const totalFixationsCount = sourceFixations.length; // Metric 1 (Fixations)
-    
-    const globalFirstFixation = sortedFixations[0];
-    const globalFirstFixationDuration = globalFirstFixation ? `${globalFirstFixation.duration}ms` : "—"; // Metric 9 global
-
-    const globalAvgFixationDuration = sourceFixations.length > 0
-      ? `${Math.round(sourceFixations.reduce((a, b) => a + b.duration, 0) / sourceFixations.length)}ms` // Metric 10 global
-      : "—";
-
-    return {
-      aoisMetrics,
-      sequence,
-      totalGazePointsCount,
-      totalFixationsCount,
-      globalFirstFixationDuration,
-      globalAvgFixationDuration
-    };
-  };
-
   const currentPoints = status === "replaying" ? recordedPoints.slice(0, playbackIndex + 1) : (recordedPoints.length > 0 ? recordedPoints : points);
   const currentFixations = status === "replaying"
     ? recordedFixations.filter((f) => {
@@ -771,8 +928,86 @@ function EyeTrackingPage() {
         return lastPt ? f.start <= lastPt.t : false;
       })
     : (recordedFixations.length > 0 ? recordedFixations : fixations);
+  const currentSaccades = status === "replaying"
+    ? recordedSaccades.slice(0, Math.max(0, currentFixations.length - 1))
+    : (recordedSaccades.length > 0 ? recordedSaccades : saccades);
 
-  const metricResults = getScientificMetrics(currentPoints, currentFixations);
+  const metricResults = useMemo(() => {
+    const sessionStart = sessionStartRef.current || 0;
+    const sortedFixations = [...currentFixations].sort((a, b) => a.start - b.start);
+    const aoiMetrics: Record<number, {
+      ttff: string;
+      dwellSec: string;
+      ratio: number;
+      revisits: number;
+      firstFixationDuration: string;
+      avgFixationDuration: string;
+      fixationsCount: number;
+    }> = {};
+
+    const totalDwellMs = calculateDwell(currentPoints);
+    aois.forEach((aoi) => {
+      const aoiFixations = sortedFixations.filter((fixation) => fixation.aoiId === aoi.id);
+      const aoiPoints = currentPoints.filter((point) => {
+        const pointAoi = getAOIForPoint(point.x, point.y);
+        return pointAoi?.id === aoi.id;
+      });
+      const firstFixation = aoiFixations[0];
+      const dwellMs = calculateDwell(aoiPoints);
+      const ratio = totalDwellMs > 0 ? Math.round((dwellMs / totalDwellMs) * 100) : 0;
+      const revisits = aoiFixations.length > 0 ? Math.max(...aoiFixations.map((fixation) => fixation.revisitIndex)) : 0;
+      const totalFixDuration = aoiFixations.reduce((sum, fixation) => sum + fixation.duration, 0);
+
+      aoiMetrics[aoi.id] = {
+        ttff: firstFixation ? `${((firstFixation.start - sessionStart) / 1000).toFixed(2)}s` : "—",
+        dwellSec: `${(dwellMs / 1000).toFixed(2)}s`,
+        ratio,
+        revisits,
+        firstFixationDuration: firstFixation ? `${firstFixation.duration}ms` : "—",
+        avgFixationDuration: aoiFixations.length > 0 ? `${Math.round(totalFixDuration / aoiFixations.length)}ms` : "—",
+        fixationsCount: aoiFixations.length
+      };
+    });
+
+    const sequence: number[] = [];
+    sortedFixations.forEach((fixation) => {
+      if (fixation.aoiId === 0) return;
+      if (sequence.length === 0 || sequence[sequence.length - 1] !== fixation.aoiId) {
+        sequence.push(fixation.aoiId);
+      }
+    });
+
+    const durations = sortedFixations.map((fixation) => fixation.duration);
+    const longestFixation = durations.length > 0 ? Math.max(...durations) : 0;
+    const globalAvgFixationDuration = durations.length > 0
+      ? `${Math.round(durations.reduce((sum, value) => sum + value, 0) / durations.length)}ms`
+      : "—";
+    const distribution = {
+      short: durations.filter((duration) => duration < 200).length,
+      medium: durations.filter((duration) => duration >= 200 && duration < 500).length,
+      long: durations.filter((duration) => duration >= 500 && duration < 900).length,
+      veryLong: durations.filter((duration) => duration >= 900).length
+    };
+
+    return {
+      aoisMetrics: aoiMetrics,
+      sequence,
+      transitions: buildTransitions(sortedFixations),
+      totalGazePointsCount: currentPoints.length,
+      totalFixationsCount: sortedFixations.length,
+      globalFirstFixationDuration: sortedFixations[0] ? `${sortedFixations[0].duration}ms` : "—",
+      globalAvgFixationDuration,
+      medianFixationDuration: durations.length > 0 ? `${Math.round(median(durations))}ms` : "—",
+      longestFixationDuration: durations.length > 0 ? `${Math.round(longestFixation)}ms` : "—",
+      fixationVariance: durations.length > 0 ? `${Math.round(variance(durations))}ms²` : "—",
+      fixationDistribution: distribution
+    };
+  }, [aois, currentFixations, currentPoints]);
+
+  const liveHeatCells = useMemo(
+    () => buildHeatCells(points, TRACKING_CONFIG.HEATMAP_GRID_SIZE),
+    [points]
+  );
 
   // Strategic AI-Auditor feedback based on scientific telemetry values
   const getCorporateAdvisory = () => {
@@ -780,9 +1015,9 @@ function EyeTrackingPage() {
       return "Calibration verified. Sit ~50cm directly facing your monitor. Begin look sweeps to compile cognitive eye metrics.";
     }
 
-    const cta = metricResults.aoisMetrics[4];
-    const brand = metricResults.aoisMetrics[1];
-    const rateCard = metricResults.aoisMetrics[2];
+    const cta = metricResults.aoisMetrics[4] ?? { ratio: 0, ttff: "—", revisits: 0, avgFixationDuration: "0ms" };
+    const brand = metricResults.aoisMetrics[1] ?? { ratio: 0 };
+    const rateCard = metricResults.aoisMetrics[2] ?? { ratio: 0, revisits: 0, avgFixationDuration: "0ms" };
 
     if (cta.ratio < 10) {
       return "⚠️ HIGH-RISK DISCOVERY: Time Spent on the Primary CTA zone (AOI 4) is critical at less than 10% of total attention. TTFF is excessively delayed. Action Required: Increase CTA contrast, enlarge the action button, and add directional cues guiding the eye downward.";
@@ -798,6 +1033,55 @@ function EyeTrackingPage() {
 
     return "✅ LAYOUT EQUILIBRIUM: Attention sweeps show a fluid, chronological Z-pattern trajectory. Time to First Fixation (TTFF) is rapid across key zones, with healthy dwell shares on conversion anchors.";
   };
+
+  async function handleGetAISuggestions() {
+    if (aiSuggestionsLoading) return;
+    setAiSuggestionsLoading(true);
+    setAiSuggestionsError(null);
+    setAiSuggestions(null);
+
+    try {
+      // Build aoisMetrics as a string-keyed record for the API
+      const aoisMetricsForApi: Record<string, {
+        ttff: string; dwellSec: string; ratio: number; revisits: number;
+        firstFixationDuration: string; avgFixationDuration: string; fixationsCount: number;
+      }> = {};
+      for (const [id, metrics] of Object.entries(metricResults.aoisMetrics)) {
+        aoisMetricsForApi[String(id)] = metrics;
+      }
+
+      const result = await getEyeTrackingSuggestions({
+        data: {
+          imageDataUrl: uploadedImage ?? undefined,
+          metrics: {
+            totalGazePoints: metricResults.totalGazePointsCount,
+            totalFixations: metricResults.totalFixationsCount,
+            avgFixationDuration: metricResults.globalAvgFixationDuration,
+            medianFixationDuration: metricResults.medianFixationDuration,
+            longestFixationDuration: metricResults.longestFixationDuration,
+            fixationVariance: metricResults.fixationVariance,
+            firstFixationDuration: metricResults.globalFirstFixationDuration,
+            saccadeCount: currentSaccades.length,
+            fixationSequence: metricResults.sequence,
+            aoisMetrics: aoisMetricsForApi,
+            transitions: metricResults.transitions,
+            fixationDistribution: metricResults.fixationDistribution,
+            advisory: getCorporateAdvisory(),
+          },
+        },
+      });
+
+      if (result.ok) {
+        setAiSuggestions(result.suggestions);
+      } else {
+        setAiSuggestionsError(result.error);
+      }
+    } catch (err) {
+      setAiSuggestionsError(err instanceof Error ? err.message : "Failed to get AI suggestions");
+    } finally {
+      setAiSuggestionsLoading(false);
+    }
+  }
 
   // ----------------------------------------------------
   // CINEMATIC CANVAS COMPOSITING & ANIMATION
@@ -831,24 +1115,52 @@ function EyeTrackingPage() {
     }
 
     ctx.clearRect(0, 0, c.width, c.height);
+    const renderPoints = pointsRef.current;
+    const renderFixations = fixationsRef.current;
+    const renderSaccades = saccadesRef.current;
+
+    if (showAOIOverlay && aois.length > 0) {
+      ctx.save();
+      aois.forEach((aoi) => {
+        const left = aoi.x * c.width;
+        const top = aoi.y * c.height;
+        const width = aoi.width * c.width;
+        const height = aoi.height * c.height;
+        const color = aoi.color ?? "#8B1E1E";
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 1.8;
+        ctx.setLineDash([6, 4]);
+        ctx.strokeRect(left, top, width, height);
+        ctx.setLineDash([]);
+        ctx.fillStyle = `${color}1A`;
+        ctx.fillRect(left, top, width, height);
+        ctx.fillStyle = color;
+        ctx.font = "bold 10px sans-serif";
+        ctx.textBaseline = "top";
+        ctx.fillText(aoi.name, left + 6, top + 6);
+      });
+      ctx.restore();
+    }
 
     // 1. Draw Cinematic HSL Heatmap with pulsing breathing spots
-    if (showHeatmap && points.length > 0) {
+    if (showHeatmap && liveHeatCells.length > 0) {
       ctx.save();
       // Use multiply compositing for cinematic premium overlay texture
       ctx.globalCompositeOperation = "multiply";
+      const maxIntensity = liveHeatCells.reduce((highest, cell) => Math.max(highest, cell.intensity), 1);
       
-      points.forEach((p) => {
-        const px = p.x * c.width;
-        const py = p.y * c.height;
+      liveHeatCells.forEach((cell) => {
+        const px = cell.x * c.width;
+        const py = cell.y * c.height;
+        const normalizedIntensity = Math.max(0.08, cell.intensity / maxIntensity);
 
         // Breathe calculation using sinusoidal scales
-        const pulse = 1 + Math.sin(scalePulseRef.current + p.t * 0.002) * 0.12;
-        const radius = 45 * pulse;
+        const pulse = 1 + Math.sin(scalePulseRef.current + normalizedIntensity * 5) * 0.12;
+        const radius = TRACKING_CONFIG.HEATMAP_HOTSPOT_RADIUS_PX * pulse * (0.75 + normalizedIntensity * 0.9);
 
         const g = ctx.createRadialGradient(px, py, 0, px, py, radius);
-        g.addColorStop(0, "rgba(139, 30, 30, 0.22)"); // Mahindra Red
-        g.addColorStop(0.4, "rgba(234, 179, 8, 0.12)"); // Amber
+        g.addColorStop(0, `rgba(139, 30, 30, ${TRACKING_CONFIG.HEATMAP_BASE_OPACITY + normalizedIntensity * 0.34})`);
+        g.addColorStop(0.4, `rgba(234, 179, 8, ${0.08 + normalizedIntensity * 0.22})`);
         g.addColorStop(1, "rgba(0, 0, 0, 0)");
 
         ctx.fillStyle = g;
@@ -859,27 +1171,41 @@ function EyeTrackingPage() {
       ctx.restore();
     }
 
+    if (showGazePoints && renderPoints.length > 0) {
+      ctx.save();
+      ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+      for (let index = 0; index < renderPoints.length; index += 1) {
+        const point = renderPoints[index];
+        const px = point.x * c.width;
+        const py = point.y * c.height;
+        ctx.beginPath();
+        ctx.arc(px, py, 1.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
     // 2. Draw Bezier Smooth Scanpath Trails
-    if (showGazePath && points.length > 1) {
+    if (showGazePath && renderPoints.length > 1) {
       ctx.save();
       ctx.strokeStyle = "rgba(139, 30, 30, 0.55)";
       ctx.lineWidth = 3;
       ctx.beginPath();
 
       // Smooth Bezier path approximations
-      ctx.moveTo(points[0].x * c.width, points[0].y * c.height);
-      for (let i = 1; i < points.length - 1; i++) {
-        const xc = (points[i].x * c.width + points[i + 1].x * c.width) / 2;
-        const yc = (points[i].y * c.height + points[i + 1].y * c.height) / 2;
-        ctx.quadraticCurveTo(points[i].x * c.width, points[i].y * c.height, xc, yc);
+      ctx.moveTo(renderPoints[0].x * c.width, renderPoints[0].y * c.height);
+      for (let i = 1; i < renderPoints.length - 1; i++) {
+        const xc = (renderPoints[i].x * c.width + renderPoints[i + 1].x * c.width) / 2;
+        const yc = (renderPoints[i].y * c.height + renderPoints[i + 1].y * c.height) / 2;
+        ctx.quadraticCurveTo(renderPoints[i].x * c.width, renderPoints[i].y * c.height, xc, yc);
       }
       ctx.stroke();
 
       // Draw numbered node points along chronological path
-      const sampleGap = Math.max(1, Math.floor(points.length / 15));
+      const sampleGap = Math.max(1, Math.floor(renderPoints.length / 15));
       let idx = 1;
-      for (let i = 0; i < points.length; i += sampleGap) {
-        const p = points[i];
+      for (let i = 0; i < renderPoints.length; i += sampleGap) {
+        const p = renderPoints[i];
         const px = p.x * c.width;
         const py = p.y * c.height;
 
@@ -897,6 +1223,53 @@ function EyeTrackingPage() {
         ctx.textBaseline = "middle";
         ctx.fillText(String(idx++), px, py);
       }
+      ctx.restore();
+    }
+
+    if (showSaccades && renderSaccades.length > 0) {
+      ctx.save();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+      ctx.lineWidth = 1.5;
+      renderSaccades.forEach((saccade) => {
+        const fromX = saccade.fromX * c.width;
+        const fromY = saccade.fromY * c.height;
+        const toX = saccade.toX * c.width;
+        const toY = saccade.toY * c.height;
+        ctx.beginPath();
+        ctx.moveTo(fromX, fromY);
+        ctx.lineTo(toX, toY);
+        ctx.stroke();
+        const angle = Math.atan2(toY - fromY, toX - fromX);
+        const arrowSize = 5;
+        ctx.beginPath();
+        ctx.moveTo(toX, toY);
+        ctx.lineTo(toX - arrowSize * Math.cos(angle - Math.PI / 6), toY - arrowSize * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(toX - arrowSize * Math.cos(angle + Math.PI / 6), toY - arrowSize * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+      });
+      ctx.restore();
+    }
+
+    if (renderFixations.length > 0) {
+      ctx.save();
+      renderFixations.forEach((fixation, fixationIndex) => {
+        const px = fixation.x * c.width;
+        const py = fixation.y * c.height;
+        ctx.fillStyle = "rgba(234, 179, 8, 0.45)";
+        ctx.strokeStyle = "rgba(139, 30, 30, 0.8)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(px, py, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        if (fixationIndex % 2 === 0) {
+          ctx.fillStyle = "rgba(255,255,255,0.92)";
+          ctx.font = "bold 8px sans-serif";
+          ctx.fillText(String(fixation.sequenceIndex + 1), px + 7, py - 7);
+        }
+      });
       ctx.restore();
     }
 
@@ -955,6 +1328,61 @@ function EyeTrackingPage() {
     pctx.clearRect(0, 0, pc.width, pc.height);
 
     const activeSubset = recordedPoints.slice(0, playbackIndex + 1);
+    const activeFixations = recordedFixations.filter((fixation) => {
+      const lastPoint = activeSubset[activeSubset.length - 1];
+      return lastPoint ? fixation.start <= lastPoint.t : false;
+    });
+    const activeSaccades = recordedSaccades.slice(0, Math.max(0, activeFixations.length - 1));
+    const replayHeatCells = buildHeatCells(activeSubset, TRACKING_CONFIG.HEATMAP_GRID_SIZE);
+
+    if (showAOIOverlay && aois.length > 0) {
+      pctx.save();
+      aois.forEach((aoi) => {
+        const left = aoi.x * pc.width;
+        const top = aoi.y * pc.height;
+        const width = aoi.width * pc.width;
+        const height = aoi.height * pc.height;
+        const color = aoi.color ?? "#8B1E1E";
+        pctx.strokeStyle = color;
+        pctx.lineWidth = 1.7;
+        pctx.setLineDash([6, 4]);
+        pctx.strokeRect(left, top, width, height);
+        pctx.setLineDash([]);
+      });
+      pctx.restore();
+    }
+
+    if (showHeatmap && replayHeatCells.length > 0) {
+      pctx.save();
+      pctx.globalCompositeOperation = "multiply";
+      const maxIntensity = replayHeatCells.reduce((highest, cell) => Math.max(highest, cell.intensity), 1);
+      replayHeatCells.forEach((cell) => {
+        const px = cell.x * pc.width;
+        const py = cell.y * pc.height;
+        const normalizedIntensity = Math.max(0.08, cell.intensity / maxIntensity);
+        const radius = TRACKING_CONFIG.HEATMAP_HOTSPOT_RADIUS_PX * (0.7 + normalizedIntensity);
+        const gradient = pctx.createRadialGradient(px, py, 0, px, py, radius);
+        gradient.addColorStop(0, `rgba(139, 30, 30, ${0.14 + normalizedIntensity * 0.35})`);
+        gradient.addColorStop(0.5, `rgba(234, 179, 8, ${0.08 + normalizedIntensity * 0.2})`);
+        gradient.addColorStop(1, "rgba(0,0,0,0)");
+        pctx.fillStyle = gradient;
+        pctx.beginPath();
+        pctx.arc(px, py, radius, 0, Math.PI * 2);
+        pctx.fill();
+      });
+      pctx.restore();
+    }
+
+    if (showGazePoints && activeSubset.length > 0) {
+      pctx.save();
+      pctx.fillStyle = "rgba(255,255,255,0.35)";
+      activeSubset.forEach((point) => {
+        pctx.beginPath();
+        pctx.arc(point.x * pc.width, point.y * pc.height, 1.8, 0, Math.PI * 2);
+        pctx.fill();
+      });
+      pctx.restore();
+    }
 
     // Draw smooth Bezier curves for replay scanpath
     if (showGazePath && activeSubset.length > 1) {
@@ -995,6 +1423,48 @@ function EyeTrackingPage() {
       pctx.restore();
     }
 
+    if (showSaccades && activeSaccades.length > 0) {
+      pctx.save();
+      pctx.strokeStyle = "rgba(255, 255, 255, 0.55)";
+      pctx.fillStyle = "rgba(255, 255, 255, 0.75)";
+      pctx.lineWidth = 1.4;
+      activeSaccades.forEach((saccade) => {
+        const fromX = saccade.fromX * pc.width;
+        const fromY = saccade.fromY * pc.height;
+        const toX = saccade.toX * pc.width;
+        const toY = saccade.toY * pc.height;
+        pctx.beginPath();
+        pctx.moveTo(fromX, fromY);
+        pctx.lineTo(toX, toY);
+        pctx.stroke();
+        const angle = Math.atan2(toY - fromY, toX - fromX);
+        const arrowSize = 5;
+        pctx.beginPath();
+        pctx.moveTo(toX, toY);
+        pctx.lineTo(toX - arrowSize * Math.cos(angle - Math.PI / 6), toY - arrowSize * Math.sin(angle - Math.PI / 6));
+        pctx.lineTo(toX - arrowSize * Math.cos(angle + Math.PI / 6), toY - arrowSize * Math.sin(angle + Math.PI / 6));
+        pctx.closePath();
+        pctx.fill();
+      });
+      pctx.restore();
+    }
+
+    if (activeFixations.length > 0) {
+      pctx.save();
+      activeFixations.forEach((fixation) => {
+        const px = fixation.x * pc.width;
+        const py = fixation.y * pc.height;
+        pctx.fillStyle = "rgba(234, 179, 8, 0.4)";
+        pctx.strokeStyle = "rgba(139, 30, 30, 0.9)";
+        pctx.lineWidth = 1.1;
+        pctx.beginPath();
+        pctx.arc(px, py, 5, 0, Math.PI * 2);
+        pctx.fill();
+        pctx.stroke();
+      });
+      pctx.restore();
+    }
+
     // Active gaze pointer glow pulsing
     if (activeSubset.length > 0) {
       const latest = activeSubset[activeSubset.length - 1];
@@ -1017,7 +1487,19 @@ function EyeTrackingPage() {
       pctx.arc(px, py, 14, 0, Math.PI * 2);
       pctx.stroke();
     }
-  }, [playbackIndex, recordedPoints, status, showGazePath]);
+  }, [
+    aois,
+    playbackIndex,
+    recordedFixations,
+    recordedPoints,
+    recordedSaccades,
+    showAOIOverlay,
+    showGazePath,
+    showGazePoints,
+    showHeatmap,
+    showSaccades,
+    status
+  ]);
 
   useEffect(() => {
     if (status === "replaying" && !isPlaybackPaused) {
@@ -1305,6 +1787,15 @@ function EyeTrackingPage() {
 
             <div className="flex items-center gap-3">
               {status === "replaying" && (
+                <div className="hidden md:flex items-center gap-1 rounded-lg border border-white/20 bg-white/5 p-1">
+                  <button onClick={() => setShowHeatmap((value) => !value)} className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${showHeatmap ? "bg-white/20 text-white" : "text-white/60"}`}>Heat</button>
+                  <button onClick={() => setShowGazePoints((value) => !value)} className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${showGazePoints ? "bg-white/20 text-white" : "text-white/60"}`}>Points</button>
+                  <button onClick={() => setShowGazePath((value) => !value)} className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${showGazePath ? "bg-white/20 text-white" : "text-white/60"}`}>Path</button>
+                  <button onClick={() => setShowSaccades((value) => !value)} className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${showSaccades ? "bg-white/20 text-white" : "text-white/60"}`}>Saccades</button>
+                  <button onClick={() => setShowAOIOverlay((value) => !value)} className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${showAOIOverlay ? "bg-white/20 text-white" : "text-white/60"}`}>AOI</button>
+                </div>
+              )}
+              {status === "replaying" && (
                 <div className="inline-flex items-center border border-white/20 bg-white/5 rounded-lg p-0.5 gap-1 shrink-0">
                   <button
                     onClick={() => setIsPlaybackPaused(!isPlaybackPaused)}
@@ -1358,10 +1849,6 @@ function EyeTrackingPage() {
                 alt="Campaign audit target"
                 className="max-w-[90vw] max-h-[80vh] block rounded-lg shadow-2xl shadow-black/50"
               />
-
-            {status === "active" && (
-              <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-20 rounded-lg" />
-            )}
 
             {status === "replaying" && (
               <canvas ref={playbackCanvasRef} className="absolute inset-0 pointer-events-none z-20 rounded-lg" />
@@ -1456,6 +1943,14 @@ function EyeTrackingPage() {
             </div>
           </div>
 
+          <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold">
+            <button onClick={() => setShowHeatmap((value) => !value)} className={`px-3 py-1.5 rounded-lg border transition ${showHeatmap ? "bg-primary/10 text-primary border-primary/25" : "bg-card border-border text-muted-foreground"}`}>Heatmap</button>
+            <button onClick={() => setShowGazePoints((value) => !value)} className={`px-3 py-1.5 rounded-lg border transition ${showGazePoints ? "bg-primary/10 text-primary border-primary/25" : "bg-card border-border text-muted-foreground"}`}>Raw Gaze</button>
+            <button onClick={() => setShowGazePath((value) => !value)} className={`px-3 py-1.5 rounded-lg border transition ${showGazePath ? "bg-primary/10 text-primary border-primary/25" : "bg-card border-border text-muted-foreground"}`}>Path</button>
+            <button onClick={() => setShowSaccades((value) => !value)} className={`px-3 py-1.5 rounded-lg border transition ${showSaccades ? "bg-primary/10 text-primary border-primary/25" : "bg-card border-border text-muted-foreground"}`}>Saccades</button>
+            <button onClick={() => setShowAOIOverlay((value) => !value)} className={`px-3 py-1.5 rounded-lg border transition ${showAOIOverlay ? "bg-primary/10 text-primary border-primary/25" : "bg-card border-border text-muted-foreground"}`}>AOI Overlay</button>
+          </div>
+
           {/* Upload area or preview */}
           <Card className="p-6">
             {!uploadedImage ? (
@@ -1521,13 +2016,34 @@ function EyeTrackingPage() {
                           <span className="h-5 w-5 rounded-full bg-primary text-white flex items-center justify-center text-[10px] shrink-0">
                             {idx + 1}
                           </span>
-                          <span>AOI {aoiId}</span>
+                          <span>{aois.find((aoi) => aoi.id === aoiId)?.name ?? `AOI ${aoiId}`}</span>
                         </div>
                         {idx < metricResults.sequence.length - 1 && (
                           <ChevronRight className="h-4 w-4 text-muted-foreground" />
                         )}
                       </div>
                     ))}
+                  </div>
+                </Card>
+              )}
+
+              {metricResults.transitions.length > 0 && (
+                <Card className="p-5">
+                  <h4 className="font-display text-sm font-bold mb-3 flex items-center gap-2">
+                    <Activity className="h-4.5 w-4.5 text-primary" /> AOI Transition Flow
+                  </h4>
+                  <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-2">
+                    {metricResults.transitions.map((transition, index) => {
+                      const fromName = aois.find((aoi) => aoi.id === transition.from)?.name ?? `AOI ${transition.from}`;
+                      const toName = aois.find((aoi) => aoi.id === transition.to)?.name ?? `AOI ${transition.to}`;
+                      return (
+                        <div key={`${transition.from}-${transition.to}-${index}`} className="p-2.5 rounded-lg border border-border bg-secondary/40 text-[11px] font-bold">
+                          <div className="text-muted-foreground">Flow {index + 1}</div>
+                          <div className="text-foreground mt-1">{fromName} → {toName}</div>
+                          <div className="text-primary font-mono mt-0.5">{transition.count} transitions</div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </Card>
               )}
@@ -1555,6 +2071,22 @@ function EyeTrackingPage() {
                       <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">First Fixation Duration</div>
                       <div className="text-xs font-black text-foreground font-mono">{metricResults.globalFirstFixationDuration}</div>
                     </div>
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-secondary/40 border border-border/40 select-none leading-none">
+                      <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Median Fixation</div>
+                      <div className="text-xs font-black text-foreground font-mono">{metricResults.medianFixationDuration}</div>
+                    </div>
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-secondary/40 border border-border/40 select-none leading-none">
+                      <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Longest Fixation</div>
+                      <div className="text-xs font-black text-foreground font-mono">{metricResults.longestFixationDuration}</div>
+                    </div>
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-secondary/40 border border-border/40 select-none leading-none">
+                      <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Fixation Variance</div>
+                      <div className="text-xs font-black text-foreground font-mono">{metricResults.fixationVariance}</div>
+                    </div>
+                    <div className="flex justify-between items-center p-2.5 rounded-lg bg-secondary/40 border border-border/40 select-none leading-none">
+                      <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider">Detected Saccades</div>
+                      <div className="text-xs font-black text-foreground font-mono">{currentSaccades.length}</div>
+                    </div>
                   </div>
                 </Card>
 
@@ -1569,6 +2101,12 @@ function EyeTrackingPage() {
                   </div>
                   <div className="text-[9px] text-muted-foreground font-mono leading-relaxed mt-1">
                     *Diagnostic parameters evaluate F-pattern readability sweeps, Sweller's visual overload thresholds, and Isolation ratios.
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-[10px] font-bold">
+                    <div className="p-2 rounded-md border border-border bg-secondary/40 text-muted-foreground">Short (&lt;200ms): <span className="text-foreground">{metricResults.fixationDistribution.short}</span></div>
+                    <div className="p-2 rounded-md border border-border bg-secondary/40 text-muted-foreground">Medium: <span className="text-foreground">{metricResults.fixationDistribution.medium}</span></div>
+                    <div className="p-2 rounded-md border border-border bg-secondary/40 text-muted-foreground">Long: <span className="text-foreground">{metricResults.fixationDistribution.long}</span></div>
+                    <div className="p-2 rounded-md border border-border bg-secondary/40 text-muted-foreground">Very Long: <span className="text-foreground">{metricResults.fixationDistribution.veryLong}</span></div>
                   </div>
                 </Card>
 
@@ -1629,13 +2167,21 @@ function EyeTrackingPage() {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-border/60">
-                      {AOI_DEFINITIONS.map((aoi) => {
-                        const metrics = metricResults.aoisMetrics[aoi.id as 1 | 2 | 3 | 4];
+                      {aois.map((aoi) => {
+                        const metrics = metricResults.aoisMetrics[aoi.id] ?? {
+                          ttff: "—",
+                          dwellSec: "0.00s",
+                          ratio: 0,
+                          revisits: 0,
+                          firstFixationDuration: "—",
+                          avgFixationDuration: "—",
+                          fixationsCount: 0
+                        };
                         return (
                           <tr key={aoi.id} className="hover:bg-secondary/20 transition">
                             <td className="py-3 pr-4">
                               <div className="font-bold text-foreground/90">{aoi.name}</div>
-                              <div className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{aoi.desc}</div>
+                              <div className="text-[10px] text-muted-foreground mt-0.5 leading-snug">{AOI_DESCRIPTIONS[aoi.id] ?? "Custom AOI region for gaze analytics."}</div>
                             </td>
                             <td className="py-3 text-center font-mono font-bold text-foreground/80">{metrics.ttff}</td>
                             <td className="py-3 text-center font-mono font-bold text-foreground/80">{metrics.dwellSec}</td>
@@ -1657,6 +2203,110 @@ function EyeTrackingPage() {
                     </tbody>
                   </table>
                 </div>
+              </Card>
+
+              {/* AI-Powered Creative Improvement Suggestions */}
+              <Card className="p-6 border-t-4 border-t-amber-500">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-5">
+                  <div>
+                    <h3 className="font-display text-base font-bold flex items-center gap-2">
+                      <Lightbulb className="h-5 w-5 text-amber-500" /> AI Creative Improvement Suggestions
+                    </h3>
+                    <p className="text-[11.5px] text-muted-foreground mt-0.5">
+                      Gemini analyzes your eye-tracking metrics to generate actionable recommendations for improving this creative.
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleGetAISuggestions}
+                    disabled={aiSuggestionsLoading}
+                    className="inline-flex items-center gap-2 h-10 px-5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 text-white text-xs font-bold hover:from-amber-600 hover:to-amber-700 transition-all shadow-md shadow-amber-500/20 uppercase tracking-wider disabled:opacity-60 disabled:cursor-not-allowed shrink-0"
+                  >
+                    {aiSuggestionsLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Analyzing...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="h-4 w-4" />
+                        {aiSuggestions ? "Regenerate Suggestions" : "Get AI Suggestions"}
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {aiSuggestionsError && (
+                  <div className="p-3.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2 mb-4">
+                    <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+                    <span>{aiSuggestionsError}</span>
+                  </div>
+                )}
+
+                {aiSuggestionsLoading && !aiSuggestions && (
+                  <div className="flex flex-col items-center justify-center py-12 gap-4">
+                    <div className="relative">
+                      <div className="h-14 w-14 rounded-2xl bg-amber-500/10 flex items-center justify-center">
+                        <Sparkles className="h-7 w-7 text-amber-500 animate-pulse" />
+                      </div>
+                      <div className="absolute -inset-2 rounded-2xl border-2 border-amber-500/20 animate-ping" />
+                    </div>
+                    <div className="text-center">
+                      <p className="text-sm font-bold text-foreground">Analyzing eye-tracking data...</p>
+                      <p className="text-[11px] text-muted-foreground mt-1">NeuroCopilot is processing fixation patterns, saccade trajectories, and AOI dwell metrics</p>
+                    </div>
+                  </div>
+                )}
+
+                {aiSuggestions && aiSuggestions.length > 0 && (
+                  <div className="space-y-3">
+                    {aiSuggestions.map((suggestion, idx) => {
+                      const priorityConfig = {
+                        critical: { bg: "bg-red-50", border: "border-red-200", badge: "bg-red-100 text-red-700 border-red-200", icon: <AlertTriangle className="h-3.5 w-3.5" /> },
+                        high: { bg: "bg-amber-50", border: "border-amber-200", badge: "bg-amber-100 text-amber-700 border-amber-200", icon: <Zap className="h-3.5 w-3.5" /> },
+                        medium: { bg: "bg-blue-50", border: "border-blue-200", badge: "bg-blue-100 text-blue-700 border-blue-200", icon: <Lightbulb className="h-3.5 w-3.5" /> },
+                      }[suggestion.priority] ?? { bg: "bg-stone-50", border: "border-stone-200", badge: "bg-stone-100 text-stone-700 border-stone-200", icon: <Lightbulb className="h-3.5 w-3.5" /> };
+
+                      return (
+                        <div
+                          key={idx}
+                          className={`p-4 rounded-xl border ${priorityConfig.border} ${priorityConfig.bg} transition-all hover:shadow-sm`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="flex items-center justify-center h-7 w-7 rounded-full bg-white border border-current/10 text-amber-600 shrink-0 mt-0.5 font-display font-black text-xs shadow-sm">
+                              {idx + 1}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-wrap items-center gap-2 mb-1.5">
+                                <h5 className="text-sm font-bold text-foreground">{suggestion.title}</h5>
+                                <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider border ${priorityConfig.badge}`}>
+                                  {priorityConfig.icon}
+                                  {suggestion.priority}
+                                </span>
+                              </div>
+                              <p className="text-[11.5px] text-foreground/80 leading-relaxed">
+                                {suggestion.description}
+                              </p>
+                              <div className="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-white/80 border border-current/5 text-[10px] font-bold text-muted-foreground">
+                                <span className="text-amber-600">⚡</span> {suggestion.principle}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {!aiSuggestionsLoading && !aiSuggestions && !aiSuggestionsError && (
+                  <div className="flex flex-col items-center justify-center py-10 gap-3 text-center">
+                    <div className="h-12 w-12 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
+                      <Lightbulb className="h-6 w-6" />
+                    </div>
+                    <p className="text-xs text-muted-foreground max-w-sm">
+                      Click <strong>"Get AI Suggestions"</strong> to analyze your eye-tracking metrics and receive 6 expert recommendations for improving this creative's visual effectiveness.
+                    </p>
+                  </div>
+                )}
               </Card>
 
               {/* Measurement Definitions */}
