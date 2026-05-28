@@ -100,7 +100,12 @@ function AuditPage() {
     try {
       const res = await analyze({ data: { imageDataUrl, context: context.trim() || undefined } });
       if (res.ok) {
-        setResult(res.result as Result);
+        const nextResult = res.result as Result;
+        setResult(nextResult);
+        const hasHeatmap = (nextResult.heatmap_zones?.length ?? 0) > 0;
+        const hasGaze = (nextResult.gaze_path?.length ?? 0) > 0;
+        const hasIgnored = (nextResult.ignored_zones?.length ?? 0) > 0;
+        setOverlay(hasHeatmap ? "heatmap" : hasGaze ? "gaze" : hasIgnored ? "ignored" : "none");
         // Expand the first metric by default
         if (res.result?.metrics?.length > 0) {
           setExpandedMetric(res.result.metrics[0].id);
@@ -127,6 +132,11 @@ function AuditPage() {
   const toggleMetric = (id: string) => {
     setExpandedMetric(expandedMetric === id ? null : id);
   };
+
+  const hasHeatmapOverlay = (result?.heatmap_zones?.length ?? 0) > 0;
+  const hasGazeOverlay = (result?.gaze_path?.length ?? 0) > 0;
+  const hasIgnoredOverlay = (result?.ignored_zones?.length ?? 0) > 0;
+  const hasAnyTelemetryOverlay = hasHeatmapOverlay || hasGazeOverlay || hasIgnoredOverlay;
 
   return (
     <AppLayout>
@@ -179,7 +189,7 @@ function AuditPage() {
                       <img ref={imgRef} src={imageUrl} alt="Campaign Creative" className="h-full w-auto object-contain" />
                       
                       {/* Interactive Attention Heatmap Overlay */}
-                      {result && overlay === "heatmap" && (
+                      {result && hasHeatmapOverlay && overlay === "heatmap" && (
                         <svg className="absolute inset-0 w-full h-full pointer-events-none mix-blend-screen">
                           <defs>
                             {result.heatmap_zones.map((z, i) => (
@@ -198,7 +208,7 @@ function AuditPage() {
                       )}
 
                       {/* Interactive Numbered Saccadic Gaze Path Overlay */}
-                      {result && overlay === "gaze" && (
+                      {result && hasGazeOverlay && overlay === "gaze" && (
                         <svg className="absolute inset-0 w-full h-full pointer-events-none">
                           <defs>
                             <marker id="arrow" viewBox="0 0 10 10" refX="22" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
@@ -229,7 +239,7 @@ function AuditPage() {
                       )}
 
                       {/* Interactive Ignored/Friction Zones Overlay */}
-                      {result && overlay === "ignored" && (
+                      {result && hasIgnoredOverlay && overlay === "ignored" && (
                         <svg className="absolute inset-0 w-full h-full pointer-events-none">
                           {result.ignored_zones.map((z, i) => (
                             <g key={i}>
@@ -253,38 +263,46 @@ function AuditPage() {
                   </div>
 
                   {/* Mode Toggles Horizontal Drawer */}
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 bg-secondary/60 p-2.5 rounded-xl border border-border">
-                    <div className="flex items-center gap-2 text-muted-foreground text-xs font-mono">
-                      <Layers className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span>TELEMETRY OVERLAYS:</span>
+                  {result && hasAnyTelemetryOverlay && (
+                    <div className="mt-4 flex flex-wrap items-center justify-between gap-3 bg-secondary/60 p-2.5 rounded-xl border border-border">
+                      <div className="flex items-center gap-2 text-muted-foreground text-xs font-mono">
+                        <Layers className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span>TELEMETRY OVERLAYS:</span>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {hasHeatmapOverlay && (
+                          <button 
+                            onClick={() => setOverlay("heatmap")} 
+                            className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "heatmap" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
+                          >
+                            <Activity className="h-3.5 w-3.5" /> Salience Heatmap
+                          </button>
+                        )}
+                        {hasGazeOverlay && (
+                          <button 
+                            onClick={() => setOverlay("gaze")} 
+                            className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "gaze" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
+                          >
+                            <Eye className="h-3.5 w-3.5" /> Gaze Scanpath
+                          </button>
+                        )}
+                        {hasIgnoredOverlay && (
+                          <button 
+                            onClick={() => setOverlay("ignored")} 
+                            className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "ignored" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
+                          >
+                            <Compass className="h-3.5 w-3.5" /> Blindness Risks
+                          </button>
+                        )}
+                        <button 
+                          onClick={() => setOverlay("none")} 
+                          className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "none" ? "bg-secondary text-foreground border-border" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
+                        >
+                          Original
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      <button 
-                        onClick={() => setOverlay("heatmap")} 
-                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "heatmap" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
-                      >
-                        <Activity className="h-3.5 w-3.5" /> Salience Heatmap
-                      </button>
-                      <button 
-                        onClick={() => setOverlay("gaze")} 
-                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "gaze" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
-                      >
-                        <Eye className="h-3.5 w-3.5" /> Gaze Scanpath
-                      </button>
-                      <button 
-                        onClick={() => setOverlay("ignored")} 
-                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "ignored" ? "bg-[#8B1E1E] text-white border-[#8B1E1E] shadow-[0_0_10px_rgba(139,30,30,0.5)]" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
-                      >
-                        <Compass className="h-3.5 w-3.5" /> Blindness Risks
-                      </button>
-                      <button 
-                        onClick={() => setOverlay("none")} 
-                        className={`text-xs font-semibold px-4 py-2 rounded-lg border flex items-center gap-1.5 transition-all duration-300 ${overlay === "none" ? "bg-secondary text-foreground border-border" : "bg-card border-border text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
-                      >
-                        Original
-                      </button>
-                    </div>
-                  </div>
+                  )}
 
                 </div>
               )}
