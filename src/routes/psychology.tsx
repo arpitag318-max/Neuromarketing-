@@ -2017,34 +2017,42 @@ function PsychologyPage() {
         subtitle="Decoding the psychological reality of rural and semi-urban borrowers. Real-time campaign diagnostics and eye-tracking simulations."
       />
 
-      <div className="flex flex-col xl:flex-row gap-6 mt-2">
-        {/* Category Navigation Sidebar */}
-        <div className="w-full xl:w-[260px] shrink-0 flex xl:flex-col gap-1.5 overflow-x-auto xl:overflow-x-visible pb-2 xl:pb-0 scrollbar-none select-none">
-          {consumerNeurosciencePlaybook.map((tab) => {
-            const TabIcon = tab.icon;
-            const active = tab.id === activeTab;
-            return (
+      {/* Page Content Layout */}
+      <div className="space-y-6 mt-2">
+
+        {/* Horizontal Region Capsule Navigation */}
+        <div className="w-full bg-background/80 backdrop-blur-md border-b border-border/40 py-3 mb-2 select-none">
+          <div className="flex items-center gap-1.5 overflow-x-auto max-w-full pb-1 scrollbar-none">
+            {[
+              { id: "north-india-deep-layer", label: "North India Deep Layer" },
+              { id: "south-india-deep-layer", label: "South India Deep Layer" },
+              { id: "west-india-deep-layer", label: "West India Deep Layer" },
+              { id: "east-india-deep-layer", label: "East India Deep Layer" },
+              { id: "central-india-deep-layer", label: "Central India Deep Layer" },
+              { id: "northeast-india-deep-layer", label: "Northeast India Deep Layer" }
+            ].map((cat) => (
               <button
-                key={tab.id}
+                key={cat.id}
                 onClick={() => {
-                  setActiveTab(tab.id);
+                  setActiveTab(cat.id);
                   setShowTheory(false);
+                  const mapRegion = cat.id.split("-")[0];
+                  setSelectedRegion(mapRegion);
                 }}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-bold transition text-left shrink-0 cursor-pointer ${
-                  active
-                    ? "bg-primary text-white shadow-md shadow-primary/10"
-                    : "bg-card text-foreground/75 border border-border/40 hover:text-foreground hover:bg-secondary/60"
+                className={`h-9 px-4 rounded-xl text-[10.5px] font-black uppercase tracking-wider shrink-0 transition-all cursor-pointer ${
+                  activeTab === cat.id
+                    ? "bg-primary text-white shadow-sm shadow-primary/10"
+                    : "bg-secondary/40 text-foreground/80 hover:bg-secondary border border-border/40 hover:text-foreground"
                 }`}
               >
-                <TabIcon className="h-4.5 w-4.5 shrink-0" />
-                <span>{tab.title}</span>
+                {cat.label}
               </button>
-            );
-          })}
+            ))}
+          </div>
         </div>
 
-        {/* Main Content Detail Workspace */}
-        <div className="flex-1 min-w-0 space-y-6">
+        {/* Main Content Detail Workspace (Full-Width) */}
+        <div className="w-full space-y-6">
 
           {activeTab in REGIONAL_COMMAND_CENTERS_CONFIG ? (
             /* ═══════════════════════════════════════════
