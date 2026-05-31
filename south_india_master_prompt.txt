@@ -1,0 +1,48 @@
+﻿Created At: 2026-05-31T12:36:08Z
+Completed At: 2026-05-31T12:36:11Z
+
+				The command completed successfully.
+				Output:
+				<truncated 17 lines>
+reports\r\n* McKinsey digital adoption reports\r\n\r\nGenerate:\r\nREAL DATA-ORIENTED INSIGHTS\r\n\r\nNOT generic 
+statements.\r\n\r\nInclude:\r\n\r\n* internet penetration\r\n* digital payment adoption\r\n* fintech maturity\r\n* UPI 
+behavior\r\n* trust indicators\r\n* onboarding preferences\r\n* regional behavioral differences\r\n* attention 
+patterns\r\n* language preferences\r\n* mobile-first behavior\r\n\r\n---\r\n\r\n## PRIMARY TRUST 
+DRIVERS\r\n\r\nResearch and derive:\r\n\r\nHow trust is formed in South India.\r\n\r\nAnalyze:\r\n\r\n* digital 
+trust\r\n* institutional trust\r\n* fintech adoption\r\n* app confidence\r\n* authority bias\r\n* transparency 
+preference\r\n* information validation behavior\r\n\r\nExplain:\r\n\r\nWHY consum\n<truncated 1686 bytes>\nion\r\n* 
+savings behavior\r\n* repayment confidence\r\n* long-term planning\r\n* financial literacy\r\n\r\nExplain:\r\n\r\nWhat 
+drives:\r\n\r\n* loan adoption\r\n* fintech adoption\r\n* trust formation\r\n\r\n---\r\n\r\n## MOBILE-FIRST 
+BEHAVIOR\r\n\r\nResearch:\r\n\r\n* smartphone dependence\r\n* digital ecosystem maturity\r\n* app behavior\r\n* 
+fintech engagement\r\n* WhatsApp usage\r\n* UPI habits\r\n\r\nInclude:\r\nreal behavioral 
+insights.\r\n\r\n---\r\n\r\n## EMOTIONAL TRIGGERS\r\n\r\nIdentify:\r\n\r\n* security\r\n* stability\r\n* family 
+advancement\r\n* education\r\n* future planning\r\n* financial independence\r\n\r\nExplain:\r\n\r\nWhat emotionally 
+drives:\r\n\r\n* engagement\r\n* trust\r\n* adoption\r\n\r\n---\r\n\r\n## MARKETING 
+IMPLICATIONS\r\n\r\nGenerate:\r\n\r\n# ACTIONABLE BUSINESS OUTPUTS\r\n\r\nExplain:\r\n\r\nHow these insights can 
+improve:\r\n\r\n Campaign Design\r\n\r\n Digital Onboarding\r\n\r\n Loan Communication\r\n\r\n Trust 
+Building\r\n\r\n UX Design\r\n\r\n WhatsApp Communication\r\n\r\n Regional Marketing\r\n\r\n Financial Literacy 
+Programs\r\n\
+<truncated 4178 bytes>
+-urban adoption patterns\r\n Vernacular onboarding behavior\r\n 
+Government-backed trust signals\r\n```\r\n\r\n---\r\n\r\n### VERY IMPORTANT ADDITION FOR ALL REGIONS\r\n\r\nAt the end 
+of every prompt, add:\r\n\r\n```txt\r\nMANDATORY DELIVERABLE\r\n\r\nFor each region generate:\r\n\r\n1. Behavioral 
+Profile Summary\r\n\r\n2. Top 5 Trust Drivers\r\n\r\n3. Top 5 Conversion Barriers\r\n\r\n4. Digital Maturity Score 
+(1-10)\r\n\r\n5. Financial Confidence Score (1-10)\r\n\r\n6. Fintech Readiness Score (1-10)\r\n\r\n7. Human Assistance 
+Dependency Score (1-10)\r\n\r\n8. Vernacular Dependency Score (1-10)\r\n\r\n9. Preferred Communication 
+Style\r\n\r\n10. Preferred Onboarding Style\r\n\r\n11. Emotional Triggers\r\n\r\n12. Attention Pattern 
+Characteristics\r\n\r\n13. Marketing Implications\r\n\r\n14. UX Recommendations\r\n\r\n15. Mahindra Finance 
+Applications\r\n\r\n16. AI Creative Audit Recommendations\r\n\r\n17. Consumer Psychology Engine Integration 
+Layer\r\n\r\n18. India Trust Map Output Layer\r\n```\r\n\r\nThis will ensure that East, West, Northeast, Central, 
+North, and South all produce outputs in the **exact same structure**, making your Consumer Psychology Engine and India 
+Trust Map feel like one cohesive neuroscience intelligence system rather than a collection of separate regional 
+reports.\r\n\n</USER_REQUEST>\n<ADDITIONAL_METADATA>\nThe current local time is: 
+2026-05-31T18:04:59+05:30.\n</ADDITIONAL_METADATA>"}
+C:\Users\ASUS\.gemini\antigravity\brain\bf049d5c-eb6b-405d-85e1-a069914ce7c7\.system_generated\logs\transcript.jsonl:23
+:{"step_index":23,"source":"MODEL","type":"PLANNER_RESPONSE","status":"DONE","created_at":"2026-05-31T12:35:02Z","tool_
+calls":[{"name":"grep_search","args":{"CaseInsensitive":"true","IsRegex":"false","MatchPerLine":"true","Query":"\"REGIO
+N COVERAGE\"","SearchPath":"\"c:\\\\Users\\\\ASUS\\\\Downloads\\\\Neuromarketing\"","toolAction":"\"Searching for 
+regional prompts in workspace\"","toolSummary":"\"Searching for regional prompts in workspace\""}}]}
+
+
+
+

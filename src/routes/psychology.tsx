@@ -66,6 +66,42 @@ const consumerNeurosciencePlaybook = [
       afterUplift: "60%",
       upliftDiff: "+40% Hybrid Completion Gain"
     }
+  },
+  {
+    id: "south-india-deep-layer",
+    title: "South India Deep Layer",
+    icon: Brain,
+    category: "Regional Intelligence",
+    layer1: {
+      alert: "⚡ STRUCTURAL PRICING & TRUST DRIVER",
+      impact: "Detailed compliance disclosures, structural pricing transparency, and self-driven verification minimize drop-off.",
+      metric: "92%",
+      metricLabel: "Self-driven Verification"
+    },
+    insight: {
+      observation: "South Indian consumers process data with high prefrontal analytical activation and lower baseline trust transfer to human-only phygital agents.",
+      explanation: "Higher cognitive processing capacity reduces risk-scanning amygdala thresholds, but triggers intense visual search patterns looking for compliance/RBI padlocks.",
+      principle: "Analytical Verification & Structural Transparency",
+      impact: "Stand-alone automation succeeds if backed by absolute numeric clarity and verifiable terms.",
+      recommendation: "Expose explicit side-by-side comparison matrices and detail regulatory compliance up front.",
+      source: "Deloitte India BFSI Study + Kantar Digital Habit Index (Jan 2026 · 95% Confidence)"
+    },
+    deepTheory: {
+      sweller: "Working memory cognitive load is minimized by presenting progressive logical disclosure of data. Dialect comfort anchors emotional trust, but is secondary to quantitative clarity.",
+      company: "Mahindra Finance South Pilot",
+      challenge: "High-value lending drop-offs when numerical details were obscured behind 'Get Quote' buttons in urban/semi-urban Tamil Nadu.",
+      solution: "Introduced clear transparent EMI calculator grids with explicit interest breakdown and compliance text.",
+      impact: "Resulted in +31% conversion rate and lowered early-churn rates by 22%."
+    },
+    auditImpact: "Lack of transparent pricing breakdown triggers rapid threat scanning and immediate platform exit.",
+    failureRisk: "Abstract terms or obfuscated pricing trigger avoidance behaviors.",
+    beforeAfter: {
+      beforeFriction: "Obfuscated credit pricing with 'Call Representative' call-to-action.",
+      afterFriction: "Transparent EMI comparison grids showing interest, processing fees, and compliance badges.",
+      beforeUplift: "30%",
+      afterUplift: "75%",
+      upliftDiff: "+45% Transparent Conversion Uplift"
+    }
   }
 ];
 
@@ -239,6 +275,159 @@ const NORTH_INDIA_LAYERS: BehavioralLayer[] = [
       output: "Maximized agricultural lending volumes and perfect seasonal repayment performance.",
       recommendation: "Promote seasonal repayment schedules directly adjacent to financing rate tools, showing harvest-matched plans.",
       impact: "+40% Punjab tractor lending share."
+    }
+  }
+];
+
+const SOUTH_INDIA_LAYERS: BehavioralLayer[] = [
+  {
+    id: "primary-trust",
+    title: "A. Primary Trust Drivers",
+    category: "Trust & Safety",
+    observation: "South Indian consumers form digital trust through explicit institutional validation, regulatory compliance (RBI padlocks, SECU badges), and detailed policy disclosures. They seek transparent fee structures before starting onboarding.",
+    neuroscience: "High prefrontal cortical activation during decision-making. Information verification reduces activation of the uncertainty-scanning right amygdala. Transparency comfort lowers cognitive friction, letting cognitive safety networks bypass initial defensive filtering.",
+    indices: { reassurance: 92, threat: 30, skepticism: 85, comfort: 88 },
+    playbook: {
+      implication: "Render formal RBI licensing and Mahindra Finance corporate heritage badges in high-contrast visual zones.",
+      interpretation: "Consumers trust structured systems with explicit regulatory compliance. They actively search interfaces for fee disclosures, validating licensing details as a primary defensive safety scan.",
+      output: "Mitigated early drop-off and higher digital credit application completions.",
+      recommendation: "Display explicit RBI licensing disclaimers and visible digital security seals directly adjacent to identity upload forms.",
+      impact: "+28% Initial onboarding continuation."
+    }
+  },
+  {
+    id: "comm-style",
+    title: "B. Preferred Communication Style",
+    category: "Linguistic UX",
+    observation: "South Indian cohorts prefer logical, detail-heavy, and structured informational structures over emotional pride-based messaging. Persuasion is driven by transparent APR breakdowns, cash flow alignment, and historical proof-of-stability.",
+    neuroscience: "The brain processes logical, quantitative propositions through the left dorsolateral prefrontal cortex (dlPFC). Obfuscating fee parameters triggers rapid reward-suppression in the striatum, which is interpreted as a threat of hidden costs.",
+    indices: { reassurance: 88, threat: 42, skepticism: 78, comfort: 91 },
+    playbook: {
+      implication: "Prioritize logical, data-rich loan terms, tabular interest tables, and explicit fee disclosure in campaign materials.",
+      interpretation: "Rational, highly structured communication satisfies analytical prefrontal scans. In contrast to emotional narrative structures, South Indian cohorts demand precise APR, processing fees, and net payouts.",
+      output: "Higher loan inquiry-to-application conversions.",
+      recommendation: "Swap emotional catchphrases for functional value propositions, detailed interest grids, and clear financial benefits.",
+      impact: "+22% Loan selection accuracy."
+    }
+  },
+  {
+    id: "ui-ux-pref",
+    title: "C. UI / UX Preferences",
+    category: "Interface Design",
+    observation: "High cognitive bandwidth allows South Indian consumers to tolerate and explore complex, information-dense dashboard designs. They utilize comparative UI layouts, progressive tabular parameters, and detailed visual data graphs.",
+    neuroscience: "Well-organized visual information structures reduce cognitive strain on working memory. Users scanning clean comparison grids exhibit efficient ocular scan paths with shorter fixation durations and high focus on comparative metrics.",
+    indices: { reassurance: 85, threat: 25, skepticism: 65, comfort: 92 },
+    playbook: {
+      implication: "Implement structured comparison matrices, detailed dynamic calculators, and tabular progress tracks.",
+      interpretation: "Consumers process interfaces as logical tools. Clean grids, dense calculators, and comparison tables reduce visual search time and satisfy deep comparison heuristics.",
+      output: "Higher engagement on credit product detail screens and interactive interest sliders.",
+      recommendation: "Provide side-by-side comparison tables restricted to 3 clean alternatives, using explicit parameters instead of text summaries.",
+      impact: "+30% Interactive calculator engagement."
+    }
+  },
+  {
+    id: "digital-trust-behavior",
+    title: "D. Digital Trust Behavior",
+    category: "Fintech Habits",
+    observation: "Extremely high digital and fintech maturity driven by broad mobile internet penetration (~74% average) and UPI adoption. Onboarding confidence is strong for biometric authentication, digital lockers, and instant paperless KYC processes.",
+    neuroscience: "Habitual digital transactions (like UPI) shift cognitive processing from the energy-intensive prefrontal cortex to the automated basal ganglia. Repeating safe digital actions builds a solid 'default safety' heuristic.",
+    indices: { reassurance: 94, threat: 28, skepticism: 45, comfort: 95 },
+    playbook: {
+      implication: "Enable instant DigiLocker authentication, biometric identity links, and automated UPI Autopay consent flows.",
+      interpretation: "Digital onboarding is accepted as a standard transaction. Consumers favor speed and immediate system responses, preferring biometric or digital document links over manual uploads.",
+      output: "Rapid onboarding cycles and reduced document upload friction.",
+      recommendation: "Position DigiLocker and biometric authentication as primary onboarding pathways, reducing manual form entry.",
+      impact: "+35% Onboarding velocity."
+    }
+  },
+  {
+    id: "vernacular-insights",
+    title: "E. Vernacular Experience Insights",
+    category: "Regional Identity",
+    observation: "Heavy reliance on regional languages (Tamil, Telugu, Kannada, Malayalam) to build local trust. Translating text is not enough; interfaces need native conversational UX patterns and cultural linguistic cues.",
+    neuroscience: "Processing native dialect syntax activates the left temporal lobe's auditory and semantic networks with minimal cognitive resistance. Mismatched translations trigger linguistic alienation, activating subconscious risk scanning.",
+    indices: { reassurance: 80, threat: 35, skepticism: 55, comfort: 94 },
+    playbook: {
+      implication: "Localize conversational patterns and audio guidelines in Tamil, Telugu, Kannada, and Malayalam.",
+      interpretation: "Dialect localized copywriting serves as a powerful trust transfer. It reduces institutional alienation and confirms that customer support is accessible locally.",
+      output: "Higher emotional connection and improved brand recall.",
+      recommendation: "Calibrate dynamic helpers in local languages with culturally familiar terms, bypassing generic Hindi/English templates.",
+      impact: "+26% Vernacular conversion."
+    }
+  },
+  {
+    id: "cognitive-processing",
+    title: "F. Attention & Cognitive Processing",
+    category: "Cognitive Load",
+    observation: "South Indian consumers focus attention on analytical and structural metrics. Ocular tracking reveals systematic visual search patterns that prioritize interest tables, fee breakdowns, and repayment timelines over lifestyle photos.",
+    neuroscience: "The dorsal attention network is highly active, directing conscious, goal-driven visual scans. Lifestyle imagery is processed as visual noise, while quantitative and structural metrics draw long visual fixations.",
+    indices: { reassurance: 89, threat: 22, skepticism: 70, comfort: 85 },
+    playbook: {
+      implication: "Structure layouts to prioritize logical grids, pricing charts, and explicit benefits in the primary visual zone.",
+      interpretation: "Systematic, analytical attention filters out lifestyle marketing fluff. Visual search maps focus straight on core parameters, requiring immediate clarity.",
+      output: "Higher visual processing efficiency and improved product benefit recall.",
+      recommendation: "Place interactive loan sliders and pricing structures at the top-left of visual displays to capture early systematic scans.",
+      impact: "+19% Eye-tracking visual recall."
+    }
+  },
+  {
+    id: "financial-psychology",
+    title: "G. Financial Decision Psychology",
+    category: "Behavioral Finance",
+    observation: "Highly conservative financial decision-making that prioritizes long-term safety, asset creation (gold, land, agri), and structured repayments. Loan evaluation is highly rational, matching personal seasonal cash flows or business cycles.",
+    neuroscience: "Financial decisions are guided by logical value calculations in the orbitofrontal cortex (OFC), assessing long-term benefit vs immediate cost. This rational calculation tempers impulsive, dopamine-driven reward seeking.",
+    indices: { reassurance: 91, threat: 38, skepticism: 82, comfort: 75 },
+    playbook: {
+      implication: "Align loan offerings with long-term asset building, providing custom seasonal repayment plans.",
+      interpretation: "Semi-urban and rural South Indian borrowers calculate repayment capacity with high accuracy. They seek financial stability, treating borrowing as an investment in productive assets.",
+      output: "Lower delinquency risk and highly predictable, scheduled loan repayments.",
+      recommendation: "Display cash flow matching grids that visually align repayments with seasonal harvest or local crop calendars.",
+      impact: "+32% Repayment punctuality."
+    }
+  },
+  {
+    id: "mobile-behavior",
+    title: "H. Mobile-First Behavioral Patterns",
+    category: "Digital Maturity",
+    observation: "High mobile-first reliance, with smartphones acting as the primary gateway for digital services. Heavy daily engagement with WhatsApp for customer queries, transaction receipts, and digital account updates.",
+    neuroscience: "High habituation to mobile interfaces minimizes the need for active learning. Familiar mobile UX patterns reduce cognitive load, while non-standard web interfaces trigger frustration.",
+    indices: { reassurance: 93, threat: 32, skepticism: 50, comfort: 91 },
+    playbook: {
+      implication: "Optimize digital interfaces for responsive mobile displays, utilizing WhatsApp for continuous transaction validation.",
+      interpretation: "Smartphones serve as a secure personal trust hub. Real-time updates via WhatsApp build trust through immediate validation and active feedback loops.",
+      output: "Reduced user drop-offs and seamless phygital integration.",
+      recommendation: "Deliver real-time transaction receipts and account updates via WhatsApp directly after any digital interaction.",
+      impact: "+41% Active mobile engagement."
+    }
+  },
+  {
+    id: "emotional-triggers",
+    title: "I. Emotional Triggers",
+    category: "Archetypes",
+    observation: "Primary emotional drivers are centered on family security, education quality, future agricultural productivity, and long-term asset building. Pride is built on academic achievement, agricultural efficiency, and financial independence.",
+    neuroscience: "Academic and asset-creation narratives trigger oxytocin-driven emotional responses. Visual references to educational milestones release positive neural markers, boosting trust and connection.",
+    indices: { reassurance: 87, threat: 40, skepticism: 60, comfort: 89 },
+    playbook: {
+      implication: "Craft marketing campaigns featuring children's educational progress, agricultural modernizations, and long-term family growth.",
+      interpretation: "South Indian families prioritize investment in future generations and agricultural modernization. Highlighting these outcomes aligns with their core value calculations.",
+      output: "Increased brand affinity and stronger emotional connection.",
+      recommendation: "Use high-quality visual creative themes of successful local students, crop yields, and modern machinery.",
+      impact: "+23% Brand loyalty index."
+    }
+  },
+  {
+    id: "marketing-implications",
+    title: "J. Marketing & Onboarding Implications",
+    category: "Growth & Gateway",
+    observation: "South India campaigns must swap generic aspirational lifestyle hooks for information-dense, data-rich value layouts. Onboarding requires instant digital validation, clear regulatory badges, and native-dialect helpers.",
+    neuroscience: "Clear value propositions reduce visual searching and cognitive fatigue, facilitating smooth, low-friction transitions down the conversion funnel.",
+    indices: { reassurance: 95, threat: 30, skepticism: 70, comfort: 90 },
+    playbook: {
+      implication: "Build modular, logical onboarding paths, visible security tags, and transparent dynamic pricing charts.",
+      interpretation: "Conversion funnels succeed by matching the logical, self-driven expectations of South Indian consumers. Obfuscating pricing elements blocks conversion and triggers rapid abandonment.",
+      output: "Maximized digital campaign ROI, lower CAC, and industry-leading digital loan completion rates.",
+      recommendation: "Deploy transparent price comparison grids, native dialect onboarding steps, and immediate WhatsApp confirmation loops.",
+      impact: "+38% Marketing conversion efficiency."
     }
   }
 ];
@@ -461,12 +650,28 @@ function PsychologyPage() {
     });
   };
 
+  const handleRegionSelect = (regionId: string) => {
+    setSelectedRegion(regionId);
+    if (regionId === "north") {
+      setActiveTab("north-india-deep-layer");
+    } else if (regionId === "south") {
+      setActiveTab("south-india-deep-layer");
+    }
+  };
+
   // North India Deep Intel States
   const [activeLayerIndex, setActiveLayerIndex] = useState(0);
   const [presenceSlider, setPresenceSlider] = useState(60);
   const [hinglishSlider, setHinglishSlider] = useState(50);
   const [kycSlider, setKycSlider] = useState(40);
   const [voiceSlider, setVoiceSlider] = useState(70);
+
+  // South India Deep Intel States
+  const [activeLayerIndexSouth, setActiveLayerIndexSouth] = useState(0);
+  const [transparencySlider, setTransparencySlider] = useState(70);
+  const [densitySlider, setDensitySlider] = useState(80);
+  const [logicalSlider, setLogicalSlider] = useState(75);
+  const [securitySlider, setSecuritySlider] = useState(85);
 
   // Dynamic Index Calculations for North India Deep Intel
   const reassuranceIndex = Math.min(100, Math.round(presenceSlider * 0.4 + voiceSlider * 0.5 + 10));
@@ -486,6 +691,25 @@ function PsychologyPage() {
   }
   
   const comfortIndex = Math.min(100, Math.round(hinglishSlider > 60 && hinglishSlider < 90 ? 94 : 50 + (hinglishSlider * 0.4)));
+
+  // Dynamic Index Calculations for South India Deep Intel
+  const reassuranceIndexSouth = Math.min(100, Math.round(transparencySlider * 0.4 + securitySlider * 0.5 + 8));
+  
+  let threatMeterSouth = 35;
+  if (transparencySlider < 50) {
+    threatMeterSouth = Math.min(100, Math.round(88 + (50 - transparencySlider) * 0.6));
+  } else {
+    threatMeterSouth = Math.min(100, Math.round(35 + (100 - transparencySlider) * 0.25 + densitySlider * 0.15));
+  }
+  
+  let skepticismIndexSouth = 60;
+  if (transparencySlider < 60) {
+    skepticismIndexSouth = Math.min(100, Math.round(92 + (60 - transparencySlider) * 0.4));
+  } else {
+    skepticismIndexSouth = Math.min(100, Math.round(60 + (100 - transparencySlider) * 0.3 - securitySlider * 0.15));
+  }
+  
+  const comfortIndexSouth = Math.min(100, Math.round(logicalSlider * 0.5 + transparencySlider * 0.45));
 
   const activeData = consumerNeurosciencePlaybook.find((c) => c.id === activeTab) || consumerNeurosciencePlaybook[0];
   const IconComponent = activeData.icon;
@@ -549,7 +773,9 @@ function PsychologyPage() {
     }
   }
 
-  const activeLayer = NORTH_INDIA_LAYERS[activeLayerIndex];
+  const activeLayer = activeTab === "south-india-deep-layer"
+    ? SOUTH_INDIA_LAYERS[activeLayerIndexSouth]
+    : NORTH_INDIA_LAYERS[activeLayerIndex];
 
   return (
     <AppLayout>
@@ -788,6 +1014,291 @@ function PsychologyPage() {
                           <span className="text-[9px] font-black uppercase text-destructive tracking-widest block">FRAUD ANXIETY DETECTED</span>
                           <p className="text-[11.5px] text-foreground font-semibold leading-relaxed mt-0.5">
                             {"Standalone chatbot triggers prefrontal threat scanning. Human presence ratio must be >= 40% to secure cognitive safety."}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </Card>
+
+                  {/* McKinsey consulting playbook */}
+                  <div className="space-y-4">
+                    <span className="text-[9px] font-black uppercase text-stone-500 tracking-wider block select-none">Dynamic Playbook Playbooks</span>
+                    
+                    {/* Playbook 5-Field Cards Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Field 1: Customer Interpretation */}
+                      <Card className="p-4 flex flex-col justify-between border-l-4 border-l-cyan-500/60 bg-card hover:shadow-md transition text-left">
+                        <div className="space-y-1.5">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-cyan-500 flex items-center gap-1.5">
+                            <Smile className="h-3.5 w-3.5 text-cyan-500" />
+                            Consumer Interpretation
+                          </span>
+                          <p className="text-xs text-foreground font-semibold leading-relaxed">
+                            "{activeLayer.playbook.interpretation}"
+                          </p>
+                        </div>
+                      </Card>
+
+                      {/* Field 2: Neuroscience Interpretation */}
+                      <Card className="p-4 flex flex-col justify-between border-l-4 border-l-primary/60 bg-card hover:shadow-md transition text-left">
+                        <div className="space-y-1.5">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5">
+                            <Brain className="h-3.5 w-3.5 text-primary" />
+                            Neuroscience Interpretation
+                          </span>
+                          <p className="text-xs text-foreground/80 leading-relaxed font-medium">
+                            {activeLayer.neuroscience}
+                          </p>
+                        </div>
+                      </Card>
+
+                      {/* Field 3: Marketing Implication */}
+                      <Card className="p-4 flex flex-col justify-between border-l-4 border-l-amber-500/60 bg-card hover:shadow-md transition text-left">
+                        <div className="space-y-1.5">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-amber-500 flex items-center gap-1.5">
+                            <Target className="h-3.5 w-3.5 text-amber-500" />
+                            Marketing Implication
+                          </span>
+                          <p className="text-xs text-foreground/90 leading-relaxed font-semibold">
+                            "{activeLayer.playbook.implication}"
+                          </p>
+                        </div>
+                      </Card>
+
+                      {/* Field 4: Recommended Action */}
+                      <Card className="p-4 flex flex-col justify-between border-l-4 border-l-emerald-500/60 bg-primary/2 hover:shadow-md transition text-left">
+                        <div className="space-y-1.5">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-emerald-500 flex items-center gap-1.5">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
+                            Campaign Recommendation
+                          </span>
+                          <p className="text-xs text-foreground font-bold leading-normal">
+                            "{activeLayer.playbook.recommendation}"
+                          </p>
+                        </div>
+                      </Card>
+                    </div>
+
+                    {/* Field 5: Expected Conversion Impact (Highlight) */}
+                    <Card className="p-4 border border-emerald-500/20 bg-emerald-500/2 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative overflow-hidden select-none">
+                      <div className="absolute top-0 right-0 h-32 w-32 bg-radial from-emerald-500/5 to-transparent pointer-events-none" />
+                      <div className="space-y-1 relative z-10 flex-1 text-left">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[8.5px] font-black uppercase tracking-wider">
+                          <TrendingUp className="h-3 w-3" />
+                          Business Metrics Uplink
+                        </span>
+                        <h4 className="text-xs font-bold text-foreground mt-1">Expected Conversion Impact</h4>
+                        <p className="text-[10.5px] text-muted-foreground leading-normal mt-0.5">Diagnosed business lift when successfully optimized inside complex financial funnels.</p>
+                      </div>
+
+                      <div className="p-3 bg-card border border-border rounded-xl min-w-[145px] text-center shrink-0 relative z-10">
+                        <span className="text-[8px] text-muted-foreground uppercase font-black block">Continuity Uplift</span>
+                        <div className="text-xl font-black text-emerald-500 mt-0.5">{activeLayer.playbook.impact}</div>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : activeTab === "south-india-deep-layer" ? (
+            /* ═══════════════════════════════════════════
+               Bespoke Interactive Command Center (South India)
+               ═══════════════════════════════════════════ */
+            <div className="space-y-6 animate-fade-in">
+              {/* Premium Dashboard Header Banner */}
+              <div className="bg-radial from-slate-900 via-slate-950 to-slate-900 text-white rounded-3xl p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden shadow-lg border border-slate-800">
+                <div className="absolute top-0 right-0 h-64 w-64 bg-gradient-to-bl from-cyan-500/10 to-transparent pointer-events-none" />
+                <div className="space-y-2 relative z-10">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-black uppercase tracking-widest">
+                    <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    Operational Neuromarketing Command Center
+                  </span>
+                  <h3 className="font-display font-black text-xl md:text-2xl uppercase tracking-tight">
+                    South India Consumer Cognition System
+                  </h3>
+                  <p className="text-xs text-slate-300 font-semibold leading-relaxed max-w-xl">
+                    Live neuroscience-driven marketing intelligence and regional decision analytics. Formulated for Mahindra Finance South India credit validation.
+                  </p>
+                </div>
+                
+                <div className="flex items-center gap-4 bg-slate-900/60 border border-slate-800 rounded-2xl p-4 shrink-0 relative z-10 select-none">
+                  <Activity className="h-5 w-5 text-cyan-400 animate-pulse" />
+                  <div>
+                    <span className="text-[8px] text-slate-400 uppercase font-black tracking-wider block">Telemetry Uplink</span>
+                    <span className="font-mono text-cyan-400 font-bold text-xs">ONLINE · ACTIVE</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* 2-Column Command Center Workspace */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left side: 10-Layer Navigator Checklist */}
+                <div className="lg:col-span-4 bg-card border border-border/80 rounded-3xl p-5 space-y-4 shadow-sm select-none">
+                  <div>
+                    <span className="text-[9px] font-black uppercase text-primary tracking-widest block">Operational Navigator</span>
+                    <h4 className="font-display text-sm font-black uppercase text-foreground leading-none mt-1">Core Behavioral Intelligence Layers</h4>
+                    <p className="text-[10px] text-muted-foreground mt-1 leading-normal">Select a chapter to calibrate regional campaign parameters.</p>
+                  </div>
+
+                  <div className="space-y-1.5 max-h-[460px] overflow-y-auto pr-1.5 scrollbar-thin">
+                    {SOUTH_INDIA_LAYERS.map((layer, idx) => {
+                      const isActive = idx === activeLayerIndexSouth;
+                      return (
+                        <button
+                          key={layer.id}
+                          onClick={() => setActiveLayerIndexSouth(idx)}
+                          className={`w-full text-left p-3 rounded-xl transition-all duration-200 border cursor-pointer group flex items-start gap-2.5 ${
+                            isActive
+                              ? "bg-primary/5 border-primary/20 text-primary font-bold shadow-sm"
+                              : "bg-card border-border/50 hover:bg-secondary/40 text-stone-400 hover:text-foreground"
+                          }`}
+                        >
+                          <span className={`h-4.5 w-4.5 rounded-full text-[9px] font-black flex items-center justify-center shrink-0 border mt-0.5 ${
+                            isActive ? "bg-primary text-white border-transparent" : "bg-secondary text-stone-400 border-border"
+                          }`}>
+                            {idx + 1}
+                          </span>
+                          <div className="min-w-0">
+                            <span className="text-[8.5px] font-black uppercase tracking-wider block opacity-75">{layer.category}</span>
+                            <span className="text-[11.5px] font-bold leading-snug block truncate">{layer.title}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Right side: Interactive Telemetry & Consulting Playbook */}
+                <div className="lg:col-span-8 space-y-6">
+                  {/* Biometric gauges */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 select-none">
+                    {[
+                      {
+                        title: "Analytical Trust Score",
+                        val: `${reassuranceIndexSouth}%`,
+                        label: reassuranceIndexSouth > 75 ? "Subcortical Safety" : reassuranceIndexSouth > 40 ? "Alert Baseline" : "High Anxiety",
+                        color: reassuranceIndexSouth > 75 ? "text-emerald-500" : reassuranceIndexSouth > 40 ? "text-amber-500" : "text-destructive",
+                        progress: reassuranceIndexSouth
+                      },
+                      {
+                        title: "Fraud Threat Perception",
+                        val: `${threatMeterSouth}%`,
+                        label: threatMeterSouth > 75 ? "Severe Threat Scans" : threatMeterSouth > 40 ? "Alert Active" : "Cognitive Peace",
+                        color: threatMeterSouth > 75 ? "text-destructive" : threatMeterSouth > 40 ? "text-amber-500" : "text-emerald-500",
+                        progress: threatMeterSouth
+                      },
+                      {
+                        title: "AI Skepticism Index",
+                        val: `${skepticismIndexSouth}%`,
+                        label: skepticismIndexSouth > 75 ? "Avoidance Loops" : skepticismIndexSouth > 40 ? "Baseline Scrutiny" : "Oxytocin Trust",
+                        color: skepticismIndexSouth > 75 ? "text-destructive" : skepticismIndexSouth > 40 ? "text-amber-500" : "text-emerald-500",
+                        progress: skepticismIndexSouth
+                      },
+                      {
+                        title: "Logical Persuasion Score",
+                        val: `${comfortIndexSouth}%`,
+                        label: comfortIndexSouth > 75 ? "Data-Backed Comfort" : comfortIndexSouth > 40 ? "Processing Friction" : "Textbook Intimidation",
+                        color: comfortIndexSouth > 75 ? "text-emerald-500" : comfortIndexSouth > 40 ? "text-amber-500" : "text-destructive",
+                        progress: comfortIndexSouth
+                      }
+                    ].map((gauge, i) => (
+                      <div key={i} className="bg-card border border-border/80 rounded-2xl p-3.5 flex flex-col justify-between shadow-xs">
+                        <span className="text-[8px] font-black uppercase text-stone-500 tracking-wider leading-none">{gauge.title}</span>
+                        <div className="my-2">
+                          <div className="text-xl font-black text-foreground">{gauge.val}</div>
+                          <span className={`text-[8.5px] font-bold block leading-none mt-0.5 ${gauge.color}`}>{gauge.label}</span>
+                        </div>
+                        <div className="w-full bg-secondary h-1.5 rounded-full overflow-hidden border border-border/10">
+                          <div className={`h-full rounded-full transition-all duration-300 bg-primary`} style={{ width: `${gauge.progress}%` }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Interactive Sliders Panel */}
+                  <Card className="p-5 space-y-4">
+                    <div className="border-b border-border/50 pb-2 flex items-center justify-between select-none">
+                      <h4 className="font-display font-black text-xs uppercase tracking-wider text-foreground flex items-center gap-1.5">
+                        <Sliders className="h-4 w-4 text-primary" />
+                        Interactive Telemetry Controls
+                      </h4>
+                      <span className="text-[9px] text-muted-foreground uppercase font-black">Calibrate Variables</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 select-none">
+                      {/* Slider 1: Pricing Transparency */}
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs">
+                          <span className="font-bold text-stone-400">Pricing Transparency:</span>
+                          <span className="font-black text-primary">{transparencySlider}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="10"
+                          max="100"
+                          value={transparencySlider}
+                          onChange={(e) => setTransparencySlider(parseInt(e.target.value))}
+                          className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
+                        />
+                      </div>
+
+                      {/* Slider 2: Information Density */}
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs">
+                          <span className="font-bold text-stone-400">Information Density:</span>
+                          <span className="font-black text-primary">{densitySlider}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="10"
+                          max="100"
+                          value={densitySlider}
+                          onChange={(e) => setDensitySlider(parseInt(e.target.value))}
+                          className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
+                        />
+                      </div>
+
+                      {/* Slider 3: Logical Persuasion */}
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs">
+                          <span className="font-bold text-stone-400">Logical Persuasion:</span>
+                          <span className="font-black text-primary">{logicalSlider}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="10"
+                          max="100"
+                          value={logicalSlider}
+                          onChange={(e) => setLogicalSlider(parseInt(e.target.value))}
+                          className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
+                        />
+                      </div>
+
+                      {/* Slider 4: Security Badge Trust */}
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs">
+                          <span className="font-bold text-stone-400">Security Badge Trust:</span>
+                          <span className="font-black text-primary">{securitySlider}%</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="10"
+                          max="100"
+                          value={securitySlider}
+                          onChange={(e) => setSecuritySlider(parseInt(e.target.value))}
+                          className="w-full h-1 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Interactive Warning Callout */}
+                    {transparencySlider < 50 && (
+                      <div className="p-3.5 border border-destructive/20 bg-destructive/5 rounded-2xl flex items-start gap-2.5 animate-pulse select-none">
+                        <AlertTriangle className="h-5 w-5 text-destructive shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-[9px] font-black uppercase text-destructive tracking-widest block">COMPLIANCE OBFUSCATION DETECTED</span>
+                          <p className="text-[11.5px] text-foreground font-semibold leading-relaxed mt-0.5">
+                            {"Obfuscated credit terms trigger immediate prefrontal threat scanning. Pricing transparency ratio must be >= 50% to secure cognitive safety."}
                           </p>
                         </div>
                       </div>
@@ -1335,7 +1846,7 @@ function PsychologyPage() {
                     return (
                       <g
                         key={region.id}
-                        onClick={() => setSelectedRegion(region.id)}
+                        onClick={() => handleRegionSelect(region.id)}
                         onMouseEnter={() => setHoveredRegion(region.id)}
                         onMouseLeave={() => setHoveredRegion(null)}
                         className={`region-group ${isSelected ? "region-group-selected" : ""} ${isHovered ? "region-group-hovered" : ""}`}
@@ -1357,7 +1868,7 @@ function PsychologyPage() {
                   {INDIA_REGIONS.map((region) => (
                     <button
                       key={region.id}
-                      onClick={() => setSelectedRegion(region.id)}
+                      onClick={() => handleRegionSelect(region.id)}
                       className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase border transition-all duration-200 cursor-pointer ${
                         selectedRegion === region.id
                           ? "bg-cyan-600 text-white border-cyan-600 shadow-md shadow-cyan-600/10"
