@@ -1,7 +1,7 @@
 import { Outlet, Link, useLocation } from "@tanstack/react-router";
 import {
   LayoutDashboard, Brain, Sprout, Microscope, Workflow, ClipboardCheck,
-  Eye, FlaskConical, BookMarked, Sparkles, Search, Bell,
+  Eye, FlaskConical, BookMarked, Sparkles,
   Menu, X
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
@@ -44,17 +44,6 @@ export function AppLayout({ children }: { children?: ReactNode }) {
 
         {/* Brand accent divider */}
         <div className="brand-divider" />
-
-        {/* Search */}
-        <div className="px-3 pt-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-            <input
-              placeholder="Search modules…"
-              className="w-full h-9 pl-9 pr-3 rounded-lg bg-secondary border border-transparent text-xs placeholder:text-muted-foreground/70 focus:outline-none focus:border-primary/30 focus:bg-card transition"
-            />
-          </div>
-        </div>
 
         {/* Navigation */}
         <nav className="flex-1 overflow-y-auto scrollbar-thin px-2 py-4">
@@ -129,10 +118,6 @@ export function AppLayout({ children }: { children?: ReactNode }) {
               <Link to="/audit" className="hidden sm:inline-flex items-center gap-2 h-9 px-4 rounded-lg bg-primary text-primary-foreground hover:bg-mahindra-red-light text-xs font-medium transition shadow-sm shadow-primary/20">
                 <Sparkles className="h-3.5 w-3.5" /> Run Creative Audit
               </Link>
-              <button className="relative h-9 w-9 grid place-items-center rounded-lg border border-border bg-card hover:bg-secondary transition">
-                <Bell className="h-4 w-4" />
-                <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-primary" />
-              </button>
               <div className="h-9 w-9 rounded-lg bg-primary text-primary-foreground font-semibold text-xs flex items-center justify-center shadow-sm select-none border border-primary/10 shrink-0">
                 MT
               </div>
@@ -153,9 +138,19 @@ export function AppLayout({ children }: { children?: ReactNode }) {
         <footer className="px-4 lg:px-8 py-6 border-t border-border bg-card/40">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
             <MahindraBrandMark />
-            <div className="flex flex-col items-center md:items-end gap-1 text-center md:text-right select-none">
-              <span>Powered by Neuroscience, Behavioral Science & Rural Consumer Psychology</span>
-              <span className="text-[10px] text-muted-foreground/60">© 2026 Mahindra & Mahindra Financial Services Ltd. · Internal Platform</span>
+            <div className="flex flex-col items-center md:items-end gap-1 text-center md:text-right">
+              <span>
+                Created by{" "}
+                <a
+                  href="https://www.linkedin.com/in/guptarpita/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline font-bold transition-all"
+                >
+                  Arpita Gupta
+                </a>
+              </span>
+              <span className="text-[10px] text-muted-foreground/60 select-none">© 2026 Mahindra & Mahindra Financial Services Ltd. · Internal Platform</span>
             </div>
           </div>
         </footer>
