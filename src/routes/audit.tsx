@@ -9,7 +9,12 @@ import {
   Zap, Award, RefreshCw 
 } from "lucide-react";
 import { analyzeCreativeStream } from "@/lib/ai.streaming";
-import type { StreamEvent } from "@/lib/ai.streaming";
+
+// Stream event types from the edge function (NDJSON)
+type StreamEvent =
+  | { type: "progress"; stage: string; chunksReceived?: number }
+  | { type: "result"; data: unknown }
+  | { type: "error"; message: string };
 
 export const Route = createFileRoute("/audit")({ component: AuditPage });
 
@@ -109,28 +114,53 @@ function AuditPage() {
     setChunksReceived(0);
 
     try {
-      // Call the streaming server function — returns a ReadableStream
-      const stream = await analyzeCreativeStream({
-        data: { imageDataUrl, context: context.trim() || undefined },
-      });
+      let stream: ReadableStream;
 
-      if (!stream || typeof (stream as any).getReader !== "function") {
-        // Fallback: if the response is not a stream (e.g. direct result),
-        // treat it as a non-streaming response for backwards compatibility
-        const directResult = stream as any;
-        if (directResult?.type === "result" && directResult.data) {
-          const nextResult = directResult.data as Result;
-          setResult(nextResult);
-          applyOverlayDefaults(nextResult);
-        } else {
-          setError("Unexpected response format.");
+      if (import.meta.env.DEV) {
+        console.log("[Client Stream] Using local TanStack Start server function (bypass 404)");
+        // Local development: no 30s timeout on localhost, so we can use the server function
+        const serverFnStream = await analyzeCreativeStream({
+          data: { imageDataUrl, context: context.trim() || undefined },
+        });
+
+        if (!serverFnStream || typeof (serverFnStream as any).getReader !== "function") {
+          const directResult = serverFnStream as any;
+          if (directResult?.type === "result" && directResult.data) {
+            const nextResult = directResult.data as Result;
+            setResult(nextResult);
+            applyOverlayDefaults(nextResult);
+          } else {
+            setError("Unexpected response format.");
+          }
+          setLoading(false);
+          setStreamStatus("idle");
+          return;
         }
-        setLoading(false);
-        setStreamStatus("idle");
-        return;
+        stream = serverFnStream as ReadableStream;
+      } else {
+        console.log("[Client Stream] Using Netlify Edge Function (bypass 30s timeout)");
+        // Production: Call the Netlify Edge Function directly via fetch.
+        // Edge functions have no wall-clock timeout.
+        const response = await fetch("/api/analyze-stream", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            imageDataUrl,
+            context: context.trim() || undefined,
+          }),
+        });
+
+        if (!response.ok || !response.body) {
+          const errText = await response.text();
+          setError(`Server error (${response.status}): ${errText}`);
+          setLoading(false);
+          setStreamStatus("idle");
+          return;
+        }
+        stream = response.body;
       }
 
-      const reader = (stream as ReadableStream).getReader();
+      const reader = stream.getReader();
       const decoder = new TextDecoder();
       let buffer = "";
 
