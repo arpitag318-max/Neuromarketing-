@@ -5,6 +5,7 @@ import { ArrowLeft, Brain, Activity, Smile, Zap, Cpu, Search, X, ChevronRight, C
 import { neuroscienceToolsList, EegStorytellingView } from "./tools";
 import { FmriStorytellingView } from "./fmri-view";
 import { GsrStorytellingView } from "./gsr-view";
+import { EyeTrackingStorytellingView } from "./eye-tracking-view";
 
 export const Route = createFileRoute("/tools/$toolId")({
   component: ToolDetailPage,
@@ -217,6 +218,8 @@ export function ToolDetailPage() {
           <FmriStorytellingView tool={tool} activeTheme={activeTheme} />
         ) : tool.id === 'gsr' ? (
           <GsrStorytellingView tool={tool} activeTheme={activeTheme} />
+        ) : tool.id === 'eye-tracking' ? (
+          <EyeTrackingStorytellingView tool={tool} activeTheme={activeTheme} />
         ) : (
           <EegStorytellingView tool={tool} activeTheme={activeTheme} />
         )}
