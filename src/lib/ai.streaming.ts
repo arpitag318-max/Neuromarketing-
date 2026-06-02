@@ -88,6 +88,11 @@ export const analyzeCreativeStream = createServerFn({ method: "POST" })
           enqueue(controller, { type: "progress", stage: currentStage });
 
           for await (const chunk of stream) {
+            if (chunkCount === 0) {
+              clearInterval(keepAliveInterval);
+              console.log(`[Server Stream] Cleared keep-alive interval (first chunk received).`);
+            }
+            
             const text = chunk.text ?? "";
             accumulated += text;
             chunkCount++;
