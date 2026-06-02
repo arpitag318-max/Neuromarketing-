@@ -8,8 +8,8 @@ import {
   ChevronDown, ChevronUp, ShieldCheck, Eye, Compass, Layers, 
   Zap, Award, RefreshCw 
 } from "lucide-react";
-import { useServerFn } from "@tanstack/react-start";
-import { analyzeCreativeGemini as analyzeCreative } from "@/lib/ai.functions";
+import { analyzeCreativeStream } from "@/lib/ai.streaming";
+import type { StreamEvent } from "@/lib/ai.streaming";
 
 export const Route = createFileRoute("/audit")({ component: AuditPage });
 
@@ -56,6 +56,13 @@ function scoreProgressBar(score: number, lowerBetter = false) {
   return "bg-gradient-to-r from-rose-600 to-red-400 shadow-[0_0_8px_rgba(244,63,94,0.5)]";
 }
 
+const STREAM_STATUS_MESSAGES: Record<string, string> = {
+  starting: "Initializing neural analysis engine…",
+  connecting: "Connecting to Gemini cognitive processor…",
+  analyzing: "AI is analyzing visual saliency patterns…",
+  processing: "Computing weighted neuro-scores…",
+};
+
 function AuditPage() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
@@ -65,10 +72,11 @@ function AuditPage() {
   const [result, setResult] = useState<Result | null>(null);
   const [overlay, setOverlay] = useState<"heatmap" | "gaze" | "ignored" | "none">("heatmap");
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
+  const [streamStatus, setStreamStatus] = useState<string>("idle");
+  const [chunksReceived, setChunksReceived] = useState(0);
   
   const fileRef = useRef<HTMLInputElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
-  const analyze = useServerFn(analyzeCreative);
 
   const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) { 
@@ -97,27 +105,97 @@ function AuditPage() {
     setError(null); 
     setResult(null);
     setExpandedMetric(null);
+    setStreamStatus("starting");
+    setChunksReceived(0);
+
     try {
-      const res = await analyze({ data: { imageDataUrl, context: context.trim() || undefined } });
-      if (res.ok) {
-        const nextResult = res.result as Result;
-        setResult(nextResult);
-        const hasHeatmap = (nextResult.heatmap_zones?.length ?? 0) > 0;
-        const hasGaze = (nextResult.gaze_path?.length ?? 0) > 0;
-        const hasIgnored = (nextResult.ignored_zones?.length ?? 0) > 0;
-        setOverlay(hasHeatmap ? "heatmap" : hasGaze ? "gaze" : hasIgnored ? "ignored" : "none");
-        // Expand the first metric by default
-        if (res.result?.metrics?.length > 0) {
-          setExpandedMetric(res.result.metrics[0].id);
+      // Call the streaming server function — returns a ReadableStream
+      const stream = await analyzeCreativeStream({
+        data: { imageDataUrl, context: context.trim() || undefined },
+      });
+
+      if (!stream || typeof (stream as any).getReader !== "function") {
+        // Fallback: if the response is not a stream (e.g. direct result),
+        // treat it as a non-streaming response for backwards compatibility
+        const directResult = stream as any;
+        if (directResult?.type === "result" && directResult.data) {
+          const nextResult = directResult.data as Result;
+          setResult(nextResult);
+          applyOverlayDefaults(nextResult);
+        } else {
+          setError("Unexpected response format.");
         }
-      } else {
-        setError(res.error);
+        setLoading(false);
+        setStreamStatus("idle");
+        return;
+      }
+
+      const reader = (stream as ReadableStream).getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      console.log("[Client Stream] Started reading stream at:", new Date().toISOString());
+
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (value) {
+          console.log(`[Client Stream] Received chunk of size: ${value.byteLength} bytes at ${new Date().toISOString()}`);
+        }
+
+        if (done) {
+          console.log("[Client Stream] Stream reading complete at:", new Date().toISOString());
+          break;
+        }
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Process complete NDJSON lines
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? ""; // Keep incomplete line in buffer
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed) continue;
+
+          try {
+            const event: StreamEvent = JSON.parse(trimmed);
+            console.log("[Client Stream] Parsed event:", event.type, event.type === 'progress' ? event.stage : '');
+
+            if (event.type === "progress") {
+              setStreamStatus(event.stage);
+              if (event.chunksReceived) {
+                setChunksReceived(event.chunksReceived);
+              }
+            } else if (event.type === "result") {
+              const nextResult = event.data as Result;
+              setResult(nextResult);
+              applyOverlayDefaults(nextResult);
+              if (nextResult.metrics?.length > 0) {
+                setExpandedMetric(nextResult.metrics[0].id);
+              }
+            } else if (event.type === "error") {
+              setError(event.message);
+            }
+          } catch (err) {
+            console.error("[Client Stream] Failed to parse JSON line:", trimmed, err);
+            // Skip malformed JSON lines
+          }
+        }
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Audit failed.");
     } finally {
       setLoading(false);
+      setStreamStatus("idle");
     }
+  }
+
+  function applyOverlayDefaults(nextResult: Result) {
+    const hasHeatmap = (nextResult.heatmap_zones?.length ?? 0) > 0;
+    const hasGaze = (nextResult.gaze_path?.length ?? 0) > 0;
+    const hasIgnored = (nextResult.ignored_zones?.length ?? 0) > 0;
+    setOverlay(hasHeatmap ? "heatmap" : hasGaze ? "gaze" : hasIgnored ? "ignored" : "none");
   }
 
   function reset() {
@@ -348,7 +426,12 @@ function AuditPage() {
                   {loading ? (
                     <>
                       <Loader2 className="h-4 w-4 animate-spin text-stone-200" /> 
-                      <span className="font-mono">Processing visual arrays...</span>
+                      <span className="font-mono">
+                        {STREAM_STATUS_MESSAGES[streamStatus] || "Processing visual arrays…"}
+                        {chunksReceived > 0 && streamStatus === "analyzing" && (
+                          <span className="text-stone-400 ml-1">(chunk {chunksReceived})</span>
+                        )}
+                      </span>
                     </>
                   ) : (
                     <>
