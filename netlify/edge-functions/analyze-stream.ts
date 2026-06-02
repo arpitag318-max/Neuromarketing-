@@ -1,4 +1,5 @@
 import type { Context } from "@netlify/edge-functions";
+import { GoogleGenAI } from "@google/genai";
 
 // Edge functions have access to Netlify env vars via Deno.env
 function getApiKey(): string {
@@ -89,8 +90,6 @@ function applyWeightedScoring(parsed: any): void {
   });
 }
 
-// The system prompt is very large — keep it in a constant
-// (same as ai.helpers.ts but inlined for edge compatibility)
 const GEMINI_SYSTEM_PROMPT = `You are NeuroCopilot, an elite enterprise-grade neuromarketing analyst and visual cognition expert specializing in behavioral finance for Mahindra Finance (rural India's leading NBFC). You are a panel of world-class experts:
 
 1. **Consumer Neuroscientist** - Brain response, memory encoding, emotional processing
@@ -234,100 +233,75 @@ export default async (request: Request, _context: Context) => {
     async start(controller) {
       send(controller, { type: "progress", stage: "starting" });
 
+      let currentStage = "connecting";
+      
+      const keepAliveInterval = setInterval(() => {
+        console.log(`[Edge Stream] Sending keep-alive heartbeat at: ${new Date().toISOString()}`);
+        send(controller, { type: "progress", stage: currentStage });
+      }, 5000);
+
       try {
         const { imageDataUrl, context } = await request.json();
 
         if (!imageDataUrl || typeof imageDataUrl !== "string" || imageDataUrl.length < 50) {
           send(controller, { type: "error", message: "Invalid or missing imageDataUrl." });
+          clearInterval(keepAliveInterval);
           controller.close();
           return;
         }
 
         const apiKey = getApiKey();
+        const ai = new GoogleGenAI({ apiKey });
         const userPrompt = buildUserPrompt(context);
         const mimeType = imageDataUrl.startsWith("data:image/png") ? "image/png" : "image/jpeg";
         const base64Data = imageDataUrl.replace(/^data:image\/\w+;base64,/, "");
 
         console.log(`[Edge Stream] Triggering Gemini API at: ${new Date().toISOString()}`);
-        send(controller, { type: "progress", stage: "connecting" });
+        send(controller, { type: "progress", stage: currentStage });
 
-        // Call Gemini REST API directly with streaming (no SDK needed in edge)
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:streamGenerateContent?alt=sse&key=${apiKey}`;
-
-        const geminiResponse = await fetch(geminiUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            systemInstruction: {
-              parts: [{ text: GEMINI_SYSTEM_PROMPT }],
+        // Use SDK exactly as in the serverless function to avoid raw SSE parsing bugs
+        const stream = await ai.models.generateContentStream({
+          model: "gemini-2.5-flash",
+          contents: [
+            {
+              role: "user",
+              parts: [
+                { text: userPrompt },
+                { inlineData: { mimeType, data: base64Data } },
+              ],
             },
-            contents: [
-              {
-                role: "user",
-                parts: [
-                  { text: userPrompt },
-                  { inlineData: { mimeType, data: base64Data } },
-                ],
-              },
-            ],
-            generationConfig: {
-              responseMimeType: "application/json",
-            },
-          }),
+          ],
+          config: {
+            systemInstruction: GEMINI_SYSTEM_PROMPT,
+            responseMimeType: "application/json",
+          },
         });
 
-        if (!geminiResponse.ok) {
-          const errText = await geminiResponse.text();
-          console.error(`[Edge Stream] Gemini API error: ${geminiResponse.status}`, errText);
-          send(controller, { type: "error", message: `Gemini API error: ${geminiResponse.status}` });
-          controller.close();
-          return;
-        }
-
-        console.log(`[Edge Stream] Started receiving from Gemini at: ${new Date().toISOString()}`);
-        send(controller, { type: "progress", stage: "analyzing" });
-
-        // Read SSE stream from Gemini
-        const reader = geminiResponse.body!.getReader();
-        const decoder = new TextDecoder();
         let accumulated = "";
         let chunkCount = 0;
-        let sseBuffer = "";
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
+        currentStage = "analyzing";
+        console.log(`[Edge Stream] Started receiving from Gemini at: ${new Date().toISOString()}`);
+        send(controller, { type: "progress", stage: currentStage });
 
-          sseBuffer += decoder.decode(value, { stream: true });
+        for await (const chunk of stream) {
+          if (chunkCount === 0) {
+            clearInterval(keepAliveInterval);
+            console.log(`[Edge Stream] Cleared keep-alive interval (first chunk received).`);
+          }
 
-          // Parse SSE events (format: "data: {...}\n\n")
-          const events = sseBuffer.split("\n\n");
-          sseBuffer = events.pop() ?? "";
+          const text = chunk.text ?? "";
+          accumulated += text;
+          chunkCount++;
 
-          for (const event of events) {
-            const dataLine = event.split("\n").find((l) => l.startsWith("data: "));
-            if (!dataLine) continue;
+          console.log(`[Edge Stream] Gemini chunk ${chunkCount} (size: ${text.length}) at ${new Date().toISOString()}`);
 
-            const jsonStr = dataLine.slice(6); // Remove "data: " prefix
-            try {
-              const parsed = JSON.parse(jsonStr);
-              const text = parsed?.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
-              if (text) {
-                accumulated += text;
-                chunkCount++;
-                console.log(`[Edge Stream] Gemini chunk ${chunkCount} (size: ${text.length}) at ${new Date().toISOString()}`);
-
-                if (chunkCount % 3 === 0) {
-                  send(controller, {
-                    type: "progress",
-                    stage: "analyzing",
-                    chunksReceived: chunkCount,
-                  });
-                }
-              }
-            } catch {
-              // Skip malformed SSE data
-            }
+          if (chunkCount % 3 === 0) {
+            send(controller, {
+              type: "progress",
+              stage: currentStage,
+              chunksReceived: chunkCount,
+            });
           }
         }
 
@@ -339,7 +313,8 @@ export default async (request: Request, _context: Context) => {
           return;
         }
 
-        send(controller, { type: "progress", stage: "processing" });
+        currentStage = "processing";
+        send(controller, { type: "progress", stage: currentStage });
 
         const parsed = parseGeminiResponse(accumulated);
         if (!parsed) {
@@ -358,9 +333,10 @@ export default async (request: Request, _context: Context) => {
           type: "error",
           message: err instanceof Error ? err.message : "Unknown error",
         });
+      } finally {
+        clearInterval(keepAliveInterval);
+        controller.close();
       }
-
-      controller.close();
     },
   });
 
