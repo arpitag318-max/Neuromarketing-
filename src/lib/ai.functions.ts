@@ -16,7 +16,7 @@ const AnalysisSchema = z.object({
 });
 
 function getGeminiClient(): GoogleGenAI {
-  const key = "AIzaSyDSzdQ5vtRAhCxb6lGF5xlAckoBx-Vu4Ts";
+  const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("GEMINI_API_KEY not configured.");
   return new GoogleGenAI({ apiKey: key });
 }
