@@ -124,7 +124,7 @@ export function EyeTrackingStorytellingView({ tool, activeTheme }: {
       title: "Website CTA Optimization",
       tag: "Web Usability",
       style: "lg:col-span-4 md:col-span-6",
-      image: "/images/eye_tracking_website.png",
+      image: "/images/eye_tracking_scenario1.png",
       challenge: "Users overlook Apply Now buttons during self-service mobile loan calculation.",
       reveal: "Gaze heatmaps reveal that visual attention concentrated on surrounding colorful tractor graphics rather than actions.",
       insight: "Visual hierarchy weakness: background assets competition siphons foveal attention from checkout triggers.",
@@ -135,7 +135,7 @@ export function EyeTrackingStorytellingView({ tool, activeTheme }: {
       title: "WhatsApp Creative Testing",
       tag: "Mobile Messaging",
       style: "lg:col-span-4 md:col-span-6",
-      image: "/images/eye_tracking_whatsapp.png",
+      image: "/images/eye_tracking_scenario2.png",
       challenge: "Low click-through rates and high opt-outs on promotional WhatsApp campaigns.",
       reveal: "Gaze tracking shows consumers completely ignore secondary bulleted copy, focusing only on the header graphic.",
       insight: "Consumers skim messages in less than 2 seconds, meaning secondary value propositions are completely neglected.",
@@ -146,78 +146,12 @@ export function EyeTrackingStorytellingView({ tool, activeTheme }: {
       title: "Loan Application Flow",
       tag: "Onboarding Journey",
       style: "lg:col-span-4 md:col-span-6",
-      image: "/images/eye_tracking_onboarding.png",
+      image: "/images/eye_tracking_scenario3.png",
       challenge: "High customer abandonment during digital self-service KYC and onboarding forms.",
       reveal: "Scanpaths reveal extreme visual backtracking and chaotic search behaviors around income declaration fields.",
       insight: "Visual friction: complex field groupings trigger cognitive fatigue and visual disorientation before completion.",
       optimize: "Simplify layout structure, utilize progressive single-column fields, and place visual progress steps.",
       impact: "Higher application completion velocity and lower drop-off ratios."
-    },
-    {
-      title: "EMI Calculator Analysis",
-      tag: "Interactive Widgets",
-      style: "lg:col-span-4 md:col-span-6",
-      image: "/images/eye_tracking_calculator.png",
-      challenge: "Borrowers struggle to comprehend complex dynamic interest rate grids and loan selectors.",
-      reveal: "Wearable trackers capture prolonged fixation and visual loops between rate details and repayment tables.",
-      insight: "Too many simultaneous variables scatter focus, increasing working memory load and purchase hesitation.",
-      optimize: "Simplify financial information architecture, displaying EMI outcomes in a single high-salience row.",
-      impact: "Improved financial comprehension and reduction in calculator abandonment."
-    },
-    {
-      title: "Branch Experience Optimization",
-      tag: "Physical Spaces",
-      style: "lg:col-span-4 md:col-span-6",
-      image: "/images/eye_tracking_branch.png",
-      challenge: "Customers ignore informational posters, agricultural pamphlets, and product standees inside branches.",
-      reveal: "Mobile eye-tracking glasses reveal walk-in customers systematically ignore posters placed behind high-traffic counters.",
-      insight: "Visual noise: busy branch environments compete with collateral, relegating them to peripheral blindness.",
-      optimize: "Redesign branch communication layouts, placing high-contrast, simple posters in primary sightlines.",
-      impact: "Improved product awareness and organic branch-led cross-selling conversions."
-    },
-    {
-      title: "Video Ad Attention Testing",
-      tag: "Video Advertising",
-      style: "lg:col-span-4 md:col-span-6",
-      image: "/images/eye_tracking_video.png",
-      challenge: "Regional television and social media video campaigns fail to communicate branding and core loan offers.",
-      reveal: "Scene-by-scene fixations show borrowers focus on emotional story characters while completely ignoring overlays.",
-      insight: "Branding assets receive limited visual exposure because they appear during high-motion action sequences.",
-      optimize: "Reposition branding marks and core numbers into early, low-motion visual focal segments.",
-      impact: "Higher brand recall and improved return on seasonal media investments."
-    },
-    {
-      title: "Female Borrower Trust Research",
-      tag: "Inclusive Financing",
-      style: "lg:col-span-4 md:col-span-6",
-      image: "/images/eye_tracking_female.png",
-      challenge: "Traditional agricultural campaigns fail to engage female family co-signers in farm financing decisions.",
-      reveal: "Ocular metrics show female borrowers fixate up to 3x longer on inclusive household agricultural scenes.",
-      insight: "Representation bias: campaigns focusing exclusively on sole male farmers trigger visual neglect in women.",
-      optimize: "Increase female visual representation, showcasing collaborative family ownership farming visuals.",
-      impact: "Improved trust perception and higher family joint-loan applications."
-    },
-    {
-      title: "Festival Campaign Visibility",
-      tag: "Seasonal Marketing",
-      style: "lg:col-span-4 md:col-span-6",
-      image: "/images/eye_tracking_festival.png",
-      challenge: "Festival campaigns blend into cluttered seasonal advertising spaces without creating brand memorability.",
-      reveal: "Gaze path analysis shows excessive visual elements (ribbons, gold frames) siphon focus from brand marks.",
-      insight: "Festive visual clutter overshadows corporate emblems, decreasing long-term brand recall.",
-      optimize: "Integrate the corporate emblem cleanly into the primary visual focal zones, minimizing non-essential decor.",
-      impact: "Higher campaign engagement and stronger brand memorability."
-    },
-    {
-      title: "Regional Language Creative Optimization",
-      tag: "Vernacular Translation",
-      style: "lg:col-span-4 md:col-span-6",
-      image: "/images/eye_tracking_vernacular.png",
-      challenge: "Localized regional language campaigns yield highly inconsistent conversion performances.",
-      reveal: "Reading speed and fixation durations reveal visual backtracking when text contains direct dictionary translations.",
-      insight: "Linguistic visual friction: direct literal translation creates reading strains, triggering visual avoidance.",
-      optimize: "Refine regional copywriting structures to use natural local dialects and familiar spacing structures.",
-      impact: "Higher emotional trust and improved regional campaign effectiveness."
     }
   ];
 

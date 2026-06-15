@@ -6,6 +6,11 @@ import { neuroscienceToolsList, EegStorytellingView } from "./tools";
 import { FmriStorytellingView } from "./fmri-view";
 import { GsrStorytellingView } from "./gsr-view";
 import { EyeTrackingStorytellingView } from "./eye-tracking-view";
+import { FnirsStorytellingView } from "./fnirs-view";
+import { MegStorytellingView } from "./meg-view";
+import { PetStorytellingView } from "./pet-view";
+import { PupillometryStorytellingView } from "./pupillometry-view";
+import { HrvStorytellingView } from "./hrv-view";
 
 export const Route = createFileRoute("/tools/$toolId")({
   component: ToolDetailPage,
@@ -220,6 +225,16 @@ export function ToolDetailPage() {
           <GsrStorytellingView tool={tool} activeTheme={activeTheme} />
         ) : tool.id === 'eye-tracking' ? (
           <EyeTrackingStorytellingView tool={tool} activeTheme={activeTheme} />
+        ) : tool.id === 'fnirs' ? (
+          <FnirsStorytellingView tool={tool} activeTheme={activeTheme} />
+        ) : tool.id === 'meg' ? (
+          <MegStorytellingView tool={tool} activeTheme={activeTheme} />
+        ) : tool.id === 'pet' ? (
+          <PetStorytellingView tool={tool} activeTheme={activeTheme} />
+        ) : tool.id === 'pupillometry' ? (
+          <PupillometryStorytellingView tool={tool} activeTheme={activeTheme} />
+        ) : tool.id === 'hrv-ecg' ? (
+          <HrvStorytellingView tool={tool} activeTheme={activeTheme} />
         ) : (
           <EegStorytellingView tool={tool} activeTheme={activeTheme} />
         )}

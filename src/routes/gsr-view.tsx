@@ -4,6 +4,302 @@ import {
   Activity, Target, Zap, Eye, Award, Sliders, EyeOff
 } from "lucide-react";
 
+function GsrSignalChart({ name, color }: { name: string; color: string }) {
+  let chartContent: React.ReactNode = null;
+  let signalLabel = "uS";
+  let valueLabel = "0.0";
+
+  switch (name) {
+    case "TONIC SKIN CONDUCTANCE LEVEL (SCL)":
+      signalLabel = "SCL baseline";
+      valueLabel = "5.2 uS";
+      chartContent = (
+        <>
+          <path
+            d="M 10,42 C 60,38 100,20 150,25 C 200,28 220,45 230,40"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            filter={`url(#glow-${color.replace('#', '')})`}
+          />
+          <path
+            d="M 10,42 C 60,38 100,20 150,25 C 200,28 220,45 230,40"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <text x="15" y="55" fill="#57534e" fontSize="6" fontWeight="bold">0s</text>
+          <text x="215" y="55" fill="#57534e" fontSize="6" fontWeight="bold">60s</text>
+        </>
+      );
+      break;
+
+    case "PHASIC SKIN CONDUCTANCE RESPONSE (SCR)":
+      signalLabel = "Phasic spikes";
+      valueLabel = "1.8 Hz";
+      chartContent = (
+        <>
+          <path
+            d="M 10,48 L 30,48 L 35,15 C 45,20 50,45 60,48 L 100,48 L 105,10 C 115,15 120,45 130,48 L 170,48 L 175,20 C 185,25 190,45 200,48 L 230,48"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            filter={`url(#glow-${color.replace('#', '')})`}
+          />
+          <path
+            d="M 10,48 L 30,48 L 35,15 C 45,20 50,45 60,48 L 100,48 L 105,10 C 115,15 120,45 130,48 L 170,48 L 175,20 C 185,25 190,45 200,48 L 230,48"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <circle cx="35" cy="15" r="2" fill="#ef4444" />
+          <circle cx="105" cy="10" r="2" fill="#ef4444" />
+          <circle cx="175" cy="20" r="2" fill="#ef4444" />
+        </>
+      );
+      break;
+
+    case "EVENT-RELATED SCR (ER-SCR)":
+      signalLabel = "Stimulus Lock";
+      valueLabel = "ER-SCR";
+      chartContent = (
+        <>
+          <line x1="80" y1="5" x2="80" y2="55" stroke="#ef4444" strokeWidth="1" strokeDasharray="3,3" />
+          <text x="84" y="15" fill="#ef4444" fontSize="7" fontWeight="black" letterSpacing="0.05em">STIMULUS</text>
+          <path
+            d="M 10,48 L 80,48 L 92,48 L 110,12 C 125,18 160,40 230,46"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            filter={`url(#glow-${color.replace('#', '')})`}
+          />
+          <path
+            d="M 10,48 L 80,48 L 92,48 L 110,12 C 125,18 160,40 230,46"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <line x1="80" y1="48" x2="92" y2="48" stroke="#10b981" strokeWidth="2" />
+          <text x="68" y="55" fill="#10b981" fontSize="6" fontWeight="bold">Latency</text>
+        </>
+      );
+      break;
+
+    case "NON-SPECIFIC SCR (NS-SCR)":
+      signalLabel = "NS-SCR drift";
+      valueLabel = "4.2 min-1";
+      chartContent = (
+        <>
+          <path
+            d="M 10,45 Q 25,30 40,42 T 70,35 T 100,48 T 130,38 T 160,45 T 190,30 T 220,42 T 230,45"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            filter={`url(#glow-${color.replace('#', '')})`}
+          />
+          <path
+            d="M 10,45 Q 25,30 40,42 T 70,35 T 100,48 T 130,38 T 160,45 T 190,30 T 220,42 T 230,45"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </>
+      );
+      break;
+
+    case "ANTICIPATORY AROUSAL":
+      signalLabel = "Pre-decision climb";
+      valueLabel = "+82% Arousal";
+      chartContent = (
+        <>
+          <line x1="180" y1="5" x2="180" y2="55" stroke="#8b5cf6" strokeWidth="1" strokeDasharray="3,3" />
+          <text x="135" y="15" fill="#8b5cf6" fontSize="6" fontWeight="black" letterSpacing="0.05em">EXPECTED TASK</text>
+          <path
+            d="M 10,50 C 50,48 100,40 140,25 C 160,18 175,10 180,8 L 190,8 C 205,10 220,25 230,30"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            filter={`url(#glow-${color.replace('#', '')})`}
+          />
+          <path
+            d="M 10,50 C 50,48 100,40 140,25 C 160,18 175,10 180,8 L 190,8 C 205,10 220,25 230,30"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </>
+      );
+      break;
+
+    case "EMOTIONAL OVERLOAD PATTERNS":
+      signalLabel = "Stress saturation";
+      valueLabel = "9.4 uS";
+      chartContent = (
+        <>
+          <path
+            d="M 10,35 L 20,15 L 28,28 L 35,10 L 45,30 L 52,12 L 62,25 L 70,8 L 80,28 L 88,10 L 98,22 L 105,5 L 115,25 L 122,8 L 132,20 L 140,8 L 150,28 L 158,12 L 168,22 L 175,5 L 185,25 L 192,8 L 202,22 L 210,12 L 220,30 L 230,25"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            filter={`url(#glow-${color.replace('#', '')})`}
+          />
+          <path
+            d="M 10,35 L 20,15 L 28,28 L 35,10 L 45,30 L 52,12 L 62,25 L 70,8 L 80,28 L 88,10 L 98,22 L 105,5 L 115,25 L 122,8 L 132,20 L 140,8 L 150,28 L 158,12 L 168,22 L 175,5 L 185,25 L 192,8 L 202,22 L 210,12 L 220,30 L 230,25"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <rect x="50" y="8" width="130" height="42" fill="rgba(239, 68, 68, 0.08)" stroke="rgba(239, 68, 68, 0.2)" strokeDasharray="2,2" rx="4" />
+          <text x="95" y="32" fill="#ef4444" fontSize="7" fontWeight="black" letterSpacing="0.08em">OVERLOAD ZONE</text>
+        </>
+      );
+      break;
+
+    case "HABITUATION RESPONSE":
+      signalLabel = "Adaptation curve";
+      valueLabel = "t1/2 Decay";
+      chartContent = (
+        <>
+          <path
+            d="M 10,48 L 25,48 L 30,10 C 40,15 45,45 55,48 L 75,48 L 80,22 C 90,25 95,45 105,48 L 125,48 L 130,30 C 140,32 145,45 155,48 L 175,48 L 180,38 C 190,39 195,45 205,48 L 230,48"
+            fill="none"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            filter={`url(#glow-${color.replace('#', '')})`}
+          />
+          <path
+            d="M 10,48 L 25,48 L 30,10 C 40,15 45,45 55,48 L 75,48 L 80,22 C 90,25 95,45 105,48 L 125,48 L 130,30 C 140,32 145,45 155,48 L 175,48 L 180,38 C 190,39 195,45 205,48 L 230,48"
+            fill="none"
+            stroke={color}
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <path d="M 40,8 L 190,30" fill="none" stroke="#ef4444" strokeWidth="1" strokeDasharray="2,2" markerEnd="url(#arrow)" />
+        </>
+      );
+      break;
+
+    case "ENGAGEMENT PERSISTENCE":
+      signalLabel = "Autonomic stability";
+      valueLabel = "Steady State";
+      chartContent = (
+        <>
+          <path
+            d="M 10,32 C 30,28 50,35 70,30 C 90,25 110,35 130,32 C 150,28 170,35 190,30 C 210,28 220,32 230,30"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            filter={`url(#glow-${color.replace('#', '')})`}
+          />
+          <path
+            d="M 10,32 C 30,28 50,35 70,30 C 90,25 110,35 130,32 C 150,28 170,35 190,30 C 210,28 220,32 230,30"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </>
+      );
+      break;
+
+    case "EMOTIONAL RECOVERY RATE":
+      signalLabel = "T1/2 Recovery";
+      valueLabel = "2.8s Recovery";
+      chartContent = (
+        <>
+          <path
+            d="M 10,48 L 35,48 L 40,10 C 55,15 90,48 180,48 L 230,48"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            filter={`url(#glow-${color.replace('#', '')})`}
+          />
+          <path
+            d="M 10,48 L 35,48 L 40,10 C 55,15 90,48 180,48 L 230,48"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+          <line x1="40" y1="29" x2="110" y2="29" stroke={color} strokeWidth="1" strokeDasharray="2,2" />
+          <text x="50" y="25" fill={color} fontSize="6" fontWeight="bold">Half-Recovery (t50)</text>
+        </>
+      );
+      break;
+
+    case "SURPRISE ACTIVATION":
+      signalLabel = "Shock reaction";
+      valueLabel = "+3.4 uS Spike";
+      chartContent = (
+        <>
+          <path
+            d="M 10,48 L 95,48 L 100,8 C 110,12 130,45 150,48 L 230,48"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+            filter={`url(#glow-${color.replace('#', '')})`}
+          />
+          <path
+            d="M 10,48 L 95,48 L 100,8 C 110,12 130,45 150,48 L 230,48"
+            fill="none"
+            stroke={color}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </>
+      );
+      break;
+
+    default:
+      chartContent = (
+        <path
+          d="M 10,32 H 230"
+          fill="none"
+          stroke={color}
+          strokeWidth="2"
+        />
+      );
+  }
+
+  return (
+    <div className="h-16 w-full bg-[#050405] border border-stone-900 rounded-xl flex items-center justify-center relative overflow-hidden shadow-inner group-hover:border-stone-800 transition-colors">
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:8px_8px] pointer-events-none" />
+      <svg className="absolute inset-0 h-full w-full select-none" viewBox="0 0 240 64">
+        <defs>
+          <filter id={`glow-${color.replace('#', '')}`} x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+          <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" />
+          </marker>
+        </defs>
+        <line x1="10" y1="55" x2="230" y2="55" stroke="#1c1917" strokeWidth="1" />
+        <line x1="10" y1="5" x2="10" y2="55" stroke="#1c1917" strokeWidth="1" />
+        {chartContent}
+        <text x="12" y="12" fill="#57534e" fontSize="5.5" fontFamily="monospace" fontWeight="bold" letterSpacing="0.05em">{signalLabel.toUpperCase()}</text>
+        <text x="228" y="12" fill={color} fontSize="6" fontFamily="monospace" fontWeight="bold" textAnchor="end">{valueLabel}</text>
+      </svg>
+    </div>
+  );
+}
+
 export function GsrStorytellingView({ tool, activeTheme }: { 
   tool: any; 
   activeTheme: any;
@@ -119,70 +415,70 @@ export function GsrStorytellingView({ tool, activeTheme }: {
       function: "Baseline Autonomic Arousal",
       state: "Slow-moving electrodermal baseline measured over extended interaction periods.",
       interpretation: "Persistently elevated tonic conductance may indicate chronic financial stress and low digital confidence.",
-      color: "#ef4444"
+      color: "#10b981" // Green = Baseline Activity
     },
     {
       name: "PHASIC SKIN CONDUCTANCE RESPONSE (SCR)",
       function: "Acute Emotional Reactivity",
       state: "Rapid electrodermal spikes emerging 1–5 seconds after emotional stimulus exposure.",
       interpretation: "Specific onboarding screens or repayment disclosures may trigger immediate emotional distress.",
-      color: "#f59e0b"
+      color: "#f97316" // Orange = Reactivity
     },
     {
       name: "EVENT-RELATED SCR (ER-SCR)",
       function: "Stimulus-Locked Emotional Response",
       state: "Precise autonomic peak directly synchronized to a specific interaction event.",
       interpretation: "Biometric verification prompts may generate measurable trust disruption responses.",
-      color: "#818cf8"
+      color: "#8b5cf6" // Purple = Event Response
     },
     {
       name: "NON-SPECIFIC SCR (NS-SCR)",
       function: "Spontaneous Internal Arousal",
       state: "Autonomic spikes occurring without identifiable external stimulus.",
       interpretation: "Borrowers may internally ruminate about future repayment burden even during passive interaction stages.",
-      color: "#10b981"
+      color: "#06b6d4" // Cyan = Spontaneous / Recovery
     },
     {
       name: "ANTICIPATORY AROUSAL",
       function: "Pre-Decision Threat Prediction",
       state: "Elevated electrodermal activity emerging before high-risk decision exposure.",
       interpretation: "Borrowers subconsciously fear irreversible financial commitment before final loan submission.",
-      color: "#a855f7"
+      color: "#f97316" // Orange = Reactivity
     },
     {
       name: "EMOTIONAL OVERLOAD PATTERNS",
       function: "Autonomic Stress Saturation",
       state: "Sustained high-amplitude conductance with poor recovery stabilization.",
       interpretation: "Overly complex onboarding systems may psychologically exhaust users.",
-      color: "#dc2626"
+      color: "#ef4444" // Red = Stress
     },
     {
       name: "HABITUATION RESPONSE",
       function: "Autonomic Adaptation",
       state: "Gradual reduction in electrodermal reactivity after repeated exposure.",
       interpretation: "Familiar repayment systems may eventually reduce emotional borrower anxiety.",
-      color: "#06b6d4"
+      color: "#06b6d4" // Cyan = Recovery
     },
     {
       name: "ENGAGEMENT PERSISTENCE",
       function: "Sustained Emotional Attention",
       state: "Stable moderate arousal maintained throughout extended interaction periods.",
       interpretation: "Financial literacy systems may successfully sustain emotional engagement over time.",
-      color: "#8b5cf6"
+      color: "#10b981" // Green = Baseline Activity
     },
     {
       name: "EMOTIONAL RECOVERY RATE",
       function: "Post-Stress Autonomic Stabilization",
       state: "Speed at which electrodermal activity returns to baseline after emotional activation.",
       interpretation: "Long emotional recovery periods may indicate severe financial insecurity or repayment trauma.",
-      color: "#f97316"
+      color: "#06b6d4" // Cyan = Recovery
     },
     {
       name: "SURPRISE ACTIVATION",
       function: "Unexpected Emotional Interruption",
       state: "Abrupt conductance spikes during unanticipated stimulus exposure.",
       interpretation: "Hidden charges or unexpected repayment obligations may create subconscious shock reactions.",
-      color: "#eab308"
+      color: "#ef4444" // Red = Stress
     }
   ];
 
@@ -406,19 +702,19 @@ export function GsrStorytellingView({ tool, activeTheme }: {
         {/* Realistic Aspirational Visual */}
         <div className="lg:col-span-6 relative rounded-2xl overflow-hidden shadow-2xl border border-stone-850 aspect-[4/3] group">
           <img 
-            src="/images/eeg_headset_participant.png" 
+            src="/images/gsr_hero.png" 
             alt="Rural borrower with wearable GSR sensor during digital loan onboarding stress analysis" 
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-102 filter brightness-[0.85]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/30 to-transparent flex flex-col justify-end p-6">
             <span className="text-[9px] font-black uppercase text-amber-400 tracking-wider mb-1 flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" /> Simulated Deployment Scenario
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-ping" /> SIMULATED DEPLOYMENT SCENARIO
             </span>
             <h3 className="font-display font-black text-sm text-white uppercase tracking-wide">
-              Digital Loan Onboarding Stress Analysis
+              DIGITAL LOAN ONBOARDING STRESS ANALYSIS
             </h3>
             <p className="text-[11px] text-[#E5E7EB] mt-1 leading-normal font-medium max-w-md">
-              Wearable GSR sensors continuously measure electrodermal fluctuations during onboarding, revealing hidden emotional stress caused by legal complexity, repayment uncertainty, and biometric mistrust.
+              Wearable GSR sensors continuously monitor electrodermal activity to identify hidden emotional stress, trust disruption, financial anxiety, and cognitive friction during customer onboarding journeys.
             </p>
           </div>
         </div>
@@ -510,16 +806,7 @@ export function GsrStorytellingView({ tool, activeTheme }: {
               </div>
 
               {/* Signal visual representation */}
-              <div className="h-16 w-full bg-[#050405] border border-stone-900 rounded-xl flex items-center justify-center relative overflow-hidden shadow-inner group-hover:border-stone-800 transition-colors">
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:8px_8px] pointer-events-none" />
-                <div 
-                  className="h-10 w-10 rounded-full opacity-80 animate-pulse"
-                  style={{ 
-                    backgroundColor: signal.color,
-                    boxShadow: `0 0 20px ${signal.color}40`
-                  }}
-                />
-              </div>
+              <GsrSignalChart name={signal.name} color={signal.color} />
 
               <div className="space-y-3.5 relative z-10">
                 <div className="bg-[#121011] p-2.5 rounded-xl border border-stone-850">
